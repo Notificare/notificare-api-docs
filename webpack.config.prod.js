@@ -38,6 +38,6 @@ module.exports = merge(common, {
       cssProcessor: cssnano,
       cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: true,
-    }),
+    })
   ],
 });

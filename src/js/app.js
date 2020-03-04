@@ -3,15 +3,14 @@ if (module.hot) {
 }
 
 import SwaggerUI from 'swagger-ui'
-console.log(SwaggerUI);
 
 SwaggerUI({
-  url: "./specs/notificare-push-api-oas3.yaml",
+  url: './specs/notificare-push-api-oas3.yaml',
   dom_id: '#swagger-ui',
   deepLinking: true,
   presets: [
-    SwaggerUI.presets.apis
+    SwaggerUI.presets.apis,
   ],
-  plugins: []
+
 })
 
