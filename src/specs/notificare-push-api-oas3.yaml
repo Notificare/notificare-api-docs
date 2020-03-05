@@ -3770,6 +3770,12 @@ paths:
         + subscriptionId (should be a valid email or mobile phone number)
 
 
+        + p256dh (for WebPush)
+
+
+        + auth (for WebPush)
+
+
         + medium (one of the available channels: push, email, sms)
 
 
@@ -3791,7 +3797,34 @@ paths:
         + deviceString (defaults to 'unknown')
 
 
+        + browserName
+
+
+        + browserVersion
+
+
+        + webPushCapable
+
+
         + language (defaults to 'en')
+
+
+        + region
+
+
+        + country
+
+
+        + allowedUI
+
+
+        + backgroundAppRefresh
+
+
+        + locationServicesAuthStatus
+
+
+        + bluetoothEnabled
 
 
         + tags, by default separated by `|`, if you use something else, don't
@@ -3807,6 +3840,12 @@ paths:
         + latitude
 
 
+        + course
+
+
+        + speed
+
+
         + locationLastUpdated (ISO Date, defaults to lastActive)
 
 
@@ -3820,21 +3859,7 @@ paths:
         + userName (only used when userID is present. Defaults to 'anonymous')
       operationId: postImportDevice
       requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                data:
-                  properties:
-                    overwrite:
-                      description: Overwrite previously imported devices that are not active
-                      type: boolean
-                      default: false
-                  type: object
-                path:
-                  type: string
-                  example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              type: object
+        $ref: '#/components/requestBodies/ImportDevice'
       summary: Import Devices/Contacts/Numbers
   /import/re.notifica.import.User:
     post:
@@ -3867,7 +3892,7 @@ paths:
         + userName
       operationId: postImportUser
       requestBody:
-        $ref: '#/components/requestBodies/Import_UsersBody'
+        $ref: '#/components/requestBodies/ImportUser'
       summary: Import Users
   /import/re.notifica.import.UserSegment:
     post:
@@ -3908,14 +3933,7 @@ paths:
         + userID
       operationId: postImportUserSegment
       requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                path:
-                  type: string
-                  example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              type: object
+        $ref: '#/components/requestBodies/ImportUserSegment'
       summary: Import Users Into Segment
   /import/re.notifica.import.Region:
     post:
@@ -3988,14 +4006,7 @@ paths:
         + country
       operationId: postImportRegion
       requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                path:
-                  type: string
-                  example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              type: object
+        $ref: '#/components/requestBodies/ImportRegion'
       summary: Import Regions
   /import/re.notifica.import.Beacon:
     post:
@@ -4052,25 +4063,7 @@ paths:
         + notification, message  to be set for the beacon
       operationId: postImportBeacon
       requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                data:
-                  properties:
-                    createRegion:
-                      type: boolean
-                    distance:
-                      type: number
-                      example: 100
-                    timezone:
-                      type: string
-                      example: Europe/Amsterdam
-                  type: object
-                path:
-                  type: string
-                  example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              type: object
+        $ref: '#/components/requestBodies/ImportBeacon'
       summary: Import Beacons
   /import/re.notifica.import.Pass:
     post:
@@ -4155,49 +4148,7 @@ paths:
         Template)
       operationId: postImportPass
       requestBody:
-        content:
-          application/json:
-            schema:
-              example:
-                data:
-                  notificationTemplate: 5245bc5b3e66a3b01fa66356
-                  passData:
-                    passFields:
-                      from: AMS
-                      to: OPO
-                    relevantDate: '2018-01-01T12:00:00'
-                  passbook: 5245bc5b3e66a3b01fa66355
-                  sendNotification: true
-                  sendUpdateNotification: true
-                path: >-
-                  /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              properties:
-                data:
-                  properties:
-                    notificationTemplate:
-                      $ref: '#/components/schemas/ObjectId'
-                    passData:
-                      properties:
-                        passFields:
-                          properties:
-                            from:
-                              type: string
-                            to:
-                              type: string
-                          type: object
-                        relevantDate:
-                          $ref: '#/components/schemas/Date'
-                      type: object
-                    passbook:
-                      $ref: '#/components/schemas/ObjectId'
-                    sendNotification:
-                      type: boolean
-                    sendUpdateNotification:
-                      type: boolean
-                  type: object
-                path:
-                  type: string
-              type: object
+        $ref: '#/components/requestBodies/ImportPass'
       summary: Import Passes
   /import/re.notifica.import.PassUpdate:
     post:
@@ -4229,23 +4180,7 @@ paths:
         + pass_xxx (where xxx is any field defined in the Passbook Template)
       operationId: postImportPassUpdate
       requestBody:
-        content:
-          application/json:
-            schema:
-              example:
-                data:
-                  passbook: 5245bc5b3e66a3b01fa66355
-                path: >-
-                  /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              properties:
-                data:
-                  properties:
-                    passbook:
-                      $ref: '#/components/schemas/ObjectId'
-                  type: object
-                path:
-                  type: string
-              type: object
+        $ref: '#/components/requestBodies/ImportPassUpdate'
       summary: Import Pass Fields Update
   /import/re.notifica.import.Notification:
     post:
@@ -4318,20 +4253,7 @@ paths:
         `{{userID}}` or `{{userName}}`.
       operationId: postImportNotification
       requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                data:
-                  properties:
-                    notificationTemplate:
-                      description: Use previously created template for messages
-                      $ref: '#/components/schemas/ObjectId'
-                  type: object
-                path:
-                  type: string
-                  example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              type: object
+        $ref: '#/components/requestBodies/ImportNotification'
       summary: Import Private Messages
   /import/re.notifica.import.GroupedNotification:
     post:
@@ -4375,32 +4297,7 @@ paths:
         the template)
       operationId: postImportGroupedNotification
       requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                data:
-                  properties:
-                    notificationTemplate:
-                      description: Use previously created template for messages
-                      $ref: '#/components/schemas/ObjectId'
-                    notificationSchedule:
-                      description: Schedule message
-                      properties:
-                        time:
-                          $ref: '#/components/schemas/Date'
-                        timezone:
-                          type: string
-                          example: Europe/Amsterdam
-                        local:
-                          type: boolean
-                          default: false
-                      type: object
-                  type: object
-                path:
-                  type: string
-                  example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
-              type: object
+        $ref: '#/components/requestBodies/ImportGroupedNotification'
       summary: Import Grouped Messages
   '/import/{import}':
     get:
@@ -4464,13 +4361,18 @@ paths:
       requestBody:
         content:
           application/json:
-            example:
-              data:
-                createRegion: true
-                distance: '100'
-                timezone: Europe/Amsterdam
-              path: >-
-                /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
+            schema:
+              properties:
+                data:
+                  additionalProperties: true
+                  type: object
+                  example:
+                    overwrite: true
+                    push: true
+                path:
+                  type: string
+                  example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
+              type: object
       summary: Update Import
     delete:
       parameters:
@@ -6139,9 +6041,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                schedule:
-                  '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  schedule:
+                    '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Schedule
@@ -6405,9 +6308,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                template:
-                  $ref: '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  template:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Template
@@ -6735,9 +6639,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                test:
-                  $ref: '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  test:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Test
@@ -6757,9 +6662,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                test:
-                  $ref: '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  test:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Test
@@ -6896,9 +6802,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                test:
-                  $ref: '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  test:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Test
@@ -6918,9 +6825,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                test:
-                  $ref: '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  test:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Test
@@ -7060,9 +6968,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                test:
-                  $ref: '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  test:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Test
@@ -7082,9 +6991,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                test:
-                  $ref: '#/components/schemas/ObjectCreated'
+              schema:
+                properties:
+                  test:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
       tags:
         - Message Test
@@ -7218,53 +7128,50 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 2
-                    passes:
-                      - _id: 5501894253058ca5269a9928
-                        application: 5354f0bb3fa544452ff4c7c0
-                        barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
-                        data:
-                          auxiliaryFields: []
-                          backFields: []
-                          background: null
-                          backgroundColor: 'rgb(0,0,0)'
-                          barcode:
-                            format: PKBarcodeFormatQR
-                            messageEncoding: iso-8859-1
-                          description: coupon example
-                          footer: null
-                          foregroundColor: 'rgb(255,255,255)'
-                          headerFields: []
-                          icon: >-
-                            https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                          labelColor: 'rgb(255,255,255)'
-                          logo: >-
-                            https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                          logoText: My Company
-                          primaryFields:
-                            - key: discount
-                              label: discount
-                              string: true
-                              textAlignment: PKTextAlignmentLeft
-                              value: 20% off
-                          secondaryFields:
-                            - key: expires
-                              label: expires
-                              string: true
-                              textAlignment: PKTextAlignmentLeft
-                              value: 31-12-2015
-                          strip: >-
-                            https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                          suppressStripShine: false
-                          thumbnail: null
-                          transitType: null
-                        passbook: 54e135049c2cad772e7c0de0
-                        serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              example:
+                count: 2
+                passes:
+                  - _id: 5501894253058ca5269a9928
+                    application: 5354f0bb3fa544452ff4c7c0
+                    barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+                    data:
+                      auxiliaryFields: []
+                      backFields: []
+                      background: null
+                      backgroundColor: 'rgb(0,0,0)'
+                      barcode:
+                        format: PKBarcodeFormatQR
+                        messageEncoding: iso-8859-1
+                      description: coupon example
+                      footer: null
+                      foregroundColor: 'rgb(255,255,255)'
+                      headerFields: []
+                      icon: >-
+                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                      labelColor: 'rgb(255,255,255)'
+                      logo: >-
+                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                      logoText: My Company
+                      primaryFields:
+                        - key: discount
+                          label: discount
+                          string: true
+                          textAlignment: PKTextAlignmentLeft
+                          value: 20% off
+                      secondaryFields:
+                        - key: expires
+                          label: expires
+                          string: true
+                          textAlignment: PKTextAlignmentLeft
+                          value: 31-12-2015
+                      strip: >-
+                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                      suppressStripShine: false
+                      thumbnail: null
+                      transitType: null
+                    passbook: 54e135049c2cad772e7c0de0
+                    serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           description: OK
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7272,20 +7179,18 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Passes
-      summary: Get Passes
+      operationId: getPass
+      summary: List Passes
     post:
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    pass:
-                      _id: 5245bc5b3e66a3b01f0024d4
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7299,7 +7204,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Create Pass
+      operationId: postPass
       requestBody:
         content:
           application/json:
@@ -7350,27 +7255,26 @@ paths:
     get:
       parameters:
         - description: The serial number of an active pass.
-          example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           in: path
           name: serial
           required: true
+          example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           content:
             image/png:
-              examples:
-                response:
-                  value: ''
+              type: string
+              format: binary
           description: OK
-          headers: {}
       tags:
         - Pass
       description: |-
         Generate a barcode for a specific pass using the serial UUID.
         This request does not require authentication.
-      operationId: Generate Barcode By Serial
+      operationId: getPassBarcodeForSerial
       summary: Generate Barcode By Serial
   '/pass/barcode/{type}/{code}':
     get:
@@ -7393,11 +7297,9 @@ paths:
         '200':
           content:
             image/png:
-              examples:
-                response:
-                  value: ''
+              type: string
+              format: binary
           description: OK
-          headers: {}
       tags:
         - Pass
       description: |-
@@ -7423,7 +7325,7 @@ paths:
         code128
 
         ***
-      operationId: Generate a Barcode By Barcode
+      operationId: getPassBarcodeByBarcode
       summary: Generate a Barcode By Barcode
   '/pass/forbarcode/{barcode}':
     get:
@@ -7439,50 +7341,48 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5501894253058ca5269a9928
-                    application: 5354f0bb3fa544452ff4c7c0
-                    data:
-                      auxiliaryFields: []
-                      backFields: []
-                      background: null
-                      backgroundColor: 'rgb(0,0,0)'
-                      barcode:
-                        format: PKBarcodeFormatQR
-                        messageEncoding: iso-8859-1
-                      description: coupon example
-                      footer: null
-                      foregroundColor: 'rgb(255,255,255)'
-                      headerFields: []
-                      icon: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                      labelColor: 'rgb(255,255,255)'
-                      logo: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                      logoText: lebkov
-                      primaryFields:
-                        - key: discount
-                          label: discount
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 20% off
-                      secondaryFields:
-                        - key: expires
-                          label: expires
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 31-12-2015
-                      strip: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                      suppressStripShine: false
-                      thumbnail: null
-                      transitType: null
-                    passbook: 54e135049c2cad772e7c0de0
-                    serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              example:
+                pass:
+                  _id: 5501894253058ca5269a9928
+                  application: 5354f0bb3fa544452ff4c7c0
+                  data:
+                    auxiliaryFields: []
+                    backFields: []
+                    background: null
+                    backgroundColor: 'rgb(0,0,0)'
+                    barcode:
+                      format: PKBarcodeFormatQR
+                      messageEncoding: iso-8859-1
+                    description: coupon example
+                    footer: null
+                    foregroundColor: 'rgb(255,255,255)'
+                    headerFields: []
+                    icon: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                    labelColor: 'rgb(255,255,255)'
+                    logo: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                    logoText: lebkov
+                    primaryFields:
+                      - key: discount
+                        label: discount
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                        value: 20% off
+                    secondaryFields:
+                      - key: expires
+                        label: expires
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                        value: 31-12-2015
+                    strip: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                    suppressStripShine: false
+                    thumbnail: null
+                    transitType: null
+                  passbook: 54e135049c2cad772e7c0de0
+                  serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           description: OK
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7490,66 +7390,65 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Pass By Barcode
-      summary: Pass By Barcode
+      operationId: getPassForBarcode
+      summary: Pass For Barcode
   '/pass/forserial/{serial}':
     get:
       parameters:
         - description: The serial of the pass.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: serial
           required: true
+          example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5501894253058ca5269a9928
-                    application: 5354f0bb3fa544452ff4c7c0
-                    data:
-                      auxiliaryFields: []
-                      backFields: []
-                      background: null
-                      backgroundColor: 'rgb(0,0,0)'
-                      barcode:
-                        format: PKBarcodeFormatQR
-                        messageEncoding: iso-8859-1
-                      description: coupon example
-                      footer: null
-                      foregroundColor: 'rgb(255,255,255)'
-                      headerFields: []
-                      icon: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                      labelColor: 'rgb(255,255,255)'
-                      logo: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                      logoText: lebkov
-                      primaryFields:
-                        - key: discount
-                          label: discount
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 20% off
-                      secondaryFields:
-                        - key: expires
-                          label: expires
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 31-12-2015
-                      strip: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                      suppressStripShine: false
-                      thumbnail: null
-                      transitType: null
-                    passbook: 54e135049c2cad772e7c0de0
-                    serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              example:
+                pass:
+                  _id: 5501894253058ca5269a9928
+                  application: 5354f0bb3fa544452ff4c7c0
+                  data:
+                    auxiliaryFields: []
+                    backFields: []
+                    background: null
+                    backgroundColor: 'rgb(0,0,0)'
+                    barcode:
+                      format: PKBarcodeFormatQR
+                      messageEncoding: iso-8859-1
+                    description: coupon example
+                    footer: null
+                    foregroundColor: 'rgb(255,255,255)'
+                    headerFields: []
+                    icon: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                    labelColor: 'rgb(255,255,255)'
+                    logo: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                    logoText: lebkov
+                    primaryFields:
+                      - key: discount
+                        label: discount
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                        value: 20% off
+                    secondaryFields:
+                      - key: expires
+                        label: expires
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                        value: 31-12-2015
+                    strip: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                    suppressStripShine: false
+                    thumbnail: null
+                    transitType: null
+                  passbook: 54e135049c2cad772e7c0de0
+                  serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           description: OK
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7557,33 +7456,32 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Pass By Serial
-      summary: Get Pass By Serial
+      operationId: getPassForSerial
+      summary: Get Pass For Serial
   '/pass/pkpass/{serial}':
     get:
       parameters:
         - description: The serial number of an active pass.
-          example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           in: path
           name: serial
           required: true
+          example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           content:
             application/vnd.pkpass:
-              examples:
-                response:
-                  value: ''
+              type: string
+              format: binary
           description: OK
-          headers: {}
       tags:
         - Pass
       description: |-
         Download a pass using a serial UUID.
         This request does not require authentication.
-      operationId: Download Pass
+      operationId: gePassPKPass
       summary: Download Pass
   '/pass/redeem/{barcode}':
     put:
@@ -7595,16 +7493,14 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: pass redeemed
+              example:
+                message: pass redeemed
           description: OK
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7612,95 +7508,64 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Redeem Pass
+      operationId: putPassRedeem
       summary: Redeem Pass
   '/pass/{pass}':
-    delete:
-      parameters:
-        - description: The id of an active pass.
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: pass
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: pass deleted
-          description: OK
-          headers: {}
-      tags:
-        - Pass
-      description: >-
-        Delete a pass. This operation cannot be undone.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: Delete Pass
-      summary: Delete Pass
     get:
       parameters:
         - description: The id of pass.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: pass
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5501894253058ca5269a9928
-                    application: 5354f0bb3fa544452ff4c7c0
-                    barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
-                    data:
-                      auxiliaryFields: []
-                      backFields: []
-                      background: null
-                      backgroundColor: 'rgb(0,0,0)'
-                      barcode:
-                        format: PKBarcodeFormatQR
-                        messageEncoding: iso-8859-1
-                      description: coupon example
-                      footer: null
-                      foregroundColor: 'rgb(255,255,255)'
-                      headerFields: []
-                      icon: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                      labelColor: 'rgb(255,255,255)'
-                      logo: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                      logoText: lebkov
-                      primaryFields:
-                        - key: discount
-                          label: discount
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 20% off
-                      secondaryFields:
-                        - key: expires
-                          label: expires
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 31-12-2015
-                      strip: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                      suppressStripShine: false
-                      thumbnail: null
-                      transitType: null
-                    passbook: 54e135049c2cad772e7c0de0
-                    serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              example:
+                pass:
+                  _id: 5501894253058ca5269a9928
+                  application: 5354f0bb3fa544452ff4c7c0
+                  barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+                  data:
+                    auxiliaryFields: []
+                    backFields: []
+                    background: null
+                    backgroundColor: 'rgb(0,0,0)'
+                    barcode:
+                      format: PKBarcodeFormatQR
+                      messageEncoding: iso-8859-1
+                    description: coupon example
+                    footer: null
+                    foregroundColor: 'rgb(255,255,255)'
+                    headerFields: []
+                    icon: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                    labelColor: 'rgb(255,255,255)'
+                    logo: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                    logoText: lebkov
+                    primaryFields:
+                      - key: discount
+                        label: discount
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                        value: 20% off
+                    secondaryFields:
+                      - key: expires
+                        label: expires
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                        value: 31-12-2015
+                    strip: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                    suppressStripShine: false
+                    thumbnail: null
+                    transitType: null
+                  passbook: 54e135049c2cad772e7c0de0
+                  serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
           description: OK
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7708,27 +7573,23 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Pass
+      operationId: getPassById
       summary: Get Pass
     put:
       parameters:
         - description: The id of an active pass.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: pass
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: pass updated
+              example:
+                message: pass updated
           description: OK
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7736,7 +7597,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Update Pass
+      operationId: putPassById
       requestBody:
         content:
           application/json:
@@ -7779,6 +7640,33 @@ paths:
                 - data
               type: object
       summary: Update Pass
+    delete:
+      parameters:
+        - description: The id of an active pass.
+          in: path
+          name: pass
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    message: pass deleted
+          description: OK
+          headers: {}
+      tags:
+        - Pass
+      description: >-
+        Delete a pass. This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deletePassById
+      summary: Delete Pass
   /passbook:
     get:
       parameters:
@@ -7801,52 +7689,48 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 2
-                    passbooks:
-                      - __v: 0
-                        _id: 5501894253058ca5269a9928
-                        active: false
-                        application: 5354f0bb3fa544452ff4c7c0
-                        data:
-                          auxiliaryFields: []
-                          backFields: []
-                          background: null
-                          backgroundColor: 'rgb(0,0,0)'
-                          barcode:
-                            format: PKBarcodeFormatQR
-                            messageEncoding: iso-8859-1
-                          description: coupon example
-                          footer: null
-                          foregroundColor: 'rgb(255,255,255)'
-                          headerFields: []
-                          icon: >-
-                            https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                          labelColor: 'rgb(255,255,255)'
-                          logo: >-
-                            https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                          logoText: lebkov
-                          primaryFields:
-                            - key: discount
-                              label: discount
-                              string: true
-                              textAlignment: PKTextAlignmentLeft
-                          secondaryFields:
-                            - key: expires
-                              label: expires
-                              string: true
-                              textAlignment: PKTextAlignmentLeft
-                          strip: >-
-                            https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                          suppressStripShine: false
-                          thumbnail: null
-                          transitType: null
-                        name: coupon example
-                        passStyle: coupon
+              example:
+                count: 2
+                passbooks:
+                  - _id: 5501894253058ca5269a9928
+                    active: false
+                    application: 5354f0bb3fa544452ff4c7c0
+                    data:
+                      auxiliaryFields: []
+                      backFields: []
+                      background: null
+                      backgroundColor: 'rgb(0,0,0)'
+                      barcode:
+                        format: PKBarcodeFormatQR
+                        messageEncoding: iso-8859-1
+                      description: coupon example
+                      footer: null
+                      foregroundColor: 'rgb(255,255,255)'
+                      headerFields: []
+                      icon: >-
+                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                      labelColor: 'rgb(255,255,255)'
+                      logo: >-
+                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                      logoText: lebkov
+                      primaryFields:
+                        - key: discount
+                          label: discount
+                          string: true
+                          textAlignment: PKTextAlignmentLeft
+                      secondaryFields:
+                        - key: expires
+                          label: expires
+                          string: true
+                          textAlignment: PKTextAlignmentLeft
+                      strip: >-
+                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                      suppressStripShine: false
+                      thumbnail: null
+                      transitType: null
+                    name: coupon example
+                    passStyle: coupon
           description: OK
-          headers: {}
       tags:
         - Pass Templates
       description: >-
@@ -7854,20 +7738,18 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Pass Templates
+      operationId: getPassbook
       summary: Get Pass Templates
     post:
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    passbook:
-                      _id: 5245bc5b3e66a3b01f0024d4
+              schema:
+                properties:
+                  passbook:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - Pass Templates
       description: >-
@@ -7990,94 +7872,63 @@ paths:
 
 
         + `redeem_limit`
-      operationId: Create Pass Template
+      operationId: postPassbook
       requestBody:
-        $ref: '#/components/requestBodies/Create_Pass_TemplateBody'
+        $ref: '#/components/requestBodies/PassbookCreate'
       summary: Create Pass Template
   '/passbook/{passbook}':
-    delete:
-      parameters:
-        - description: The id of an active passbook template.
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: passbook
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: passbook deleted
-          description: OK
-          headers: {}
-      tags:
-        - Pass Templates
-      description: >-
-        Delete a pass template. This operation cannot be undone.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: Delete Pass Template
-      summary: Delete Pass Template
     get:
       parameters:
         - description: The id of an active passbook template.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: passbook
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5501894253058ca5269a9928
-                    application: 5354f0bb3fa544452ff4c7c0
-                    data:
-                      auxiliaryFields: []
-                      backFields: []
-                      background: null
-                      backgroundColor: 'rgb(0,0,0)'
-                      barcode:
-                        format: PKBarcodeFormatQR
-                        messageEncoding: iso-8859-1
-                      description: coupon example
-                      footer: null
-                      foregroundColor: 'rgb(255,255,255)'
-                      headerFields: []
-                      icon: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                      labelColor: 'rgb(255,255,255)'
-                      logo: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                      logoText: lebkov
-                      primaryFields:
-                        - key: discount
-                          label: discount
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                      secondaryFields:
-                        - key: expires
-                          label: expires
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                      strip: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                      suppressStripShine: false
-                      thumbnail: null
-                      transitType: null
-                    name: coupon example
-                    passStyle: coupon
+              example:
+                passbook:
+                  _id: 5501894253058ca5269a9928
+                  application: 5354f0bb3fa544452ff4c7c0
+                  data:
+                    auxiliaryFields: []
+                    backFields: []
+                    background: null
+                    backgroundColor: 'rgb(0,0,0)'
+                    barcode:
+                      format: PKBarcodeFormatQR
+                      messageEncoding: iso-8859-1
+                    description: coupon example
+                    footer: null
+                    foregroundColor: 'rgb(255,255,255)'
+                    headerFields: []
+                    icon: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                    labelColor: 'rgb(255,255,255)'
+                    logo: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                    logoText: lebkov
+                    primaryFields:
+                      - key: discount
+                        label: discount
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                    secondaryFields:
+                      - key: expires
+                        label: expires
+                        string: true
+                        textAlignment: PKTextAlignmentLeft
+                    strip: >-
+                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                    suppressStripShine: false
+                    thumbnail: null
+                    transitType: null
+                  name: coupon example
+                  passStyle: coupon
           description: OK
-          headers: {}
       tags:
         - Pass Templates
       description: >-
@@ -8085,27 +7936,23 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Pass Template
+      operationId: getPassbookById
       summary: Get Pass Template
     put:
       parameters:
         - description: The id of an active passbook template.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: passbook
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: passbook updated
+              example:
+                message: passbook updated
           description: OK
-          headers: {}
       tags:
         - Pass Templates
       description: >-
@@ -8113,7 +7960,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Update Pass Template
+      operationId: putPassbookById
       requestBody:
         content:
           application/json:
@@ -8135,6 +7982,30 @@ paths:
                 - data
               type: object
       summary: Update Pass Template
+    delete:
+      parameters:
+        - description: The id of an active passbook template.
+          in: path
+          name: passbook
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                message: passbook deleted
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Delete a pass template. This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deletePassbookById
+      summary: Delete Pass Template
   /product:
     get:
       parameters:
@@ -8157,40 +8028,37 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 3
-                    products:
-                      - _id: 542f479660a365ad5a47a794
-                        active: true
-                        application: 5354f0bb3fa544452ff4c7c0
-                        identifier: re.notifica.office.nonconsumable
-                        name: Non-Consumable
-                        stores:
-                          - AppStore
-                          - GooglePlay
-                        type: onetime
-                      - _id: 5442c0927f8ec974633ed40c
-                        active: true
-                        application: 5354f0bb3fa544452ff4c7c0
-                        identifier: re.notifica.office.prod2
-                        name: Prod2
-                        stores:
-                          - AppStore
-                          - GooglePlay
-                        type: onetime
-                      - _id: 544788ed9a6050cd6f008b8d
-                        active: true
-                        application: 5354f0bb3fa544452ff4c7c0
-                        identifier: re.notifica.office.consumable
-                        name: Consumable
-                        stores:
-                          - AppStore
-                          - GooglePlay
-                        type: consumable
+              example:
+                count: 3
+                products:
+                  - _id: 542f479660a365ad5a47a794
+                    active: true
+                    application: 5354f0bb3fa544452ff4c7c0
+                    identifier: re.notifica.office.nonconsumable
+                    name: Non-Consumable
+                    stores:
+                      - AppStore
+                      - GooglePlay
+                    type: onetime
+                  - _id: 5442c0927f8ec974633ed40c
+                    active: true
+                    application: 5354f0bb3fa544452ff4c7c0
+                    identifier: re.notifica.office.prod2
+                    name: Prod2
+                    stores:
+                      - AppStore
+                      - GooglePlay
+                    type: onetime
+                  - _id: 544788ed9a6050cd6f008b8d
+                    active: true
+                    application: 5354f0bb3fa544452ff4c7c0
+                    identifier: re.notifica.office.consumable
+                    name: Consumable
+                    stores:
+                      - AppStore
+                      - GooglePlay
+                    type: consumable
           description: OK
-          headers: {}
       tags:
         - Product
       description: >-
@@ -8198,20 +8066,18 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get all products for an application
-      summary: Get all products for an application
+      operationId: getProduct
+      summary: List all products for an application
     post:
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    product:
-                      _id: 5245bc5b3e66a3b01f0024d4
+              schema:
+                properties:
+                  product:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - Product
       description: >-
@@ -8219,9 +8085,9 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Create Product
+      operationId: postProduct
       requestBody:
-        $ref: '#/components/requestBodies/Create_ProductBody'
+        $ref: '#/components/requestBodies/ProductCreate'
       summary: Create Product
   '/product/foridentifier/{sku}':
     get:
@@ -8237,20 +8103,18 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 544788ed9a6050cd6f008b8d
-                    active: true
-                    application: 5354f0bb3fa544452ff4c7c0
-                    identifier: re.notifica.office.consumable
-                    name: Consumable
-                    stores:
-                      - AppStore
-                      - GooglePlay
-                    type: consumable
+              example:
+                product:
+                  _id: 544788ed9a6050cd6f008b8d
+                  active: true
+                  application: 5354f0bb3fa544452ff4c7c0
+                  identifier: re.notifica.office.consumable
+                  name: Consumable
+                  stores:
+                    - AppStore
+                    - GooglePlay
+                  type: consumable
           description: OK
-          headers: {}
       tags:
         - Product
       description: >-
@@ -8258,64 +8122,33 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Product By SKU
+      operationId: getProductForIdentifier
       summary: Get Product By SKU
   '/product/{product}':
-    delete:
-      parameters:
-        - description: The id of an active product.
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: product
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: product deleted
-          description: OK
-          headers: {}
-      tags:
-        - Product
-      description: >-
-        Delete a product. This operation cannot be undone.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: Delete Product
-      summary: Delete Product
     get:
       parameters:
         - description: The id of an active product.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: product
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 544788ed9a6050cd6f008b8d
-                    active: true
-                    application: 5354f0bb3fa544452ff4c7c0
-                    identifier: re.notifica.office.consumable
-                    name: Consumable
-                    stores:
-                      - AppStore
-                      - GooglePlay
-                    type: consumable
+              example:
+                product:
+                  _id: 544788ed9a6050cd6f008b8d
+                  active: true
+                  application: 5354f0bb3fa544452ff4c7c0
+                  identifier: re.notifica.office.consumable
+                  name: Consumable
+                  stores:
+                    - AppStore
+                    - GooglePlay
+                  type: consumable
           description: OK
-          headers: {}
       tags:
         - Product
       description: >-
@@ -8323,27 +8156,23 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Product
+      operationId: getProductById
       summary: Get Product
     put:
       parameters:
         - description: The id of an active product.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: product
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: product updated
+              example:
+                message: product updated
           description: OK
-          headers: {}
       tags:
         - Product
       description: >-
@@ -8351,7 +8180,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Update Product
+      operationId: putProductById
       requestBody:
         content:
           application/json:
@@ -8379,6 +8208,30 @@ paths:
                   type: string
               type: object
       summary: Update Product
+    delete:
+      parameters:
+        - description: The id of an active product.
+          in: path
+          name: product
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                message: product deleted
+          description: OK
+      tags:
+        - Product
+      description: >-
+        Delete a product. This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteProductById
+      summary: Delete Product
   /purchase:
     get:
       parameters:
@@ -8401,66 +8254,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 1
-                    products:
-                      - _id: 5477c86387c552350c886d2f
-                        application: 5354f0bb3fa544452ff4c7c0
-                        currency: EUR
-                        data:
-                          bid: re.notifica.office
-                          bvrs: 1.0.36
-                          item_id: '944702328'
-                          original_purchase_date: '2014-11-28 00:57:02 Etc/GMT'
-                          original_purchase_date_ms: '1417136222704'
-                          original_purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
-                          original_transaction_id: '1000000133399653'
-                          product_id: re.notifica.office.consumable
-                          purchase_date: '2014-11-28 00:57:02 Etc/GMT'
-                          purchase_date_ms: '1417136222704'
-                          purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
-                          quantity: '1'
-                          transaction_id: '1000000133399653'
-                          unique_identifier: d30aeae69ba81cd6077a062f721059b8f1c1ffe8
-                          unique_vendor_identifier: 7F64F64E-8DAF-4445-93A2-B4632DDBAED3
-                        date: '2014-11-28T00:57:02.704Z'
-                        deviceID: >-
-                          1ebffb005c83b016e5dffafbf2755fabb79e4db87f0092dd30a903cdb0c44bad
-                        identifier: re.notifica.office.consumable
-                        price: 0.89
-                        transactionIdentifier: '1000000133399653'
-                        userID: joel@notifica.re
-          description: OK
-          headers: {}
-      tags:
-        - Purchase
-      description: >-
-        Get all purchases for an application.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: Get Purchases
-      summary: Get Purchases
-  '/purchase/byidentifier/{identifier}':
-    get:
-      parameters:
-        - description: The SKU (identifier) of a purchase.
-          example: re.notifica.office.consumable
-          in: path
-          name: identifier
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5477c86387c552350c886d2f
+              example:
+                count: 1
+                purchases:
+                  - _id: 5477c86387c552350c886d2f
                     application: 5354f0bb3fa544452ff4c7c0
                     currency: EUR
                     data:
@@ -8487,7 +8284,59 @@ paths:
                     transactionIdentifier: '1000000133399653'
                     userID: joel@notifica.re
           description: OK
-          headers: {}
+      tags:
+        - Purchase
+      description: >-
+        Get all purchases for an application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getPurchase
+      summary: List Purchases
+  '/purchase/byidentifier/{identifier}':
+    get:
+      parameters:
+        - description: The SKU (identifier) of a purchase.
+          example: re.notifica.office.consumable
+          in: path
+          name: identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                count: 1
+                purchases:
+                  - _id: 5477c86387c552350c886d2f
+                    application: 5354f0bb3fa544452ff4c7c0
+                    currency: EUR
+                    data:
+                      bid: re.notifica.office
+                      bvrs: 1.0.36
+                      item_id: '944702328'
+                      original_purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                      original_purchase_date_ms: '1417136222704'
+                      original_purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                      original_transaction_id: '1000000133399653'
+                      product_id: re.notifica.office.consumable
+                      purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                      purchase_date_ms: '1417136222704'
+                      purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                      quantity: '1'
+                      transaction_id: '1000000133399653'
+                      unique_identifier: d30aeae69ba81cd6077a062f721059b8f1c1ffe8
+                      unique_vendor_identifier: 7F64F64E-8DAF-4445-93A2-B4632DDBAED3
+                    date: '2014-11-28T00:57:02.704Z'
+                    deviceID: >-
+                      1ebffb005c83b016e5dffafbf2755fabb79e4db87f0092dd30a903cdb0c44bad
+                    identifier: re.notifica.office.consumable
+                    price: 0.89
+                    transactionIdentifier: '1000000133399653'
+                    userID: joel@notifica.re
+          description: OK
       tags:
         - Purchase
       description: >-
@@ -8495,7 +8344,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Purchase By SKU
+      operationId: getPurchaseByIdentifier
       summary: Get Purchase By SKU
   '/purchase/bytransaction/{transaction}':
     get:
@@ -8511,37 +8360,35 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5477c86387c552350c886d2f
-                    application: 5354f0bb3fa544452ff4c7c0
-                    currency: EUR
-                    data:
-                      bid: re.notifica.office
-                      bvrs: 1.0.36
-                      item_id: '944702328'
-                      original_purchase_date: '2014-11-28 00:57:02 Etc/GMT'
-                      original_purchase_date_ms: '1417136222704'
-                      original_purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
-                      original_transaction_id: '1000000133399653'
-                      product_id: re.notifica.office.consumable
-                      purchase_date: '2014-11-28 00:57:02 Etc/GMT'
-                      purchase_date_ms: '1417136222704'
-                      purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
-                      quantity: '1'
-                      transaction_id: '1000000133399653'
-                      unique_identifier: d30aeae69ba81cd6077a062f721059b8f1c1ffe8
-                      unique_vendor_identifier: 7F64F64E-8DAF-4445-93A2-B4632DDBAED3
-                    date: '2014-11-28T00:57:02.704Z'
-                    deviceID: >-
-                      1ebffb005c83b016e5dffafbf2755fabb79e4db87f0092dd30a903cdb0c44bad
-                    identifier: re.notifica.office.consumable
-                    price: 0.89
-                    transactionIdentifier: '1000000133399653'
-                    userID: joel@notifica.re
+              example:
+                purchase:
+                  _id: 5477c86387c552350c886d2f
+                  application: 5354f0bb3fa544452ff4c7c0
+                  currency: EUR
+                  data:
+                    bid: re.notifica.office
+                    bvrs: 1.0.36
+                    item_id: '944702328'
+                    original_purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                    original_purchase_date_ms: '1417136222704'
+                    original_purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                    original_transaction_id: '1000000133399653'
+                    product_id: re.notifica.office.consumable
+                    purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                    purchase_date_ms: '1417136222704'
+                    purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                    quantity: '1'
+                    transaction_id: '1000000133399653'
+                    unique_identifier: d30aeae69ba81cd6077a062f721059b8f1c1ffe8
+                    unique_vendor_identifier: 7F64F64E-8DAF-4445-93A2-B4632DDBAED3
+                  date: '2014-11-28T00:57:02.704Z'
+                  deviceID: >-
+                    1ebffb005c83b016e5dffafbf2755fabb79e4db87f0092dd30a903cdb0c44bad
+                  identifier: re.notifica.office.consumable
+                  price: 0.89
+                  transactionIdentifier: '1000000133399653'
+                  userID: joel@notifica.re
           description: OK
-          headers: {}
       tags:
         - Purchase
       description: >-
@@ -8549,53 +8396,50 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Purchase By Transaction
+      operationId: getPurchaseByTransaction
       summary: Get Purchase By Transaction
   '/purchase/{purchase}':
     get:
       parameters:
         - description: The id of a purchase.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: purchase
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5477c86387c552350c886d2f
-                    application: 5354f0bb3fa544452ff4c7c0
-                    currency: EUR
-                    data:
-                      bid: re.notifica.office
-                      bvrs: 1.0.36
-                      item_id: '944702328'
-                      original_purchase_date: '2014-11-28 00:57:02 Etc/GMT'
-                      original_purchase_date_ms: '1417136222704'
-                      original_purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
-                      original_transaction_id: '1000000133399653'
-                      product_id: re.notifica.office.consumable
-                      purchase_date: '2014-11-28 00:57:02 Etc/GMT'
-                      purchase_date_ms: '1417136222704'
-                      purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
-                      quantity: '1'
-                      transaction_id: '1000000133399653'
-                      unique_identifier: d30aeae69ba81cd6077a062f721059b8f1c1ffe8
-                      unique_vendor_identifier: 7F64F64E-8DAF-4445-93A2-B4632DDBAED3
-                    date: '2014-11-28T00:57:02.704Z'
-                    deviceID: >-
-                      1ebffb005c83b016e5dffafbf2755fabb79e4db87f0092dd30a903cdb0c44bad
-                    identifier: re.notifica.office.consumable
-                    price: 0.89
-                    transactionIdentifier: '1000000133399653'
-                    userID: joel@notifica.re
+              example:
+                purchase:
+                  _id: 5477c86387c552350c886d2f
+                  application: 5354f0bb3fa544452ff4c7c0
+                  currency: EUR
+                  data:
+                    bid: re.notifica.office
+                    bvrs: 1.0.36
+                    item_id: '944702328'
+                    original_purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                    original_purchase_date_ms: '1417136222704'
+                    original_purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                    original_transaction_id: '1000000133399653'
+                    product_id: re.notifica.office.consumable
+                    purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                    purchase_date_ms: '1417136222704'
+                    purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                    quantity: '1'
+                    transaction_id: '1000000133399653'
+                    unique_identifier: d30aeae69ba81cd6077a062f721059b8f1c1ffe8
+                    unique_vendor_identifier: 7F64F64E-8DAF-4445-93A2-B4632DDBAED3
+                  date: '2014-11-28T00:57:02.704Z'
+                  deviceID: >-
+                    1ebffb005c83b016e5dffafbf2755fabb79e4db87f0092dd30a903cdb0c44bad
+                  identifier: re.notifica.office.consumable
+                  price: 0.89
+                  transactionIdentifier: '1000000133399653'
+                  userID: joel@notifica.re
           description: OK
-          headers: {}
       tags:
         - Purchase
       description: >-
@@ -8603,7 +8447,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Purchase
+      operationId: getPurchaseById
       summary: Get Purchase
   /region:
     get:
@@ -8627,21 +8471,19 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    regions:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        geometry:
-                          coordinates:
-                            - 4.2345
-                            - 5.6789
-                          type: Point
-                        major: '123456'
-                        name: My Region
-                        timezone: Europe/Amsterdam
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
           description: OK
-          headers: {}
       tags:
         - Region
       description: >-
@@ -8649,20 +8491,18 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Regions
-      summary: Get Regions
+      operationId: getRegion
+      summary: List Regions
     post:
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    region:
-                      _id: 5245bc5b3e66a3b01f0024d4
+              schema:
+                properties:
+                  region:
+                    $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - Region
       description: >-
@@ -8671,7 +8511,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Create Region
+      operationId: postRegion
       requestBody:
         content:
           application/json:
@@ -8743,15 +8583,12 @@ paths:
   /region/all:
     delete:
       responses:
-        '200':
+        '202':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: region deleted
+              example:
+                message: region removal is being processed
           description: OK
-          headers: {}
       tags:
         - Region
       description: >-
@@ -8760,8 +8597,35 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Delete All Regions
+      operationId: deleteRegionAll
       summary: Delete All Regions
+  /region/all/{category}:
+    delete:
+      parameters:
+        - description: The category for which you want to delete regions.
+          example: shops
+          in: path
+          name: category
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          content:
+            application/json; charset=utf-8:
+              example:
+                message: region removal is being processed
+          description: OK
+      tags:
+        - Region
+      description: >-
+        Delete all regions in a category, including attached triggers and beacons.
+        This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteRegionAllCategory
+      summary: Delete All Regions In Category
   '/region/forcountry/{country}':
     get:
       parameters:
@@ -8791,21 +8655,19 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    regions:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        geometry:
-                          coordinates:
-                            - 4.2345
-                            - 5.6789
-                          type: Point
-                        major: '123456'
-                        name: My Region
-                        timezone: Europe/Amsterdam
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
           description: OK
-          headers: {}
       tags:
         - Region
       description: >-
@@ -8813,8 +8675,8 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Regions By Country
-      summary: Get Regions By Country
+      operationId: getRegionByCountry
+      summary: List Regions By Country
   '/region/fortimezone/{timezone}':
     get:
       parameters:
@@ -8844,21 +8706,19 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    regions:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        geometry:
-                          coordinates:
-                            - 4.2345
-                            - 5.6789
-                          type: Point
-                        major: '123456'
-                        name: My Region
-                        timezone: Europe/Amsterdam
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
           description: OK
-          headers: {}
       tags:
         - Region
       description: >-
@@ -8866,8 +8726,8 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Regions By Timezone
-      summary: Get Regions By Timezone
+      operationId: getRegionForTimezone
+      summary: List Regions For Timezone
   '/region/search/{search}':
     get:
       parameters:
@@ -8897,21 +8757,19 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    regions:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        geometry:
-                          coordinates:
-                            - 4.2345
-                            - 5.6789
-                          type: Point
-                        major: '123456'
-                        name: My Region
-                        timezone: Europe/Amsterdam
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
           description: OK
-          headers: {}
       tags:
         - Region
       description: >-
@@ -8919,65 +8777,34 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Search Regions
+      operationId: getRegionSearch
       summary: Search Regions
   '/region/{region}':
-    delete:
-      parameters:
-        - description: The region id of an active region.
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: region
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: region deleted
-          description: OK
-          headers: {}
-      tags:
-        - Region
-      description: >-
-        Delete a region. This operation cannot be undone.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: Delete Region
-      summary: Delete Region
     get:
       parameters:
         - description: The region id of an active region.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: region
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    regions:
-                      _id: 5245bc5b3e66a3b01f0024d4
-                      geometry:
-                        coordinates:
-                          - 4.2345
-                          - 5.6789
-                        type: Point
-                      major: '123456'
-                      name: My Region
-                      timezone: Europe/Amsterdam
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
           description: OK
-          headers: {}
       tags:
         - Region
       description: >-
@@ -8985,27 +8812,23 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Region
+      operationId: getRegionById
       summary: Get Region
     put:
       parameters:
         - description: The id for the region.
-          example: '"5245bc5b3e66a3b01f0024d4"'
           in: path
           name: region
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: region updated
+              example:
+                message: region updated
           description: OK
-          headers: {}
       tags:
         - Region
       description: >-
@@ -9013,7 +8836,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Update Region
+      operationId: putRegionById
       requestBody:
         content:
           application/json:
@@ -9086,16 +8909,39 @@ paths:
                 - name
               type: object
       summary: Update Region
+    delete:
+      parameters:
+        - description: The region id of an active region.
+          in: path
+          name: region
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                message: region deleted
+          description: OK
+      tags:
+        - Region
+      description: >-
+        Delete a region. This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteRegionById
+      summary: Delete Region
   '/reply/fornotification/{notification}':
     get:
       parameters:
         - description: The notification id of an active notification.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: notification
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
         - description: The maximum number of results to retrieve.
           example: '10'
           in: query
@@ -9115,25 +8961,22 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 2
-                    replies:
-                      - _id: 5331703332c17e3077d5a765
-                        deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
-                        label: 'yes'
-                        notification: 53317011f90827d27c6e9c94
-                        time: '2014-03-25T12:01:55.713Z'
-                        userID: testuser@example.com
-                      - _id: 5331703332c17e3077d5a765
-                        deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
-                        label: 'yes'
-                        notification: 53317011f90827d27c6e9c94
-                        time: '2014-03-25T12:01:55.713Z'
-                        userID: testuser@example.com
+              example:
+              count: 2
+              replies:
+                - _id: 5331703332c17e3077d5a765
+                  deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
+                  label: 'yes'
+                  notification: 53317011f90827d27c6e9c94
+                  time: '2014-03-25T12:01:55.713Z'
+                  userID: testuser@example.com
+                - _id: 5331703332c17e3077d5a765
+                  deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
+                  label: 'yes'
+                  notification: 53317011f90827d27c6e9c94
+                  time: '2014-03-25T12:01:55.713Z'
+                  userID: testuser@example.com
           description: OK
-          headers: {}
       tags:
         - Reply
       description: >-
@@ -9141,34 +8984,30 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Replies
-      summary: Get Replies
+      operationId: getReplyForNotification
+      summary: List Replies For Notification
   '/reply/{reply}':
     get:
       parameters:
         - description: The id for this reply.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: reply
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    reply:
-                      _id: 5331703332c17e3077d5a765
-                      deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
-                      label: 'yes'
-                      notification: 53317011f90827d27c6e9c94
-                      time: '2014-03-25T12:01:55.713Z'
-                      userID: testuser@example.com
+              example:
+                reply:
+                  _id: 5331703332c17e3077d5a765
+                  deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
+                  label: 'yes'
+                  notification: 53317011f90827d27c6e9c94
+                  time: '2014-03-25T12:01:55.713Z'
+                  userID: testuser@example.com
           description: OK
-          headers: {}
       tags:
         - Reply
       description: >-
@@ -9176,7 +9015,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Reply
+      operationId: getReplyById
       summary: Get Reply
   /sms:
     post:
@@ -9184,21 +9023,15 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: subscription updated
+              example:
+                message: subscription updated
           description: OK
-          headers: {}
         '202':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: subscription is being processed
+              example:
+                message: subscription is being processed
           description: Accepted
-          headers: {}
       tags:
         - SMS
       description: >-
@@ -9206,7 +9039,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Create SMS Number
+      operationId: postSms
       requestBody:
         content:
           application/json:
@@ -9214,7 +9047,9 @@ paths:
               properties:
                 tags:
                   description: A list of tags you wish to assign to the email address.
-                  items: {}
+                  items:
+                    type: string
+                    example: [tag1]
                   type: array
                 language:
                   description: The language you wish to assign the contact to.
@@ -9254,18 +9089,15 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        value: 2.3.6
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
-                        value: 2.3.6
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    value: 2.3.6
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
+                    value: 2.3.6
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: >-
@@ -9319,7 +9151,7 @@ paths:
 
 
         ***
-      operationId: Get Last Month Devices By Dimension
+      operationId: getStatsDeviceByDimensionLastMonth
       summary: Get Last Month Devices By Dimension
   '/stats/device/{dimension}/{year}':
     get:
@@ -9342,18 +9174,15 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        value: 2.3.6
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
-                        value: 2.3.6
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    value: 2.3.6
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
+                    value: 2.3.6
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: >-
@@ -9407,7 +9236,7 @@ paths:
 
 
         ***
-      operationId: Get Yearly Devices By Dimension
+      operationId: getStatsDeviceByDimensionYear
       summary: Get Yearly Devices By Dimension
   '/stats/device/{dimension}/{year}/{month}':
     get:
@@ -9437,18 +9266,15 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        value: 2.3.6
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
-                        value: 2.3.6
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    value: 2.3.6
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
+                    value: 2.3.6
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: >-
@@ -9502,7 +9328,7 @@ paths:
 
 
         ***
-      operationId: Get Monthly Devices By Dimension
+      operationId: getStatsDeviceByDimensionMonth
       summary: Get Monthly Devices By Dimension
   '/stats/device/{dimension}/{year}/{month}/{day}':
     get:
@@ -9539,18 +9365,15 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        value: 2.3.6
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
-                        value: 2.3.6
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    value: 2.3.6
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
+                    value: 2.3.6
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: |-
@@ -9587,7 +9410,7 @@ paths:
         deviceString
 
         ***
-      operationId: Get Daily Devices By Dimension
+      operationId: getStatsDeviceByDimensionDay
       summary: Get Daily Devices By Dimension
   '/stats/event/{type}/lastmonth':
     get:
@@ -9603,16 +9426,13 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: |-
@@ -9657,7 +9477,7 @@ paths:
         re.notifica.event.beacon.Session
 
         ***
-      operationId: Get Last Month Events By Type
+      operationId: getStatsEventByTypeLastMonth
       summary: Get Last Month Events By Type
   '/stats/event/{type}/lastweek':
     get:
@@ -9673,16 +9493,13 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: |-
@@ -9727,7 +9544,7 @@ paths:
         re.notifica.event.beacon.Session
 
         ***
-      operationId: Get Last Week Events By Type
+      operationId: getStatsEventByTypeLastWeek
       summary: Get Last Week Events By Type
   '/stats/event/{type}/total':
     get:
@@ -9743,11 +9560,9 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 1000
+              example:
+                stats:
+                  - count: 1000
           description: OK
           headers: {}
       tags:
@@ -9794,7 +9609,7 @@ paths:
         re.notifica.event.beacon.Session
 
         ***
-      operationId: Get Total Events By Type
+      operationId: getStatsEventByTypeTotal
       summary: Get Total Events By Type
   '/stats/event/{type}/{year}':
     get:
@@ -9817,16 +9632,13 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: |-
@@ -9871,7 +9683,7 @@ paths:
         re.notifica.event.beacon.Session
 
         ***
-      operationId: Get Yearly Events By Type
+      operationId: getStatsEventByTypeYear
       summary: Get Yearly Events By Type
   '/stats/event/{type}/{year}/{month}':
     get:
@@ -9901,16 +9713,13 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
+              example:
+                stats:
+                  - count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                  - count: 2
+                    date: '2014-02-26T00:00:00.000Z'
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: |-
@@ -9955,7 +9764,7 @@ paths:
         re.notifica.event.beacon.Session
 
         ***
-      operationId: Get Monthly Events By Type
+      operationId: getStatsEventByTypeMonth
       summary: Get Monthly Events By Type
   '/stats/event/{type}/{year}/{month}/{day}':
     get:
@@ -9992,16 +9801,13 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                      - count: 2
-                        date: '2014-02-26T00:00:00.000Z'
+              example:
+                  stats:
+                    - count: 2
+                      date: '2014-02-27T00:00:00.000Z'
+                    - count: 2
+                      date: '2014-02-26T00:00:00.000Z'
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: |-
@@ -10046,7 +9852,7 @@ paths:
         re.notifica.event.beacon.Session
 
         ***
-      operationId: Get Daily Events By Type
+      operationId: getStatsEventByTypeDay
       summary: Get Daily Events By Type
   /stats/notification/account/lastmonth:
     get:
@@ -10054,28 +9860,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 0
-                        date: '2014-02-28T00:00:00.000Z'
-                        day: 28
-                        month: 2
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        day: 27
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 0
+                    date: '2014-02-28T00:00:00.000Z'
+                    day: 28
+                    month: 2
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    day: 27
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of notifications sent on the last 30 days.
-      operationId: Get Last Month Notifications For Account
+      operationId: getStatsNotificationForAccountLastMonth
       summary: Get Last Month Notifications For Account
   '/stats/notification/account/{year}':
     get:
@@ -10091,26 +9894,23 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of notifications sent on a specific year.
-      operationId: Get Yearly Notifications For Account
+      operationId: getStatsNotificationForAccountYear
       summary: Get Yearly Notifications For Account
   '/stats/notification/account/{year}/{month}':
     get:
@@ -10133,28 +9933,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        day: 2
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    day: 2
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of notifications sent on a specific month.
-      operationId: Get Monthly Notifications For Account
+      operationId: getStatsNotificationForAccountMonth
       summary: Get Monthly Notifications For Account
   '/stats/notification/account/{year}/{month}/{day}':
     get:
@@ -10184,30 +9981,27 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        hour: 0
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-01-01T01:00:00.000Z'
-                        day: 1
-                        hour: 1
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    hour: 0
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-01-01T01:00:00.000Z'
+                    day: 1
+                    hour: 1
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of notifications sent on a specific day.
-      operationId: Get Daily Notifications For Account
+      operationId: getStatsNotificationForAccountDay
       summary: Get Daily Notifications For Account
   /stats/notification/application/lastmonth:
     get:
@@ -10215,28 +10009,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 0
-                        date: '2014-02-28T00:00:00.000Z'
-                        day: 28
-                        month: 2
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        day: 27
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 0
+                    date: '2014-02-28T00:00:00.000Z'
+                    day: 28
+                    month: 2
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    day: 27
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of notifications sent on the last 30 days.
-      operationId: Get Last Month Notifications For Application
+      operationId: getStatsNotificationForApplicationLastMonth
       summary: Get Last Month Notifications For Application
   '/stats/notification/application/{year}':
     get:
@@ -10252,26 +10043,23 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of notifications sent on a specific year.
-      operationId: Get Yearly Notifications For Application
+      operationId: getStatsNotificationForApplicationYear
       summary: Get Yearly Notifications For Application
   '/stats/notification/application/{year}/{month}':
     get:
@@ -10294,28 +10082,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        day: 2
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    day: 2
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of notifications sent on a specific month.
-      operationId: Get Monthly Notifications For Application
+      operationId: getStatsNotificationForApplicationMonth
       summary: Get Monthly Notifications For Application
   '/stats/notification/application/{year}/{month}/{day}':
     get:
@@ -10345,30 +10130,27 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        hour: 0
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-01-01T01:00:00.000Z'
-                        day: 1
-                        hour: 1
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    hour: 0
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-01-01T01:00:00.000Z'
+                    day: 1
+                    hour: 1
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of notifications sent on a specific day.
-      operationId: Get Daily Notifications For Application
+      operationId: getStatsNotificationForApplicationDay
       summary: Get Daily Notifications For Application
   /stats/user/account:
     get:
@@ -10376,21 +10158,18 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      count: 0
-                      date: '2014-02-28T00:00:00.000Z'
-                      day: 28
-                      month: 2
-                      year: 2014
+              example:
+                stats:
+                  count: 0
+                  date: '2014-02-28T00:00:00.000Z'
+                  day: 28
+                  month: 2
+                  year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the total number of users in your account.
-      operationId: Get Total Users For Account
+      operationId: getStatsUserForAccount
       summary: Get Total Users For Account
   /stats/user/account/lastmonth:
     get:
@@ -10398,28 +10177,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 0
-                        date: '2014-02-28T00:00:00.000Z'
-                        day: 28
-                        month: 2
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        day: 27
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 0
+                    date: '2014-02-28T00:00:00.000Z'
+                    day: 28
+                    month: 2
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    day: 27
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of users in your account on the last 30 days.
-      operationId: Get Last Month Users For Account
+      operationId: getStatsUserForAccountLastMonth
       summary: Get Last Month Users For Account
   '/stats/user/account/{year}':
     get:
@@ -10435,26 +10211,23 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of users in your account for a specific year.
-      operationId: Get Yearly Users For Account
+      operationId: getStatsUserForAccountYear
       summary: Get Yearly Users For Account
   '/stats/user/account/{year}/{month}':
     get:
@@ -10477,28 +10250,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        day: 2
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    day: 2
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of users in your account for a specific month.
-      operationId: Get Monthly Users For Account
+      operationId: getStatsUserForAccountMonth
       summary: Get Monthly Users For Account
   '/stats/user/account/{year}/{month}/{day}':
     get:
@@ -10528,30 +10298,27 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        hour: 0
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-01-01T01:00:00.000Z'
-                        day: 1
-                        hour: 1
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    hour: 0
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-01-01T01:00:00.000Z'
+                    day: 1
+                    hour: 1
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Account Stats
       description: Retrieve the number of user in your account for a specific day.
-      operationId: Get Daily Users For Account
+      operationId: getStatsUserForAccountDay
       summary: Get Daily Users For Account
   /stats/user/application:
     get:
@@ -10559,22 +10326,19 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      application: 50b62e6aebe6dd821d000003
-                      count: 0
-                      date: '2014-02-28T00:00:00.000Z'
-                      day: 28
-                      month: 2
-                      year: 2014
+              example:
+                stats:
+                  application: 50b62e6aebe6dd821d000003
+                  count: 0
+                  date: '2014-02-28T00:00:00.000Z'
+                  day: 28
+                  month: 2
+                  year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the total number of users in an application.
-      operationId: Get Total Users For Application
+      operationId: getStatsUserForApplication
       summary: Get Total Users For Application
   /stats/user/application/lastmonth:
     get:
@@ -10582,28 +10346,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 0
-                        date: '2014-02-28T00:00:00.000Z'
-                        day: 28
-                        month: 2
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 2
-                        date: '2014-02-27T00:00:00.000Z'
-                        day: 27
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 0
+                    date: '2014-02-28T00:00:00.000Z'
+                    day: 28
+                    month: 2
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 2
+                    date: '2014-02-27T00:00:00.000Z'
+                    day: 27
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of users in an application on the last 30 days.
-      operationId: Get Last Month Users For Application
+      operationId: getStatsUserForApplicationLastMonth
       summary: Get Last Month Users For Application
   '/stats/user/application/{year}':
     get:
@@ -10619,26 +10380,23 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        month: 2
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    month: 2
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of users in an application for a specific year.
-      operationId: Get Yearly Users For Application
+      operationId: getStatsUserForApplicationYear
       summary: Get Yearly Users For Application
   '/stats/user/application/{year}/{month}':
     get:
@@ -10661,28 +10419,25 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-02-01T00:00:00.000Z'
-                        day: 2
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-02-01T00:00:00.000Z'
+                    day: 2
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of users in an application for a specific month.
-      operationId: Get Monthly Users For Application
+      operationId: getStatsUserForApplicationMonth
       summary: Get Monthly Users For Application
   '/stats/user/application/{year}/{month}/{day}':
     get:
@@ -10712,30 +10467,27 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    stats:
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 33
-                        date: '2014-01-01T00:00:00.000Z'
-                        day: 1
-                        hour: 0
-                        month: 1
-                        year: 2014
-                      - application: 50b62e6aebe6dd821d000003
-                        count: 38
-                        date: '2014-01-01T01:00:00.000Z'
-                        day: 1
-                        hour: 1
-                        month: 1
-                        year: 2014
+              example:
+                stats:
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 33
+                    date: '2014-01-01T00:00:00.000Z'
+                    day: 1
+                    hour: 0
+                    month: 1
+                    year: 2014
+                  - application: 50b62e6aebe6dd821d000003
+                    count: 38
+                    date: '2014-01-01T01:00:00.000Z'
+                    day: 1
+                    hour: 1
+                    month: 1
+                    year: 2014
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: Retrieve the number of user in an application for a specific day.
-      operationId: Get Daily Users For Application
+      operationId: getStatsUserForApplicationDay
       summary: Get Daily Users For Application
   /status:
     get:
@@ -10743,16 +10495,13 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    status: ok
+              example:
+                status: ok
           description: OK
-          headers: {}
       tags:
         - Status
       description: Get the current availability of the API
-      operationId: Get API Status
+      operationId: getStatus
       summary: Get API Status
   /trigger:
     get:
@@ -10776,44 +10525,41 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 2
-                    triggers:
-                      - active: false
-                        dayEnd: null
-                        dayStart: null
-                        frequency: once
-                        interval: 8600
-                        name: One Time Welcome
-                        notAfter: null
-                        notBefore: null
-                        notification: 5245bc5b3e66a3b01f0024d4
-                        rules: []
-                        skipDays: []
-                        source: 5245bc5b3e66a3b01f0024d4
-                        type: re.notifica.trigger.region.Enter
-                      - active: true
-                        dayEnd: '08:00:00'
-                        dayStart: '19:00:00'
-                        frequency: always
-                        interval: 8600
-                        name: On Store exit
-                        notAfter: '2014-11-28T15:31:54'
-                        notBefore: '2012-11-28T15:31:54'
-                        notification: 5245bc5b3e66a3b01f0024d4
-                        rules:
-                          - params:
-                              - 3445bc5b4563b01f0f5
-                            type: re.notifica.rule.segment.Add
-                        skipDays:
-                          - 1
-                          - 2
-                        source: 5245bc5b3e66a3b01f0024d4
-                        type: re.notifica.trigger.region.Exit
+              example:
+                count: 2
+                triggers:
+                  - active: false
+                    dayEnd: null
+                    dayStart: null
+                    frequency: once
+                    interval: 8600
+                    name: One Time Welcome
+                    notAfter: null
+                    notBefore: null
+                    notification: 5245bc5b3e66a3b01f0024d4
+                    rules: []
+                    skipDays: []
+                    source: 5245bc5b3e66a3b01f0024d4
+                    type: re.notifica.trigger.region.Enter
+                  - active: true
+                    dayEnd: '08:00:00'
+                    dayStart: '19:00:00'
+                    frequency: always
+                    interval: 8600
+                    name: On Store exit
+                    notAfter: '2014-11-28T15:31:54'
+                    notBefore: '2012-11-28T15:31:54'
+                    notification: 5245bc5b3e66a3b01f0024d4
+                    rules:
+                      - params:
+                          - 3445bc5b4563b01f0f5
+                        type: re.notifica.rule.segment.Add
+                    skipDays:
+                      - 1
+                      - 2
+                    source: 5245bc5b3e66a3b01f0024d4
+                    type: re.notifica.trigger.region.Exit
           description: OK
-          headers: {}
       tags:
         - Trigger
       description: >-
@@ -10821,20 +10567,17 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Triggers
-      summary: Get Triggers
+      operationId: getTrigger
+      summary: List Triggers
     post:
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    trigger:
-                      _id: 5245bc5b3e66a3b01f0024d4
+              example:
+                trigger:
+                  $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - Trigger
       description: >-
@@ -10860,76 +10603,44 @@ paths:
         notification will be created, for each region/beacon if `source`
         contains multiple sources. See Notifications for the structure of a
         Notification object.
-      operationId: Create Trigger
+      operationId: postTrigger
       requestBody:
         $ref: '#/components/requestBodies/Create_TriggerBody'
       summary: Create Trigger
   '/trigger/{trigger}':
-    delete:
-      parameters:
-        - description: The trigger id
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: trigger
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: trigger deleted
-          description: OK
-          headers: {}
-      tags:
-        - Trigger
-      description: >-
-        Delete a trigger. This operation cannot be undone.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: Delete Trigger
-      summary: Delete Trigger
     get:
       parameters:
         - description: The trigger id
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: trigger
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    trigger:
-                      active: true
-                      dayEnd: '08:00'
-                      dayStart: '19:00'
-                      frequency: always
-                      interval: 8600
-                      name: On Store exit
-                      notAfter: '2014-11-28 15:31'
-                      notBefore: '2012-11-28 15:31'
-                      notification: 5245bc5b3e66a3b01f0024d4
-                      rules:
-                        - params:
-                            - 3445bc5b4563b01f0f5
-                          type: re.notifica.rule.segment.Add
-                      skipDays:
-                        - 0
-                        - 6
-                      source: 5245bc5b3e66a3b01f0024d4
-                      type: re.notifica.trigger.region.Exit
+              example:
+                trigger:
+                  active: true
+                  dayEnd: '08:00'
+                  dayStart: '19:00'
+                  frequency: always
+                  interval: 8600
+                  name: On Store exit
+                  notAfter: '2014-11-28 15:31'
+                  notBefore: '2012-11-28 15:31'
+                  notification: 5245bc5b3e66a3b01f0024d4
+                  rules:
+                    - params:
+                        - 3445bc5b4563b01f0f5
+                      type: re.notifica.rule.segment.Add
+                  skipDays:
+                    - 0
+                    - 6
+                  source: 5245bc5b3e66a3b01f0024d4
+                  type: re.notifica.trigger.region.Exit
           description: OK
-          headers: {}
       tags:
         - Trigger
       description: >-
@@ -10937,27 +10648,23 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Get Trigger
+      operationId: getTriggerById
       summary: Get Trigger
     put:
       parameters:
         - description: The trigger id
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: trigger
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: trigger updated
+              example:
+                message: trigger updated
           description: OK
-          headers: {}
       tags:
         - Trigger
       description: >-
@@ -10965,7 +10672,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Update Trigger
+      operationId: putTriggerById
       requestBody:
         content:
           application/json:
@@ -11041,6 +10748,30 @@ paths:
                 - source
               type: object
       summary: Update Trigger
+    delete:
+      parameters:
+        - description: The trigger id
+          in: path
+          name: trigger
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                message: trigger deleted
+          description: OK
+      tags:
+        - Trigger
+      description: >-
+        Delete a trigger. This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteTriggerById
+      summary: Delete Trigger
   '/upload/{type}':
     post:
       parameters:
@@ -11055,12 +10786,9 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    filename: /imports/9f..
+              example:
+                filename: /imports/9f..
           description: Created
-          headers: {}
       tags:
         - Upload
       description: >-
@@ -11110,9 +10838,92 @@ paths:
 
 
         ***
-      operationId: Create Upload
+      operationId: postUpload
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/gif:
+            schema:
+              type: string
+              format: binary
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+          video/mp4:
+            schema:
+              type: string
+              format: binary
       summary: Create Upload
   '/upload/{type}/{applicationKey}/{token}':
+    put:
+      parameters:
+        - description: The first (type) part of the path of the file to delete
+          example: notifications
+          in: path
+          name: type
+          required: true
+          schema:
+            type: string
+        - description: The second (applicationKey) part of the path of the file to delete
+          example: bea30d16d3a2659c22a7867718670938df4ff7c05b459adbdf0573f7a7b3b3e2
+          in: path
+          name: applicationKey
+          required: true
+          schema:
+            type: string
+        - description: The third (token) part of the path of the file to delete
+          example: 2c3b46d9d12bbc008914eaceab3f8b014b4897e49810b1170addcbe81a82a3e6
+          in: path
+          name: token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                message: asset updated
+          description: OK
+      tags:
+        - Upload
+      description: >-
+        Update file in Notificare storage.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putUpload
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/gif:
+            schema:
+              type: string
+              format: binary
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+          video/mp4:
+            schema:
+              type: string
+              format: binary
+      summary: Update Upload
     delete:
       parameters:
         - description: The first (type) part of the path of the file to delete
@@ -11139,7 +10950,6 @@ paths:
       responses:
         '204':
           description: No Content
-          headers: {}
       tags:
         - Upload
       description: >-
@@ -11147,7 +10957,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Delete Upload
+      operationId: deleteUpload
       summary: Delete Upload
   /user:
     get:
@@ -11171,38 +10981,34 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 1
-                    users:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        account: '12345'
-                        active: true
-                        application: '12345'
-                        autoGenerated: false
-                        segments: []
-                        userID: '12345'
-                        userName: Massimo
+              example:
+                count: 1
+                users:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    account: '12345'
+                    active: true
+                    application: '12345'
+                    autoGenerated: false
+                    segments: []
+                    userID: '12345'
+                    userName: Massimo
           description: OK
-          headers: {}
       tags:
         - User
       description: >-
         List all users for this app. This request is authenticated with the
         `applicationKey` and  `masterSecret`.
-      operationId: Get Users
-      summary: Get Users
+      operationId: getUser
+      summary: List Users
   '/user/forsegment/{segment}':
     get:
       parameters:
         - description: The ID of the segment
-          example: '12345'
           in: path
           name: segment
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
         - description: The maximum number of results to retrieve.
           example: '10'
           in: query
@@ -11222,53 +11028,26 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 1
-                    users:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        account: 5245bc5b3e66a3b01f0024d4
-                        active: true
-                        application: 5245bc5b3e66a3b01f0024d4
-                        autoGenerated: false
-                        segments: []
-                        userID: '12345'
-                        userName: Massimo
+              example:
+                count: 1
+                users:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    account: 5245bc5b3e66a3b01f0024d4
+                    active: true
+                    application: 5245bc5b3e66a3b01f0024d4
+                    autoGenerated: false
+                    segments: []
+                    userID: '12345'
+                    userName: Massimo
           description: OK
-          headers: {}
       tags:
         - User
       description: >-
         Retrieve users for a segment. This request is authenticated with the
         `applicationKey` and  `masterSecret`.
-      operationId: Get Users By User Segment
-      summary: Get Users By User Segment
+      operationId: getUserForSegment
+      summary: List Users By User Segment
   '/user/foruserid/{userID}':
-    delete:
-      parameters:
-        - description: The userID of the user
-          example: '12345'
-          in: path
-          name: userID
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: No Content
-          headers: {}
-      tags:
-        - User
-      description: >-
-        Deactivate a user using the  `userID`. The user will no longer be
-        visible in the dashboard.
-
-        If the user registers again on one of his devices, he will be activated
-        again. This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: Deactivate User By userID
-      summary: Deactivate User By userID
     get:
       parameters:
         - description: The app-specific userID of the user
@@ -11282,27 +11061,47 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    'user:':
-                      _id: 5245bc5b3e66a3b01f0024d4
-                      account: 5245bc5b3e66a3b01f0024d4
-                      active: true
-                      application: 5245bc5b3e66a3b01f0024d4
-                      autoGenerated: false
-                      segments: []
-                      userID: '12345'
-                      userName: Massimo
+              example:
+                user:
+                  _id: 5245bc5b3e66a3b01f0024d4
+                  account: 5245bc5b3e66a3b01f0024d4
+                  active: true
+                  application: 5245bc5b3e66a3b01f0024d4
+                  autoGenerated: false
+                  segments: []
+                  userID: '12345'
+                  userName: Massimo
           description: OK
-          headers: {}
       tags:
         - User
       description: >-
         Retrieve a user object using the `userID`. This request is authenticated
         with the `applicationKey` and  `masterSecret`.
-      operationId: Get User By userID
+      operationId: getUserForUserID
       summary: Get User By userID
+    delete:
+      parameters:
+        - description: The userID of the user
+          example: '12345'
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - User
+      description: >-
+        Deactivate a user using the  `userID`. The user will no longer be
+        visible in the dashboard.
+
+        If the user registers again on one of his devices, he will be activated
+        again. This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteUserForUserID
+      summary: Deactivate User By userID
   '/user/foruserid/{userID}/remove':
     delete:
       parameters:
@@ -11317,12 +11116,9 @@ paths:
         '202':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: user removal is being processed
+              example:
+                message: user removal is being processed
           description: Accepted
-          headers: {}
       tags:
         - User
       description: >-
@@ -11331,7 +11127,7 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Delete User By userID
+      operationId: deleteUserForUserIDRemove
       summary: Delete User By userID
   /user/provisional:
     post:
@@ -11339,13 +11135,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    user:
-                      _id: 5245bc5b3e66a3b01f0024d4
+              example:
+                user:
+                  $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - User
       description: >-
@@ -11354,7 +11147,7 @@ paths:
         that adds users to a segment. The user will not be visible in the list
         of users until a device is registered for that user. This request is
         authenticated with the `applicationKey` and  `masterSecret`.
-      operationId: Create Provisional User
+      operationId: postUserProvisional
       requestBody:
         content:
           application/json:
@@ -11399,42 +11192,67 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 1
-                    users:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        account: 5245bc5b3e66a3b01f0024d4
-                        active: true
-                        application: 5245bc5b3e66a3b01f0024d4
-                        autoGenerated: false
-                        segments: []
-                        userID: '12345'
-                        userName: Massimo
+              example:
+                count: 1
+                users:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    account: 5245bc5b3e66a3b01f0024d4
+                    active: true
+                    application: 5245bc5b3e66a3b01f0024d4
+                    autoGenerated: false
+                    segments: []
+                    userID: '12345'
+                    userName: Massimo
           description: OK
-          headers: {}
       tags:
         - User
       description: >-
         Search users by `userName` and `userID`. This request is authenticated
         with the `applicationKey` and  `masterSecret`.
-      operationId: Search Users
+      operationId: getUserSearch
       summary: Search Users
   '/user/{user}':
-    delete:
+    get:
       parameters:
         - description: The Notificare ID of the user
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: user
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                user:
+                  _id: 5245bc5b3e66a3b01f0024d4
+                  account: 5245bc5b3e66a3b01f0024d4
+                  active: true
+                  application: 5245bc5b3e66a3b01f0024d4
+                  autoGenerated: false
+                  segments: []
+                  userID: '12345'
+                  userName: Massimo
+          description: OK
+      tags:
+        - User
+      description: >-
+        Retrieve a user object. This request is authenticated with the
+        `applicationKey` and  `masterSecret`.
+      operationId: getUserById
+      summary: Get User
+    delete:
+      parameters:
+        - description: The Notificare ID of the user
+          in: path
+          name: user
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '204':
           description: No Content
-          headers: {}
       tags:
         - User
       description: >-
@@ -11443,96 +11261,24 @@ paths:
         If the user registers again on one of his devices, he will be activated
         again. This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Deactivate User
+      operationId: deleteUserById
       summary: Deactivate User
-    get:
-      parameters:
-        - description: The Notificare ID of the user
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: user
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    'user:':
-                      _id: 5245bc5b3e66a3b01f0024d4
-                      account: 5245bc5b3e66a3b01f0024d4
-                      active: true
-                      application: 5245bc5b3e66a3b01f0024d4
-                      autoGenerated: false
-                      segments: []
-                      userID: '12345'
-                      userName: Massimo
-          description: OK
-          headers: {}
-      tags:
-        - User
-      description: >-
-        Retrieve a user object. This request is authenticated with the
-        `applicationKey` and  `masterSecret`.
-      operationId: Get User
-      summary: Get User
-  '/user/{user}/add/{segment}':
-    put:
-      parameters:
-        - description: The Notificare ID of the user
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: user
-          required: true
-          schema:
-            type: string
-        - description: The ID of the segment
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: segment
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: user added to segment
-          description: OK
-          headers: {}
-      tags:
-        - User
-      description: >-
-        Add user to segment. This request is authenticated with the
-        `applicationKey` and  `masterSecret`.
-      operationId: Add User To User Segment
-      summary: Add User To User Segment
   '/user/{user}/remove':
     delete:
       parameters:
         - description: The Notificare ID of the user
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: user
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '202':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: user removal is being processed
+              example:
+                message: user removal is being processed
           description: Accepted
-          headers: {}
       tags:
         - User
       description: >-
@@ -11540,41 +11286,65 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: Delete User
+      operationId: deleteUserByIdRemove
       summary: Delete User
-  '/user/{user}/remove/{segment}':
+  '/user/{user}/add/{segment}':
     put:
       parameters:
         - description: The Notificare ID of the user
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: user
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
         - description: The ID of the segment
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: segment
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: user removed from segment
+              example:
+                message: user added to segment
           description: OK
-          headers: {}
+      tags:
+        - User
+      description: >-
+        Add user to segment. This request is authenticated with the
+        `applicationKey` and  `masterSecret`.
+      operationId: putUserByIdAddSegment
+      summary: Add User To User Segment
+  '/user/{user}/remove/{segment}':
+    put:
+      parameters:
+        - description: The Notificare ID of the user
+          in: path
+          name: user
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: The ID of the segment
+          in: path
+          name: segment
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                message: user removed from segment
+          description: OK
       tags:
         - User
       description: >-
         Remove user from segment. This request is authenticated with the
         `applicationKey` and  `masterSecret`.
-      operationId: Remove User From User Segment
+      operationId: putUserByIdRemoveSegment
       summary: Remove User From User Segment
   /usersegment:
     get:
@@ -11598,44 +11368,38 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 2
-                    userSegments:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        description: people who like our page on Facebook
-                        name: fans
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        description: people who just joined
-                        name: newbies
+              example:
+                count: 2
+                userSegments:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    description: people who like our page on Facebook
+                    name: fans
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    description: people who just joined
+                    name: newbies
           description: OK
-          headers: {}
       tags:
         - User Segment
       description: >-
         Retrieve a list of segments. This request is authenticated with the
         `applicationKey` and  `masterSecret`.
-      operationId: Get User Segments
+      operationId: getUserSegment
       summary: Get User Segments
     post:
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    userSegment:
-                      id: 5245bc5b3e66a3b01f0024d4
+              example:
+                userSegment:
+                  $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - User Segment
       description: >-
         Create a new user segment. This request is authenticated with the
         `applicationKey` and  `masterSecret`.
-      operationId: Create User Segment
+      operationId: postUserSegment
       requestBody:
         $ref: '#/components/requestBodies/Create_User_SegmentBody'
       summary: Create User Segment
@@ -11645,20 +11409,17 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    userSegment:
-                      id: 5245bc5b3e66a3b01f0024d4
+              example:
+                userSegment:
+                  $ref: '#/components/schemas/ObjectCreated'
           description: Created
-          headers: {}
       tags:
         - User Segment
       description: >-
         Create a new user segment with a batch of userIDs. There is a limit of
         1000 userIDs. This request is authenticated with the `applicationKey`
         and  `masterSecret`.
-      operationId: Create User Segment With Batch of Users
+      operationId: postUserSegmentBatch
       requestBody:
         content:
           application/json:
@@ -11709,105 +11470,68 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 1
-                    userSegments:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        description: people who like our page on Facebook
-                        name: fans
-                        userSelectable: people who like our page on Facebook
+              example:
+                count: 1
+                userSegments:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    description: people who like our page on Facebook
+                    name: fans
+                    userSelectable: false
           description: OK
-          headers: {}
       tags:
         - User Segment
       description: >-
         Retrieve a list of segments with a name (starting with) `name`. This
         request is authenticated with the `applicationKey` and  `masterSecret`.
-      operationId: Get User Segments By Name
+      operationId: getUserSegmentForName
       summary: Get User Segments By Name
   '/usersegment/{segment}':
-    delete:
-      parameters:
-        - description: The ID of the segment
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: segment
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: user segment removed
-          description: OK
-          headers: {}
-      tags:
-        - User Segment
-      description: >-
-        Delete a user segment. This request is authenticated with the
-        `applicationKey` and  `masterSecret`.
-      operationId: Delete User Segment
-      summary: Delete User Segment
     get:
       parameters:
         - description: The ID of the segment
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: segment
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    userSegment:
-                      _id: 5245bc5b3e66a3b01f0024d4
-                      description: people who like our page on Facebook
-                      name: fans
+              example:
+                userSegment:
+                  _id: 5245bc5b3e66a3b01f0024d4
+                  description: people who like our page on Facebook
+                  name: fans
           description: OK
-          headers: {}
       tags:
         - User Segment
       description: >-
         Retrieve a segment. This request is authenticated with the
         `applicationKey` and  `masterSecret`.
-      operationId: Get User Segment
+      operationId: getUserSegmentById
       summary: Get User Segment
     put:
       parameters:
         - description: The ID of the segment
-          example: '12345'
           in: path
           name: segment
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: user segment updated
+              example:
+                message: user segment updated
           description: OK
-          headers: {}
       tags:
         - User Segment
       description: >-
         Change `name` and/or `description` of a user segment. This request is
         authenticated with the `applicationKey` and  `masterSecret`.
-      operationId: Update User Segment
+      operationId: putUserSegmentById
       requestBody:
         content:
           application/json:
@@ -11822,34 +11546,52 @@ paths:
                   type: string
               type: object
       summary: Update User Segment
-  '/usersegment/{segment}/add':
-    put:
+    delete:
       parameters:
         - description: The ID of the segment
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: segment
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 2
-                    message: added users to segment
+              example:
+                message: user segment removed
           description: OK
-          headers: {}
+      tags:
+        - User Segment
+      description: >-
+        Delete a user segment. This request is authenticated with the
+        `applicationKey` and  `masterSecret`.
+      operationId: deleteUserSegmentById
+      summary: Delete User Segment
+  '/usersegment/{segment}/add':
+    put:
+      parameters:
+        - description: The ID of the segment
+          in: path
+          name: segment
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                count: 2
+                message: added users to segment
+          description: OK
       tags:
         - User Segment
       description: >-
         Add users to a segment using a batch of userIDs. There is a limit of
         1000 userIDs. This request is authenticated with the `applicationKey`
         and  `masterSecret`.
-      operationId: Add Batch of Users To User Segment
+      operationId: putUserSegmentByIdAdd
       requestBody:
         content:
           application/json:
@@ -11865,61 +11607,30 @@ paths:
                   type: array
               type: object
       summary: Add Batch of Users To User Segment
-  '/usersegment/{segment}/clear':
-    put:
-      parameters:
-        - description: The ID of the segment
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: segment
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: user segment cleared
-          description: OK
-          headers: {}
-      tags:
-        - User Segment
-      description: >-
-        Clear all the users from a segment. This request is authenticated with
-        the `applicationKey` and  `masterSecret`.
-      operationId: Delete Users From User Segment
-      summary: Delete Users From User Segment
   '/usersegment/{segment}/remove':
     put:
       parameters:
         - description: The ID of the segment
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: segment
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 2
-                    message: removed users from segment
+              example:
+                count: 2
+                message: removed users from segment
           description: OK
-          headers: {}
       tags:
         - User Segment
       description: >-
         Remove users from a segment using a batch of userIDs. There is a limit
         of 1000 userIDs. This request is authenticated with the `applicationKey`
         and  `masterSecret`.
-      operationId: Remove Batch of Users From User Segment
+      operationId: putUserSegmentByIdRemove
       requestBody:
         content:
           application/json:
@@ -11964,45 +11675,51 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 1
-                    users:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        account: '12345'
-                        active: true
-                        application: '12345'
-                        autoGenerated: false
-                        segments:
-                          - 5245bc5b3e66a3b01f0024d4
-                        userID: '12345'
-                        userName: Massimo
+              example:
+                count: 1
+                users:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    account: '12345'
+                    active: true
+                    application: '12345'
+                    autoGenerated: false
+                    segments:
+                      - 5245bc5b3e66a3b01f0024d4
+                    userID: '12345'
+                    userName: Massimo
           description: OK
-          headers: {}
       tags:
         - User Segment
       description: >-
         Get all the users in a segment. This request is authenticated with the
         `applicationKey` and  `masterSecret`.
-      operationId: Get Users In User Segment
+      operationId: getUserSegmentByIdUsers
       summary: Get Users In User Segment
+  '/usersegment/{segment}/clear':
+    put:
+      parameters:
+        - description: The ID of the segment
+          in: path
+          name: segment
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                message: user segment cleared
+          description: OK
+      tags:
+        - User Segment
+      description: >-
+        Clear all the users from a segment. This request is authenticated with
+        the `applicationKey` and  `masterSecret`.
+      operationId: putUserSegmentByIdClear
+      summary: Delete Users From User Segment
 components:
   requestBodies:
-    Add_Batch_of_Users_To_User_SegmentBody:
-      content:
-        application/json:
-          schema:
-            example:
-              users:
-                - user1@notifica.re
-                - user2@notifica.re
-            properties:
-              users:
-                items:
-                  type: string
-                type: array
-            type: object
     AssetGroup:
       content:
         application/json:
@@ -12040,7 +11757,52 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Beacon'
-    Create_Pass_TemplateBody:
+    ImportBeacon:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportBeacon'
+    ImportDevice:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportDevice'
+    ImportGroupedNotification:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportGroupedNotification'
+    ImportNotification:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportNotification'
+    ImportPass:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportPass'
+    ImportPassUpdate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportPassUpdate'
+    ImportRegion:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportBase'
+    ImportUser:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportBase'
+    ImportUserSegment:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ImportUserSegment'
+    PassbookCreate:
       content:
         application/json:
           schema:
@@ -12060,7 +11822,7 @@ components:
               - passStyle
               - data
             type: object
-    Create_ProductBody:
+    ProductCreate:
       content:
         application/json:
           schema:
@@ -12683,6 +12445,272 @@ components:
         - startDate
         - endDate
       type: object
+    ImportBeacon:
+      allOf:
+        - $ref: '#/components/schemas/ImportBase'
+        - properties:
+            data:
+              properties:
+                overwrite:
+                  description: Overwrite existing beacon
+                  type: boolean
+                  default: false
+                createRegion:
+                  description: Create region for beacon
+                  type: boolean
+                  default: false
+                category:
+                  description: Category for region to create
+                  type: string
+                  example: poi
+                  default: fence
+                distance:
+                  description: The distance for the region to create
+                  type: number
+                  example: 200
+                  default: 100
+                timezone:
+                  description: The timezone to create the region for
+                  type: string
+                  example: Europe/Amsterdam
+                  default: UTC
+              type: object
+          type: object
+    ImportDevice:
+      allOf:
+        - $ref: '#/components/schemas/ImportBase'
+        - properties:
+            data:
+              properties:
+                overwrite:
+                  description: Overwrite previously imported devices that are not active
+                  type: boolean
+                  default: false
+                includeTags:
+                  description: Import tags for the device
+                  type: boolean
+                  default: false
+                tagsSeparator:
+                  description: Use this separator for tags
+                  type: string
+                  example: '|'
+                  default: '|'
+                medium:
+                  description: Default medium
+                  type: string
+                  enum: [push, email, sms]
+                  default: push
+                platform:
+                  description: Default platform
+                  type: string
+                  enum: [iOS, tvOS, Android, Web]
+                transport:
+                  description: Default transport
+                  type: string
+                  enum: [APNS, GCM, WebPush, WebsitePush, Email, SMS, Notificare]
+                  default: Notificare
+                osVersion:
+                  description: Default osVersion
+                  type: string
+                  example: 10
+                sdkVersion:
+                  description: Default sdkVersion
+                  type: string
+                  example: 2.1.1
+                appVersion:
+                  description: Default appVersion
+                  type: string
+                  example: 3.0
+                osString:
+                  description: Default osString
+                  type: string
+                  example: Android 10
+                deviceString:
+                  description: Default deviceString
+                  type: string
+                  example: Google Pixel 2
+                language:
+                  description: Default language
+                  type: string
+                  example: nl
+                  default: en
+                region:
+                  description: Default region
+                  type: string
+                  example: NL
+                userID:
+                  description: Default userID
+                  type: string
+                  example: 188489101
+                userName:
+                  description: Default userName
+                  type: string
+                  example: Test User
+              type: object
+          type: object
+    ImportGroupedNotification:
+      allOf:
+        - $ref: '#/components/schemas/ImportBase'
+        - properties:
+            data:
+              properties:
+                notificationTemplate:
+                  description: Use previously created template for messages
+                  $ref: '#/components/schemas/ObjectId'
+                notificationSchedule:
+                  description: Schedule message
+                  properties:
+                    time:
+                      $ref: '#/components/schemas/Date'
+                    timezone:
+                      type: string
+                      example: Europe/Amsterdam
+                    local:
+                      type: boolean
+                      default: false
+                  type: object
+                notificationCriteria:
+                  description: Criteria for notification
+                  $ref: '#/components/schemas/Criteria'
+              type: object
+            path:
+              type: string
+              example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
+          type: object
+    ImportNotification:
+      allOf:
+        - $ref: '#/components/schemas/ImportBase'
+        - properties:
+            data:
+              properties:
+                notificationTemplate:
+                  description: Use previously created template for messages
+                  $ref: '#/components/schemas/ObjectId'
+                notificationSchedule:
+                  description: Schedule message
+                  properties:
+                    time:
+                      $ref: '#/components/schemas/Date'
+                    timezone:
+                      type: string
+                      example: Europe/Amsterdam
+                  type: object
+                notificationCriteria:
+                  description: Criteria for notification
+                  $ref: '#/components/schemas/Criteria'
+                medium:
+                  description: Medium to send to if no template given
+                  type: string
+                  enum: [push, email, sms]
+                  default: push
+              type: object
+            path:
+              type: string
+              example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
+          type: object
+    ImportPass:
+      allOf:
+        - $ref: '#/components/schemas/ImportBase'
+        - properties:
+            data:
+              properties:
+                notificationTemplate:
+                  description: Use previously created template for messages
+                  $ref: '#/components/schemas/ObjectId'
+                notificationCriteria:
+                  description: Criteria for notification
+                  $ref: '#/components/schemas/Criteria'
+                passData:
+                  description: Pass data values if not given in import data
+                  properties:
+                    passFields:
+                      description: The fields in the pass that need to be updated if not given in import data
+                      additionalProperties: true
+                      example:
+                        from: AMS
+                        to: OPO
+                      type: object
+                    relevantDate:
+                      $ref: '#/components/schemas/Date'
+                  type: object
+                passbook:
+                  description: The pass template to use
+                  $ref: '#/components/schemas/ObjectId'
+                redeem:
+                  description: Set redeem type for new pass
+                  type: string
+                  enum: [always, once, limit]
+                  default: always
+                limit:
+                  description: Set redeem limit for new pass
+                  type: number
+                  default: 0
+                sendNotification:
+                  description: Send a notification after importing a new pass
+                  type: boolean
+                  default: false
+                sendUpdateNotification:
+                  description: Send a notification if existing pass was updated
+                  type: boolean
+                  default: false
+              type: object
+          type: object
+    ImportPassUpdate:
+      allOf:
+        - $ref: '#/components/schemas/ImportBase'
+        - properties:
+            data:
+              properties:
+                passData:
+                  description: Pass data values if not given in import data
+                  properties:
+                    passFields:
+                      description: The fields in the pass that need to be updated if not given in import data
+                      additionalProperties: true
+                      example:
+                        from: AMS
+                        to: OPO
+                      type: object
+                    relevantDate:
+                      $ref: '#/components/schemas/Date'
+                  type: object
+                passbook:
+                  description: The pass template to use
+                  $ref: '#/components/schemas/ObjectId'
+              type: object
+          type: object
+    ImportUserSegment:
+      allOf:
+        - $ref: '#/components/schemas/ImportBase'
+        - properties:
+            data:
+              properties:
+                userSegment:
+                  description: The segment to import into
+                  $ref: '#/components/schemas/ObjectId'
+                clear:
+                  description: Clear the segment before importing users
+                  type: boolean
+                  default: false
+                push:
+                  description: Send a notification after importing users
+                  type: boolean
+                  default: false
+                notificationTemplate:
+                  description: The template to use for the notification
+                  $ref: '#/components/schemas/ObjectId'
+              type: object
+              required:
+                - userSegment
+          type: object
+    ImportBase:
+      properties:
+        path:
+          type: string
+          example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
+      type: object
+      required:
+        - path
     LocationsCriteria:
       properties:
         locations:
