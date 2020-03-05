@@ -44,12 +44,23 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: ''
+  version: 1.86
+  termsOfService: https://notificare.com/terms
+  contact:
+    name: Notificare Support
+    email: support@notifica.re
+    url: https://support.notifica.re
+  externalDocs:
+    description: Find out more
+    url: https://docs.notifica.re
 servers:
-  - url: 'https://push.notifica.re/'
+  - url: 'https://push.notifica.re'
+  - url: 'http://localhost:3006'
 paths:
   /account/login:
     post:
+      security:
+        - Password: []
       responses:
         '201':
           content:
@@ -65,7 +76,7 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseError'
               example:
                 error: wrong credentials
           description: Wrong credentials
@@ -73,7 +84,7 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseError'
               example:
                 error: account blocked
           description: Account blocked
@@ -81,7 +92,7 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseError'
               example:
                 error: account not found
           description: Account not found
@@ -89,7 +100,7 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseError'
               example:
                 error: too many login attempts
           description: Too many login attempts
@@ -101,6 +112,8 @@ paths:
       operationId: postAccountLogin
       summary: Account Login
     delete:
+      security:
+        - Token: []
       responses:
         '204':
           description: No Content
@@ -113,6 +126,8 @@ paths:
       summary: Account Logout
   /account/login/totp:
     post:
+      security:
+        - Token: []
       responses:
         '201':
           content:
@@ -144,6 +159,8 @@ paths:
       summary: Create TOTP
   /account/2fa:
     get:
+      security:
+        - Token: []
       responses:
         '200':
           description: OK
@@ -167,6 +184,8 @@ paths:
       summary: Check 2FA
   /account/2fa/totp:
     post:
+      security:
+        - Token: []
       responses:
         '200':
           content:
@@ -179,7 +198,7 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseError'
               example:
                 error: authenticator already setup
           description: Authenticator already setup
@@ -193,6 +212,8 @@ paths:
       operationId: Register TOTP
       summary: Register TOTP
     delete:
+      security:
+        - Token: []
       responses:
         '204':
           description: Unregistered TOTP
@@ -200,7 +221,7 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseError'
               example:
                 error: authenticator not setup
           description: Authenticator not setup
@@ -214,10 +235,14 @@ paths:
       summary: Unregister TOTP
   /account/2fa/enable:
     put:
+      security:
+        - Token: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               examples:
                 enabled:
                   value:
@@ -230,7 +255,7 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/ResponseError'
               examples:
                 not verified:
                   value:
@@ -249,10 +274,14 @@ paths:
       summary: Enable 2FA
   /account/2fa/disable:
     put:
+      security:
+        - Token: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               examples:
                 disabled:
                   value:
@@ -271,6 +300,8 @@ paths:
       summary: Disable 2FA
   /application:
     get:
+      security:
+        - Token: []
       parameters:
         - description: The number of results to retrieve.
           example: '10'
@@ -350,6 +381,8 @@ paths:
       operationId: getApplication
       summary: List Applications
     post:
+      security:
+        - Token: []
       responses:
         '201':
           content:
@@ -357,7 +390,7 @@ paths:
               schema:
                 properties:
                   application:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Application
@@ -387,6 +420,8 @@ paths:
       summary: Create Application
   /application/shared:
     get:
+      security:
+        - Token: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -466,30 +501,9 @@ paths:
       operationId: getApplicationShared
       summary: List Shared Applications
   '/application/{application}':
-    delete:
-      parameters:
-        - description: The account id of an active application.
-          example: 5245bc5b3e66a3b01f0024d4
-          in: path
-          name: application
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              example:
-                message: application deactivated
-          description: Deactivated
-      tags:
-        - Application
-      description: >-
-        Destroy an application. This operation can not be undone. This request
-        must be authenticated with the `token`.
-      operationId: deleteApplicationById
-      summary: Delete Application
     get:
+      security:
+        - Token: []
       parameters:
         - description: The account id of an active application.
           example: 5245bc5b3e66a3b01f0024d4
@@ -561,6 +575,8 @@ paths:
       operationId: getApplicationById
       summary: Get Application
     put:
+      security:
+        - Token: []
       parameters:
         - description: The account id of an active application.
           example: 5245bc5b3e66a3b01f0024d4
@@ -573,6 +589,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: application changes saved
           description: OK
@@ -599,8 +617,37 @@ paths:
                   type: boolean
               type: object
       summary: Update Application
+    delete:
+      security:
+        - Token: []
+      parameters:
+        - description: The account id of an active application.
+          example: 5245bc5b3e66a3b01f0024d4
+          in: path
+          name: application
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: application deactivated
+          description: Deactivated
+      tags:
+        - Application
+      description: >-
+        Destroy an application. This operation can not be undone. This request
+        must be authenticated with the `token`.
+      operationId: deleteApplicationById
+      summary: Delete Application
   /asset:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The (partial) content type of assets to list.
           example: 'image'
@@ -635,37 +682,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                assets:
-                  - _id: 5708dff98f252b8f23fe05100
-                    application: 5354f0bb3fa544f52ff4cff0
-                    contentDisposition: >-
-                      form-data; name="file";
-                      filename="Screenshot_2016-04-07-13-17-31.png"
-                    contentLength: 59609
-                    contentType: image/png
-                    customSortOrder: 0
-                    fileName: >-
-                      /notifications/3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
-                    key: >-
-                      3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
-                    lastModified: '2016-04-09T10:25:28.129Z'
-                    originalFileName: Screenshot_2016-04-07-13-17-31.png
-                  - _id: 5708dff98f252b8f23fe05100
-                    application: 5354f0bb3fa544f52ff4cff0
-                    contentDisposition: >-
-                      form-data; name="file";
-                      filename="Screenshot_2016-04-07-13-17-31.png"
-                    contentLength: 59609
-                    contentType: image/png
-                    customSortOrder: 0
-                    fileName: >-
-                      /notifications/3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
-                    key: >-
-                      3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
-                    lastModified: '2016-04-09T10:25:28.129Z'
-                    originalFileName: Screenshot_2016-04-07-13-17-31.png
-                count: 2
+              schema:
+                $ref: '#/components/schemas/AssetList'
           description: OK
       tags:
         - Asset
@@ -677,10 +695,14 @@ paths:
       operationId: getAsset
       summary: List Assets
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseKeyCreated'
               example:
                 _id: 570bff9ff09c7c399e721897
                 key: >-
@@ -727,6 +749,8 @@ paths:
       summary: Create Asset
   '/asset/{id}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The asset's id.
           example: 5245bc5b3e66a3b01fff24d4
@@ -739,22 +763,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                asset:
-                  _id: 5708dff98f252b8f23fe05100
-                  application: 5354f0bb3fa544f52ff4cff0
-                  contentDisposition: >-
-                    form-data; name="file";
-                    filename="Screenshot_2016-04-07-13-17-31.png"
-                  contentLength: 59609
-                  contentType: image/png
-                  customSortOrder: 0
-                  fileName: >-
-                    /notifications/3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
-                  key: >-
-                    3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
-                  lastModified: '2016-04-09T10:25:28.129Z'
-                  originalFileName: Screenshot_2016-04-07-13-17-31.png
+              schema:
+                properties:
+                  asset:
+                    $ref: '#/components/schemas/AssetModel'
+                type: object
           description: OK
       tags:
         - Asset
@@ -766,6 +779,8 @@ paths:
       operationId: getAssetById
       summary: Get Asset
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The asset's id.
           example: 5245bc5b3e66a3b01fff24d4
@@ -778,6 +793,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: asset updated
           description: OK
@@ -813,6 +830,8 @@ paths:
               format: binary
       summary: Update Asset
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The asset's id.
           example: 5245bc5b3e66a3b01fff24d4
@@ -835,18 +854,21 @@ paths:
       summary: Delete Asset
   '/asset/{id}/order':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The asset's id.
-          example: 5245bc5b3e66a3b01fff24d4
           in: path
           name: id
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: asset updated
           description: OK
@@ -859,19 +881,12 @@ paths:
         `masterSecret`.
       operationId: putAssetOrder
       requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                customSortOrder:
-                  type: number
-                  example: 2
-              required:
-                - customSortOrder
+        $ref: '#/components/requestBodies/AssetOrder'
       summary: Update Asset Order
   /asset/group:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -892,39 +907,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                assetGroups:
-                  - _id: 56f3444fc34c01653ffccdf0
-                    application: 5354f0bb3fa54ff52ff4c7c0
-                    assets:
-                      - _id: 56f3444fcff01653c7ccdf1
-                        button:
-                          action: ''
-                          label: ''
-                        description: ''
-                        key: >-
-                          3d99d18148e6f3dbcf4ff891c9a02646ff311feccc7b9d0c8c79fee9b4dde19/c76c6363a7e014fae1586fa9b8ff1c61faa7b79036fd2670db2840de979cab03
-                        title: Screen Shot 2016-03-24 at 00.04.49.png
-                    name: testing
-                    notAfter: null
-                    notBefore: null
-                    segment: 5354f0bb3fa54ff52ff4c7c0
-                  - _id: 56f3444fc34c01653c7ccdf0
-                    application: 5354f0bb3fa544452ff4c7c0
-                    assets:
-                      - _id: 56f3444fc34c01653c7ccdf1
-                        button:
-                          action: ''
-                          label: ''
-                        description: ''
-                        key: >-
-                          3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/c76c6363a7e014fae1586fa9b83b1c61faa7b79036fd2670db2840de979cab03
-                        title: Screen Shot 2016-03-24 at 00.04.49.png
-                    name: testing
-                    notAfter: null
-                    notBefore: null
-                    segment: 5354f0bb3fa54ff52ff4c7c0
-                count: 2
+              schema:
+                $ref: '#/components/schemas/AssetGroupList'
           description: OK
       tags:
         - Asset
@@ -936,6 +920,8 @@ paths:
       operationId: getAssetGroup
       summary: List Asset Groups
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -943,7 +929,7 @@ paths:
               schema:
                 properties:
                   assetGroup:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Asset
@@ -956,10 +942,12 @@ paths:
         `masterSecret`.
       operationId: postAssetGroup
       requestBody:
-        $ref: '#/components/requestBodies/AssetGroup'
+        $ref: '#/components/requestBodies/AssetGroupCreate'
       summary: Create Asset Group
   '/asset/group/byname/{name}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The name of the asset group
           example: testing
@@ -987,39 +975,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                assetGroups:
-                  - _id: 56f3444fc34c01653ffccdf0
-                    application: 5354f0bb3fa54ff52ff4c7c0
-                    assets:
-                      - _id: 56f3444fcff01653c7ccdf1
-                        button:
-                          action: ''
-                          label: ''
-                        description: ''
-                        key: >-
-                          3d99d18148e6f3dbcf4ff891c9a02646ff311feccc7b9d0c8c79fee9b4dde19/c76c6363a7e014fae1586fa9b8ff1c61faa7b79036fd2670db2840de979cab03
-                        title: Screen Shot 2016-03-24 at 00.04.49.png
-                    name: testing
-                    notAfter: null
-                    notBefore: null
-                    segment: 5354f0bb3fa54ff52ff4c7c0
-                  - _id: 56f3444fc34c01653c7ccdf0
-                    application: 5354f0bb3fa544452ff4c7c0
-                    assets:
-                      - _id: 56f3444fc34c01653c7ccdf1
-                        button:
-                          action: ''
-                          label: ''
-                        description: ''
-                        key: >-
-                          3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/c76c6363a7e014fae1586fa9b83b1c61faa7b79036fd2670db2840de979cab03
-                        title: Screen Shot 2016-03-24 at 00.04.49.png
-                    name: testing
-                    notAfter: null
-                    notBefore: null
-                    segment: 5354f0bb3fa54ff52ff4c7c0
-                count: 2
+              schema:
+                $ref: '#/components/schemas/AssetGroupList'
           description: OK
       tags:
         - Asset
@@ -1034,6 +991,8 @@ paths:
       summary: List Asset Groups By Name
   '/asset/group/{id}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The asset group's id.
           example: 5245bc5b3e66a3b01f0024d4
@@ -1046,23 +1005,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                assetGroup:
-                  _id: 56f3444fc34c01653ffccdf0
-                  application: 5354f0bb3fa54ff52ff4c7c0
-                  assets:
-                    - _id: 56f3444fcff01653c7ccdf1
-                      button:
-                        action: ''
-                        label: ''
-                      description: ''
-                      key: >-
-                        3d99d18148e6f3dbcf4ff891c9a02646ff311feccc7b9d0c8c79fee9b4dde19/c76c6363a7e014fae1586fa9b8ff1c61faa7b79036fd2670db2840de979cab03
-                      title: Screen Shot 2016-03-24 at 00.04.49.png
-                  name: testing
-                  notAfter: null
-                  notBefore: null
-                  segment: 5354f0bb3fa54ff52ff4c7c0
+              schema:
+                properties:
+                  assetGroup:
+                    $ref: '#/components/schemas/AssetGroupModel'
+                type: object
           description: OK
       tags:
         - Asset
@@ -1074,6 +1021,8 @@ paths:
       operationId: getAssetGroupById
       summary: Get Asset Group
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The asset group's id.
           example: 5245bc5b3e66a3b01f0024d4
@@ -1086,6 +1035,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: asset group updated
           description: OK
@@ -1098,9 +1049,11 @@ paths:
         `masterSecret`.
       operationId: putAssetGroupById
       requestBody:
-        $ref: '#/components/requestBodies/AssetGroup'
+        $ref: '#/components/requestBodies/AssetGroupUpdate'
       summary: Update Asset Group
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The asset group's id.
           example: 5245bc5b3e66a3b01fff24d4
@@ -1113,6 +1066,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: asset group removed
           description: OK
@@ -1127,6 +1082,8 @@ paths:
       summary: Delete Asset Group
   /beacon:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -1134,7 +1091,7 @@ paths:
               schema:
                 properties:
                   beacon:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Beacon
@@ -1152,32 +1109,32 @@ paths:
     get:
       parameters:
         - description: The id of an active region.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: region
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 50
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                beacons:
-                  - _id: 5245bc5b3e66a3b01f0024d4
-                    region: 5245bc5b3e66a3b01f0024d4
-                    major: 1
-                    minor: 100
-                    name: My Beacon
-                    notification: 6245bc5b3e66a3b01f0024d5
-                    proximity: immediate
-                  - _id: 5245bc5b3e66a3b01f0024d6
-                    region: 5245bc5b3e66a3b01f0024d4
-                    major: 1
-                    minor: 101
-                    name: My Beacon
-                    notification: 6245bc5b3e66a3b01f0024d5
-                    proximity: immediate
+              schema:
+                $ref: '#/components/schemas/BeaconList'
           description: OK
       tags:
         - Beacon
@@ -1202,15 +1159,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                beacon:
-                  _id: 5245bc5b3e66a3b01f0024d4
-                  region: 5245bc5b3e66a3b01f0024d4
-                  major: 1
-                  minor: 100
-                  name: My Beacon
-                  notification: 6245bc5b3e66a3b01f0024d5
-                  proximity: immediate
+              schema:
+                properties:
+                  beacon:
+                    $ref: '#/components/schemas/BeaconModel'
+                type: object
           description: OK
       tags:
         - Beacon
@@ -1222,6 +1175,8 @@ paths:
       operationId: getBeaconById
       summary: Get Beacon
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The beacon id of an active beacon.
           example: 5245bc5b3e66a3b01f0024d4
@@ -1234,6 +1189,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: beacon updated
           description: OK
@@ -1249,6 +1206,8 @@ paths:
         $ref: '#/components/requestBodies/BeaconUpdate'
       summary: Update Beacon
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The beacon id of an active beacon.
           example: 5245bc5b3e66a3b01f0024d4
@@ -1261,6 +1220,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: beacon deleted
           description: OK
@@ -1275,43 +1236,35 @@ paths:
       summary: Delete Beacon
   /datasource:
     get:
+      parameters:
+        - description: The name of the datasource to search for.
+          example: blog
+          in: query
+          name: search
+          required: false
+          schema:
+            type: string
+        - description: The maximum number of results to retrieve.
+          example: 10
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 25
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                datasources:
-                  - _id: 55c0c7f4fed3e3bb70e2e86b
-                    active: true
-                    application: 5489b42ff23e5815132b492a
-                    categoryMap: []
-                    config:
-                      messageType: re.notifica.notification.Alert
-                      url: 'http://notifica.re/blog/feed.xml'
-                    feedMap: tag_newsletter
-                    lastParsed: '2015-11-12T08:28:53.000Z'
-                    lastRun: '2015-11-13T15:19:10.698Z'
-                    mapTarget: tag
-                    mapType: feed
-                    name: Blog
-                    nextRun: '2015-11-13T15:34:10.698Z'
-                    type: feed
-                  - _id: 55c0c7f4fed3e3bb70e2e86b
-                    active: true
-                    application: 5489b42ff23e5815132b492a
-                    categoryMap: []
-                    config:
-                      messageType: re.notifica.notification.Alert
-                      url: 'http://notifica.re/blog/feed.xml'
-                    feedMap: tag_newsletter
-                    lastParsed: '2015-11-12T08:28:53.000Z'
-                    lastRun: '2015-11-13T15:19:10.698Z'
-                    mapTarget: tag
-                    mapType: feed
-                    name: Blog
-                    nextRun: '2015-11-13T15:34:10.698Z'
-                    type: feed
+              schema:
+                $ref: '#/components/schemas/DatasourceList'
           description: OK
       tags:
         - Automation
@@ -1323,13 +1276,15 @@ paths:
       operationId: getDatasource
       summary: List Datasources
     post:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
               example:
                 datasource:
-                  $ref: '#/components/schemas/ObjectCreated'
+                  $ref: '#/components/schemas/ResponseCreated'
           description: OK
       tags:
         - Automation
@@ -1344,31 +1299,17 @@ paths:
       summary: Create Datasource
   /datasource/test:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                feed:
-                  items:
-                    - date: '2016-06-24T09:00:00.000Z'
-                      description: |-
-                        <p><br />
-                        <strong>Press release</strong>...
-                      link: >-
-                        http://notifica.re/blog/2016/06/24/MobileStrategy-Notificare-Partnership/
-                      title: MobileStrategy and Notificare announce...
-                    - date: '2016-02-26T13:02:00.000Z'
-                      description: |-
-                        <p><br />
-                        From day 1, we set out to provide...
-                      link: >-
-                        http://notifica.re/blog/2016/02/26/Notificare-ISO-Certification/
-                      title: Notificare receives ISO 27001 certification
-                  meta:
-                    date: '2016-06-24T09:00:00.000Z'
-                    description: Our Blog
-                    title: Notificare
+              schema:
+                properties:
+                  feed:
+                    $ref: '#/components/schemas/DatasourceFeedModel'
+                type: object
           description: OK
       tags:
         - Automation
@@ -1379,57 +1320,26 @@ paths:
         `masterSecret`.
       operationId: postDatasourceTest
       requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                config:
-                  properties:
-                    messageType:
-                      description: The type of message to send
-                      type: string
-                    url:
-                      description: The URL to fetch the RSS Feed from
-                      type: string
-                  required:
-                    - url
-                    - messageType
-                  type: object
-              type: object
+        $ref: '#/components/requestBodies/DatasourceTest'
       summary: Test New Datasource
   '/datasource/{id}':
     get:
       parameters:
         - description: The source's id.
-          example: 55c0c7f4fed3e3ff70e2e86b
           in: path
           name: id
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                datasource:
-                  _id: 55c0c7f4fed3e3bb70e2e86b
-                  active: true
-                  application: 5489b42ff23e5815132b492a
-                  categoryMap: []
-                  config:
-                    messageType: re.notifica.notification.Alert
-                    url: 'http://notifica.re/blog/feed.xml'
-                  feedMap: tag_newsletter
-                  lastParsed: '2015-11-12T08:28:53.000Z'
-                  lastRun: '2015-11-13T15:19:10.698Z'
-                  mapTarget: tag
-                  mapType: feed
-                  name: Blog
-                  nextRun: '2015-11-13T15:34:10.698Z'
-                  type: feed
+              schema:
+                properties:
+                  datasource:
+                    $ref: '#/components/schemas/DatasourceModel'
           description: OK
-          headers: {}
       tags:
         - Automation
       description: >-
@@ -1440,18 +1350,21 @@ paths:
       operationId: getDatasourceById
       summary: Get Datasource
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The source's id.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: id
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: datasource updated
           description: OK
@@ -1468,6 +1381,8 @@ paths:
         $ref: '#/components/requestBodies/DatasourceUpdate'
       summary: Update Datasource
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The source's id.
           example: 5245bc5b3e66a3b01f0024d4
@@ -1480,6 +1395,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: datasource deleted
           description: OK
@@ -1494,39 +1411,24 @@ paths:
       summary: Delete Datasource
   '/datasource/{id}/test':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The source's id.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: id
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                feed:
-                  items:
-                    - date: '2016-06-24T09:00:00.000Z'
-                      description: |-
-                        <p><br />
-                        <strong>Press release</strong>...
-                      link: >-
-                        http://notifica.re/blog/2016/06/24/MobileStrategy-Notificare-Partnership/
-                      title: MobileStrategy and Notificare announce...
-                    - date: '2016-02-26T13:02:00.000Z'
-                      description: |-
-                        <p><br />
-                        From day 1, we set out to provide...
-                      link: >-
-                        http://notifica.re/blog/2016/02/26/Notificare-ISO-Certification/
-                      title: Notificare receives ISO 27001 certification
-                  meta:
-                    date: '2016-06-24T09:00:00.000Z'
-                    description: Our Blog
-                    title: Notificare
+              schema:
+                properties:
+                  feed:
+                    $ref: '#/components/schemas/DatasourceFeedModel'
+                type: object
           description: OK
       tags:
         - Automation
@@ -1630,6 +1532,8 @@ paths:
       summary: List Devices
   /device/bygeometry:
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -2405,6 +2309,8 @@ paths:
       summary: Get Device
   '/device/{deviceID}/user':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The deviceID is the unique identifier provided by APNS or GCM.
           example: 00a9b9bf-xxx9278-64d6a3f22476
@@ -2417,6 +2323,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: device updated
           description: OK
@@ -2449,6 +2357,8 @@ paths:
               type: object
       summary: Register User To Device
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The deviceID is the unique identifier provided by APNS or GCM.
           example: 00a9b9bf-xxx9278-64d6a3f22476
@@ -2461,6 +2371,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: device updated
           description: OK
@@ -2483,16 +2395,22 @@ paths:
       summary: Unregister User From Device
   /email:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: subscription updated
           description: OK
         '202':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: subscription is being processed
           description: Accepted
@@ -2546,6 +2464,8 @@ paths:
       summary: Create Email Contact
   '/event/custom/{type}/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The type of custom event. This event type is automatically prepended
@@ -2569,6 +2489,8 @@ paths:
         '202':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: event is being processed
           description: Accepted
@@ -2857,6 +2779,8 @@ paths:
       summary: List Exports For Type
   /export/re.notifica.export.Device:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -2864,7 +2788,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -2915,6 +2839,8 @@ paths:
       summary: Export Devices/Contacts/Numbers
   /export/re.notifica.export.User:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -2922,7 +2848,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -2994,6 +2920,8 @@ paths:
       summary: Export Users
   /export/re.notifica.export.UserData:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3001,7 +2929,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3031,6 +2959,8 @@ paths:
       summary: Export User Data
   /export/re.notifica.export.Region:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3038,7 +2968,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3053,6 +2983,8 @@ paths:
       summary: Export Regions
   /export/re.notifica.export.Beacon:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3060,7 +2992,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3075,6 +3007,8 @@ paths:
       summary: Export Beacons
   /export/re.notifica.export.Notification:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3082,7 +3016,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3128,6 +3062,8 @@ paths:
       summary: Export Notifications
   /export/re.notifica.export.Reply:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3135,7 +3071,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3166,6 +3102,8 @@ paths:
       summary: Export Replies
   /export/re.notifica.export.Event:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3173,7 +3111,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3268,6 +3206,8 @@ paths:
       summary: Export Events
   /export/re.notifica.export.Pass:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3275,7 +3215,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3307,6 +3247,8 @@ paths:
       summary: Export Passes
   /export/re.notifica.export.Campaign:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3314,7 +3256,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3347,6 +3289,8 @@ paths:
       summary: Export Campaigns
   /export/re.notifica.export.CampaignSummary:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3354,7 +3298,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3387,6 +3331,8 @@ paths:
       summary: Export Campaigns Summary
   /export/re.notifica.export.AutomationSummary:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3394,7 +3340,7 @@ paths:
               schema:
                 properties:
                   exportJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Export
@@ -3456,6 +3402,8 @@ paths:
       summary: Get Export Result
   '/export/download/{export}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of a export job
           example: 54fec699beb5cb2f6f9839ed
@@ -3540,6 +3488,8 @@ paths:
       operationId: getExportById
       summary: Get Export Job
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an export job.
           in: path
@@ -3551,6 +3501,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: export job deleted
           description: OK
@@ -3733,6 +3685,8 @@ paths:
       summary: List Import Jobs For Type
   /import/re.notifica.import.Device:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3740,7 +3694,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -3863,6 +3817,8 @@ paths:
       summary: Import Devices/Contacts/Numbers
   /import/re.notifica.import.User:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3870,7 +3826,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -3896,6 +3852,8 @@ paths:
       summary: Import Users
   /import/re.notifica.import.UserSegment:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3903,7 +3861,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -3937,6 +3895,8 @@ paths:
       summary: Import Users Into Segment
   /import/re.notifica.import.Region:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -3944,7 +3904,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -4010,6 +3970,8 @@ paths:
       summary: Import Regions
   /import/re.notifica.import.Beacon:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -4017,7 +3979,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -4067,6 +4029,8 @@ paths:
       summary: Import Beacons
   /import/re.notifica.import.Pass:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -4074,7 +4038,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -4152,6 +4116,8 @@ paths:
       summary: Import Passes
   /import/re.notifica.import.PassUpdate:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -4159,7 +4125,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -4184,6 +4150,8 @@ paths:
       summary: Import Pass Fields Update
   /import/re.notifica.import.Notification:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -4191,7 +4159,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -4257,6 +4225,8 @@ paths:
       summary: Import Private Messages
   /import/re.notifica.import.GroupedNotification:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -4264,7 +4234,7 @@ paths:
               schema:
                 properties:
                   importJob:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Import
@@ -4336,6 +4306,8 @@ paths:
       operationId: getImportById
       summary: Get Import
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The import id of a previously created job.
           in: path
@@ -4347,6 +4319,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: 'import job updated'
           description: OK
@@ -4375,6 +4349,8 @@ paths:
               type: object
       summary: Update Import
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The import id of a previously created job.
           example: 5245bc5b3e66a3b01f0024d4
@@ -4397,6 +4373,8 @@ paths:
       summary: Delete Import
   '/import/{import}/abort':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The import id of a previously created job.
           in: path
@@ -4408,6 +4386,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: 'import aborted'
           description: OK
@@ -4482,6 +4462,8 @@ paths:
       operationId: getLink
       summary: List Links
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -4489,7 +4471,7 @@ paths:
               schema:
                 properties:
                   link:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Links
@@ -4580,6 +4562,8 @@ paths:
       operationId: getLinkById
       summary: Get Link
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the link
           in: path
@@ -4591,6 +4575,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: link updated
           description: OK
@@ -4637,6 +4623,8 @@ paths:
                   example: [CustomEvent]
       summary: Update Link
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the link
           in: path
@@ -4648,6 +4636,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: link removed
           description: OK
@@ -4897,15 +4887,17 @@ paths:
       summary: Get All Messages
   /notification/push/broadcast:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    message: notifications are queued
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
           description: Created
       tags:
         - Messages
@@ -4923,10 +4915,14 @@ paths:
       summary: Create Push Message Broadcast
   /notification/push/criteria:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -4947,10 +4943,14 @@ paths:
       summary: Create Push Message to Criteria
   /notification/push/event:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -4972,15 +4972,17 @@ paths:
       summary: Create Push Message to Events
   /notification/push/segments:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    message: notifications are queued
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
           description: Created
           headers: {}
       tags:
@@ -4999,10 +5001,14 @@ paths:
       summary: Create Push Message to Segments
   /notification/push/tags:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5023,6 +5029,8 @@ paths:
       summary: Create Push Message to Tags
   '/notification/push/user/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The user ID is the one the client device registered with, e.g., the
@@ -5037,6 +5045,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5057,6 +5067,8 @@ paths:
       summary: Create Push Message to User
   '/notification/push/device/{deviceID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The deviceID is the ID as registered by the device, e.g. APNS, FCM
@@ -5071,6 +5083,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5091,10 +5105,14 @@ paths:
       summary: Create Push Message to Device
   /notification/push/triggered:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5114,10 +5132,14 @@ paths:
       summary: Create Triggered Push Message
   /notification/email/broadcast:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notification queued
@@ -5138,10 +5160,14 @@ paths:
       summary: Create Email Message Broadcast
   /notification/email/criteria:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5162,10 +5188,14 @@ paths:
       summary: Create Email Message to Criteria
   /notification/email/event:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5187,10 +5217,14 @@ paths:
       summary: Create Email Message to Events
   /notification/email/segments:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5211,10 +5245,14 @@ paths:
       summary: Create Email Message to Segments
   /notification/email/tags:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5235,6 +5273,8 @@ paths:
       summary: Create Email Message to Tags
   '/notification/email/user/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The user ID used when registering a contact.
           example: NL1234567890
@@ -5247,6 +5287,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5267,6 +5309,8 @@ paths:
       summary: Create Email Message to User
   '/notification/email/device/{deviceID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The contactID generated for this email contact.
           example: bbff2ce9b547d2df4731bac277xxx
@@ -5279,6 +5323,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5299,10 +5345,14 @@ paths:
       summary: Create Email Message to Contact
   /notification/email/triggered:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5322,10 +5372,14 @@ paths:
       summary: Create Triggered Email Message
   /notification/sms/broadcast:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5346,10 +5400,14 @@ paths:
       summary: Create SMS Message Broadcast
   /notification/sms/criteria:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5370,10 +5428,14 @@ paths:
       summary: Create SMS Message to Criteria
   /notification/sms/event:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5395,10 +5457,14 @@ paths:
       summary: Create SMS Message to Events
   /notification/sms/segments:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5419,10 +5485,14 @@ paths:
       summary: Create SMS Message to Segments
   /notification/sms/tags:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5443,6 +5513,8 @@ paths:
       summary: Create SMS Message to Tags
   '/notification/sms/user/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The user ID used when registering a contact.
           example: NL1234567890
@@ -5455,6 +5527,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5475,6 +5549,8 @@ paths:
       summary: Create SMS Message to User
   '/notification/sms/device/{deviceID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The contactID generated for this email contact.
           example: bbff2ce9b547d2df4731bac277xxx
@@ -5487,6 +5563,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5507,10 +5585,14 @@ paths:
       summary: Create SMS Message to Phone
   /notification/sms/triggered:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5530,10 +5612,14 @@ paths:
       summary: Create Triggered SMS Message
   /notification/system:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5558,6 +5644,8 @@ paths:
       summary: Create System Push Message
   '/notification/system/user/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The userID you are targeting
           example: 5245bc5b3e66a3b01f0024d4
@@ -5570,6 +5658,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5591,6 +5681,8 @@ paths:
       summary: System Push to User
   '/notification/system/device/{deviceID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The deviceID you are targeting
           example: 5245bc5b3e66a3b01f0024d4xxxx
@@ -5603,6 +5695,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
               example:
                 _id: 5245bc5b3e66a3b01f0024d4
                 message: notifications are queued
@@ -5977,10 +6071,14 @@ paths:
       operationId: getNotificationLog
       summary: Get Message Log
     delete:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: log cleared
           description: OK
@@ -6037,6 +6135,8 @@ paths:
       operationId: getNotificationSchedule
       summary: Get Scheduled Tasks
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6044,7 +6144,7 @@ paths:
               schema:
                 properties:
                   schedule:
-                    '#/components/schemas/ObjectCreated'
+                    '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Schedule
@@ -6190,6 +6290,8 @@ paths:
       operationId: getNotificationScheduleById
       summary: Get Schedule Task
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The schedule Id of the schedule to be canceled.
           in: path
@@ -6201,6 +6303,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: schedule updated
           description: OK
@@ -6240,6 +6344,8 @@ paths:
               type: object
       summary: Update Schedule Task
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The schedule Id of the schedule to be canceled.
           in: path
@@ -6251,6 +6357,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: schedule canceled
           description: OK
@@ -6304,6 +6412,8 @@ paths:
       operationId: getNotificationTemplate
       summary: List Templates
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6311,7 +6421,7 @@ paths:
               schema:
                 properties:
                   template:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Template
@@ -6487,6 +6597,8 @@ paths:
       operationId: getNotificationTemplateById
       summary: Get Template
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the template
           in: path
@@ -6498,6 +6610,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: template updated
           description: OK
@@ -6592,6 +6706,8 @@ paths:
               type: object
       summary: Update Template
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the template
           in: path
@@ -6603,6 +6719,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: template deleted
           description: OK
@@ -6617,6 +6735,8 @@ paths:
       summary: Delete Template
   /notification/test/email/broadcast:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6635,6 +6755,8 @@ paths:
       summary: Test Email Message Broadcast
   /notification/test/email/criteria:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6642,7 +6764,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Test
@@ -6658,6 +6780,8 @@ paths:
       summary: Test Email Message to Criteria
   /notification/test/email/event:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6665,7 +6789,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Test
@@ -6681,6 +6805,8 @@ paths:
       summary: Test Email Message to Events
   /notification/test/email/segments:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6702,6 +6828,8 @@ paths:
       summary: Test Email Message to Segments
   /notification/test/email/tags:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6723,6 +6851,8 @@ paths:
       summary: Test Email Message to Tags
   '/notification/test/email/user/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The userID assigned to an email contact.
           example: testuser@example.com
@@ -6751,6 +6881,8 @@ paths:
       summary: Test Email Message to User
   '/notification/test/email/device/{deviceID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The contactID generated for an email address.
           example: bbff2ce9b547d2df4731bac277xxx
@@ -6779,6 +6911,8 @@ paths:
       summary: Test Email Message to Contact
   /notification/test/push/broadcast:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6794,10 +6928,12 @@ paths:
         with the `applicationKey` and `masterSecret`.
       operationId: postNotificationTestPushBroadcast
       requestBody:
-        $ref: '#/components/requestBodies/Test_Push_Message_BroadcastBody'
+        $ref: '#/components/requestBodies/NotificationTestPushBroadcast'
       summary: Test Push Message Broadcast
   /notification/test/push/criteria:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6805,7 +6941,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Test
@@ -6821,6 +6957,8 @@ paths:
       summary: Test Push Message to Criteria
   /notification/test/push/event:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6828,7 +6966,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Test
@@ -6844,6 +6982,8 @@ paths:
       summary: Test Push Message to Events
   /notification/test/push/segments:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6865,6 +7005,8 @@ paths:
       summary: Test Push Message to Segments
   /notification/test/push/tags:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6886,6 +7028,8 @@ paths:
       summary: Test Push Message to Tags
   '/notification/test/push/user/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The user ID is the one the client device registered with, e.g., the
@@ -6916,6 +7060,8 @@ paths:
       summary: Test Push Message to User
   '/notification/test/push/device/{deviceID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The deviceID is the ID as registered by the device, e.g. APNS token
@@ -6946,6 +7092,8 @@ paths:
       summary: Test Push Message to Device
   /notification/test/sms/broadcast:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6964,6 +7112,8 @@ paths:
       summary: Test SMS Message Broadcast
   /notification/test/sms/criteria:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6971,7 +7121,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Test
@@ -6987,6 +7137,8 @@ paths:
       summary: Test SMS Message to Criteria
   /notification/test/sms/event:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -6994,7 +7146,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Test
@@ -7010,6 +7162,8 @@ paths:
       summary: Test SMS Message to Events
   /notification/test/sms/segments:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -7031,6 +7185,8 @@ paths:
       summary: Test SMS Message to Segments
   /notification/test/sms/tags:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -7052,6 +7208,8 @@ paths:
       summary: Test SMS Message to Tags
   '/notification/test/sms/user/{userID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The userID assigned to an email contact.
           example: testuser@example.com
@@ -7080,6 +7238,8 @@ paths:
       summary: Test SMS Message to User
   '/notification/test/sms/device/{deviceID}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The numberID generated for a phone number.
           example: bbff2ce9b547d2df4731bac277xxx
@@ -7182,6 +7342,8 @@ paths:
       operationId: getPass
       summary: List Passes
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -7189,7 +7351,7 @@ paths:
               schema:
                 properties:
                   pass:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Pass
@@ -7485,6 +7647,8 @@ paths:
       summary: Download Pass
   '/pass/redeem/{barcode}':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The barcode string of an active pass.
           example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
@@ -7498,6 +7662,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: pass redeemed
           description: OK
@@ -7576,6 +7742,8 @@ paths:
       operationId: getPassById
       summary: Get Pass
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active pass.
           in: path
@@ -7587,6 +7755,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: pass updated
           description: OK
@@ -7641,6 +7811,8 @@ paths:
               type: object
       summary: Update Pass
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active pass.
           in: path
@@ -7652,12 +7824,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: pass deleted
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: pass deleted
           description: OK
-          headers: {}
       tags:
         - Pass
       description: >-
@@ -7741,6 +7912,8 @@ paths:
       operationId: getPassbook
       summary: Get Pass Templates
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -7748,7 +7921,7 @@ paths:
               schema:
                 properties:
                   passbook:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Pass Templates
@@ -7939,6 +8112,8 @@ paths:
       operationId: getPassbookById
       summary: Get Pass Template
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active passbook template.
           in: path
@@ -7950,6 +8125,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: passbook updated
           description: OK
@@ -7983,6 +8160,8 @@ paths:
               type: object
       summary: Update Pass Template
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active passbook template.
           in: path
@@ -7994,6 +8173,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: passbook deleted
           description: OK
@@ -8069,6 +8250,8 @@ paths:
       operationId: getProduct
       summary: List all products for an application
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -8076,7 +8259,7 @@ paths:
               schema:
                 properties:
                   product:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Product
@@ -8159,6 +8342,8 @@ paths:
       operationId: getProductById
       summary: Get Product
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active product.
           in: path
@@ -8170,6 +8355,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: product updated
           description: OK
@@ -8209,6 +8396,8 @@ paths:
               type: object
       summary: Update Product
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active product.
           in: path
@@ -8220,6 +8409,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               examples:
                 message: product deleted
           description: OK
@@ -8494,6 +8685,8 @@ paths:
       operationId: getRegion
       summary: List Regions
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
@@ -8501,7 +8694,7 @@ paths:
               schema:
                 properties:
                   region:
-                    $ref: '#/components/schemas/ObjectCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Region
@@ -8582,10 +8775,14 @@ paths:
       summary: Create Region
   /region/all:
     delete:
+      security:
+        - MasterSecret: []
       responses:
         '202':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: region removal is being processed
           description: OK
@@ -8601,6 +8798,8 @@ paths:
       summary: Delete All Regions
   /region/all/{category}:
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The category for which you want to delete regions.
           example: shops
@@ -8613,6 +8812,8 @@ paths:
         '202':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: region removal is being processed
           description: OK
@@ -8815,6 +9016,8 @@ paths:
       operationId: getRegionById
       summary: Get Region
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id for the region.
           in: path
@@ -8826,6 +9029,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: region updated
           description: OK
@@ -8910,6 +9115,8 @@ paths:
               type: object
       summary: Update Region
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The region id of an active region.
           in: path
@@ -8921,6 +9128,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: region deleted
           description: OK
@@ -9019,16 +9228,22 @@ paths:
       summary: Get Reply
   /sms:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: subscription updated
           description: OK
         '202':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: subscription is being processed
           description: Accepted
@@ -10495,6 +10710,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseStatus'
               example:
                 status: ok
           description: OK
@@ -10570,13 +10787,15 @@ paths:
       operationId: getTrigger
       summary: List Triggers
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
               example:
                 trigger:
-                  $ref: '#/components/schemas/ObjectCreated'
+                  $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Trigger
@@ -10651,6 +10870,8 @@ paths:
       operationId: getTriggerById
       summary: Get Trigger
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The trigger id
           in: path
@@ -10662,6 +10883,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: trigger updated
           description: OK
@@ -10749,6 +10972,8 @@ paths:
               type: object
       summary: Update Trigger
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The trigger id
           in: path
@@ -10760,6 +10985,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: trigger deleted
           description: OK
@@ -10774,6 +11001,8 @@ paths:
       summary: Delete Trigger
   '/upload/{type}':
     post:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The type of the file to upload
           example: import
@@ -10864,6 +11093,8 @@ paths:
       summary: Create Upload
   '/upload/{type}/{applicationKey}/{token}':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The first (type) part of the path of the file to delete
           example: notifications
@@ -10890,6 +11121,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: asset updated
           description: OK
@@ -10925,6 +11158,8 @@ paths:
               format: binary
       summary: Update Upload
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The first (type) part of the path of the file to delete
           example: notifications
@@ -11080,6 +11315,8 @@ paths:
       operationId: getUserForUserID
       summary: Get User By userID
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The userID of the user
           example: '12345'
@@ -11104,6 +11341,8 @@ paths:
       summary: Deactivate User By userID
   '/user/foruserid/{userID}/remove':
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The userID of the user
           example: '12345'
@@ -11116,6 +11355,8 @@ paths:
         '202':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: user removal is being processed
           description: Accepted
@@ -11131,13 +11372,15 @@ paths:
       summary: Delete User By userID
   /user/provisional:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
               example:
                 user:
-                  $ref: '#/components/schemas/ObjectCreated'
+                  $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - User
@@ -11243,6 +11486,8 @@ paths:
       operationId: getUserById
       summary: Get User
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the user
           in: path
@@ -11265,6 +11510,8 @@ paths:
       summary: Deactivate User
   '/user/{user}/remove':
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the user
           in: path
@@ -11276,6 +11523,8 @@ paths:
         '202':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: user removal is being processed
           description: Accepted
@@ -11290,6 +11539,8 @@ paths:
       summary: Delete User
   '/user/{user}/add/{segment}':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the user
           in: path
@@ -11307,6 +11558,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: user added to segment
           description: OK
@@ -11319,6 +11572,8 @@ paths:
       summary: Add User To User Segment
   '/user/{user}/remove/{segment}':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the user
           in: path
@@ -11336,6 +11591,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: user removed from segment
           description: OK
@@ -11386,13 +11643,15 @@ paths:
       operationId: getUserSegment
       summary: Get User Segments
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
               example:
                 userSegment:
-                  $ref: '#/components/schemas/ObjectCreated'
+                  $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - User Segment
@@ -11405,13 +11664,15 @@ paths:
       summary: Create User Segment
   /usersegment/batch:
     post:
+      security:
+        - MasterSecret: []
       responses:
         '201':
           content:
             application/json; charset=utf-8:
               example:
                 userSegment:
-                  $ref: '#/components/schemas/ObjectCreated'
+                  $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - User Segment
@@ -11512,6 +11773,8 @@ paths:
       operationId: getUserSegmentById
       summary: Get User Segment
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           in: path
@@ -11523,6 +11786,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: user segment updated
           description: OK
@@ -11547,6 +11812,8 @@ paths:
               type: object
       summary: Update User Segment
     delete:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           in: path
@@ -11558,6 +11825,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: user segment removed
           description: OK
@@ -11570,6 +11839,8 @@ paths:
       summary: Delete User Segment
   '/usersegment/{segment}/add':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           in: path
@@ -11581,6 +11852,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCount'
               example:
                 count: 2
                 message: added users to segment
@@ -11609,6 +11882,8 @@ paths:
       summary: Add Batch of Users To User Segment
   '/usersegment/{segment}/remove':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           in: path
@@ -11620,6 +11895,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCount'
               example:
                 count: 2
                 message: removed users from segment
@@ -11697,6 +11974,8 @@ paths:
       summary: Get Users In User Segment
   '/usersegment/{segment}/clear':
     put:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           in: path
@@ -11708,6 +11987,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: user segment cleared
           description: OK
@@ -11719,34 +12000,47 @@ paths:
       operationId: putUserSegmentByIdClear
       summary: Delete Users From User Segment
 components:
+  securitySchemes:
+    Password:
+      description: >-
+        Used for signing in to your account and retrieving a session token.
+        Username is account email address, password is account password
+      type: http
+      scheme: basic
+    ApplicationSecret:
+      description: >-
+        Only used for calls that originate from the device, e.g., registration, tags.
+        Username is applicationKey, password is applicationSecret
+      type: http
+      scheme: basic
+    MasterSecret:
+      description: >-
+        Only used for calls that originate from the device, e.g., registration, tags.
+        Username is applicationKey, password is masterSecret
+      type: http
+      scheme: basic
+    Token:
+      description: >-
+        Used for all calls that need account-wide access, such as stats, lists of applications, etc.
+        Username is session token, password is arbitrary string, e.g., `xxx`
+      type: http
+      scheme: basic
   requestBodies:
-    AssetGroup:
+    AssetOrder:
       content:
         application/json:
           schema:
-            properties:
-              assets:
-                description: An array of assets.
-                items:
-                  $ref: '#/components/schemas/AssetGroupAsset'
-                type: array
-              name:
-                description: The asset group's name
-                type: string
-                example: Test Group
-              notAfter:
-                description: Asset groups will not be visible after this date.
-                $ref: '#/components/schemas/Date'
-              notBefore:
-                description: Asset groups will not be visible before this date.
-                $ref: '#/components/schemas/Date'
-              segment:
-                description: The segment for this asset group
-                $ref: '#/components/schemas/ObjectId'
-            required:
-              - name
-              - assets
-            type: object
+            $ref: '#/components/schemas/AssetOrder'
+    AssetGroupCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AssetGroupCreate'
+    AssetGroupUpdate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AssetGroupBase'
     BeaconCreate:
       content:
         application/json:
@@ -11858,6 +12152,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Datasource'
+    DatasourceTest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DatasourceTest'
     NotificationPushTriggered:
       content:
         application/json:
@@ -12099,6 +12398,118 @@ components:
           schema:
             $ref: '#/components/schemas/NotificationTestSmsBase'
   schemas:
+    AssetOrder:
+      properties:
+        customSortOrder:
+          type: number
+          example: 2
+      required:
+        - customSortOrder
+      type: object
+    AssetList:
+      properties:
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetModel'
+        count:
+          type: number
+          example: 1
+      type: object
+    AssetModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+        - $ref: '#/components/schemas/AssetBase'
+    AssetBase:
+      properties:
+        contentDisposition:
+          type: string
+          example: form-data; name="file"; filename="Screenshot_2016-04-07-13-17-31.png"
+        contentLength:
+          type: number
+          example: 59609
+        contentType:
+          type: string
+          example: image/png
+        customSortOrder:
+          type: number
+          example: '0'
+        fileName:
+          type: string
+          example: /notifications/3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
+        key:
+          type: string
+          example: 3d99d18148e6f3dbcf4ff891c9a0ff63b0311feccc7b9d0c8c79fee9b4dde19/e457c97c76bc41ff524af3697cc5236cc06fd982a83f983046fff68ea56b1b6
+        lastModified:
+          $ref: '#/components/schemas/Date'
+        originalFileName:
+          type: string
+          example: Screenshot_2016-04-07-13-17-31.png
+    AssetGroupCreate:
+      allOf:
+        - $ref: '#/components/schemas/AssetGroupBase'
+        - properties:
+            assets:
+              description: An array of assets.
+              items:
+                $ref: '#/components/schemas/AssetGroupAsset'
+              type: array
+            name:
+              description: The asset group's name
+              type: string
+              example: Test Group
+          required:
+            - name
+            - assets
+          type: object
+    AssetGroupList:
+      properties:
+        assetGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetGroupModel'
+        count:
+          type: number
+          example: 1
+      type: object
+    AssetGroupModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+        - $ref: '#/components/schemas/AssetGroupBase'
+    AssetGroupBase:
+      properties:
+        assets:
+          description: An array of assets.
+          items:
+            $ref: '#/components/schemas/AssetGroupAsset'
+          type: array
+        name:
+          description: The asset group's name
+          type: string
+          example: Test Group
+        notAfter:
+          description: Asset groups will not be visible after this date.
+          $ref: '#/components/schemas/Date'
+        notBefore:
+          description: Asset groups will not be visible before this date.
+          $ref: '#/components/schemas/Date'
+        segment:
+          description: The segment for this asset group
+          $ref: '#/components/schemas/ObjectId'
+      required:
+        - name
+        - assets
+      type: object
     AssetGroupAsset:
       properties:
         title:
@@ -12126,7 +12537,7 @@ components:
             key2: value2
     BeaconCreate:
       allOf:
-        - $ref: '#/components/schemas/Beacon'
+        - $ref: '#/components/schemas/BeaconBase'
         - properties:
             name:
               description: Your beacon's name
@@ -12147,7 +12558,28 @@ components:
             - minor
             - notification
           type: object
-    Beacon:
+    BeaconUpdate:
+      $ref: '#/components/schemas/BeaconBase'
+    BeaconList:
+      properties:
+        beacons:
+          description: The list of beacons, paginated
+          type: array
+          items:
+            $ref: '#/components/schemas/BeaconModel'
+        count:
+          description: Total number of beacons in the list
+          type: number
+          example: 1
+      type: object
+    BeaconModel:
+      allOf:
+        - properties:
+            _id:
+              description: Notificare ID of the beacon
+              $ref: '#/components/schemas/ObjectId'
+        - $ref: '#/components/schemas/BeaconBase'
+    BeaconBase:
       properties:
         batteryLevel:
           description: An object representing the battery level of this beacon.
@@ -12212,6 +12644,7 @@ components:
             Set to true if this beacon can be used in triggers. Max.
             number of beacons that can use triggers is limited to 10.
           type: boolean
+          default: false
       type: object
     Circle:
       allOf:
@@ -12297,54 +12730,105 @@ components:
             name:
               description: The source's name
               type: string
-            type:
-              description: >-
-                The type of datasource. Accepts one of these: 'feed',
-                'upload'.
-              type: string
-              enum: [feed, upload]
-              default: feed
             config:
-              properties:
-                messageType:
-                  description: The type of message to send
-                  type: string
-                url:
-                  description: The URL to fetch the RSS Feed from
-                  type: string
-              required:
-                - url
-                - messageType
-              type: object
+              $ref: '#/components/schemas/DatasourceConfig'
           required:
             - name
             - config
           type: object
-    Datasource:
+    DatasourceUpdate:
+      $ref: '#/components/schemas/DatasourceBase'
+    DatasourceList:
       properties:
+        datasources:
+          description: The list of Datasources, paginated
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasourceModel'
+        count:
+          description: Total number of Datasources in the list
+          type: number
+          example: 1
+      type: object
+    DatasourceModel:
+      allOf:
+        - properties:
+            _id:
+              description: Notificare ID of the Datasource
+              readOnly: true
+              $ref: '#/components/schemas/ObjectId'
+            lastRun:
+              description: Time of last polling
+              readOnly: true
+              $ref: '#/components/schemas/Date'
+            lastParsed:
+              description: Time of last parsing
+              readOnly: true
+              $ref: '#/components/schemas/Date'
+            nextRun:
+              description: Time of next polling
+              readOnly: true
+              $ref: '#/components/schemas/Date'
+          type: object
+        - $ref: '#/components/schemas/DatasourceBase'
+    DatasourceTest:
+      properties:
+        config:
+          $ref: '#/components/schemas/DatasourceConfig'
+      type: object
+      required:
+        - config
+    DatasourceFeedModel:
+      properties:
+        items:
+          type: array
+          items:
+            properties:
+              date:
+                $ref: '#/components/schemas/Date'
+              description:
+                type: string
+                example: |-
+                  <p><br />
+                  From day 1, we set out to provide...
+              link:
+                type: string
+                format: uri
+                example: http://notifica.re/blog/2016/02/26/Notificare-ISO-Certification/
+              title:
+                type: string
+                example: Notificare receives ISO 27001 certification
+        meta:
+          properties:
+            date:
+              $ref: '#/components/schemas/Date'
+            description:
+              type: string
+              example: Our Blog
+            title:
+              type: string
+              example: Notificare
+          type: object
+      type: object
+    DatasourceBase:
+      properties:
+        active:
+          description: Polling of this feed is enabled
+          type: boolean
+          default: false
         name:
           description: The source's name
+          example: Blog
           type: string
         type:
           description: >-
             The type of datasource. Accepts one of these: 'feed',
             'upload'.
+          example: feed
           type: string
           default: feed
         config:
-          properties:
-            messageType:
-              description: The type of message to send
-              type: string
-              example: re.notifica.notification.Alert
-            url:
-              description: The URL to fetch the RSS Feed from
-              type: string
-              format: uri
-          required:
-            - url
-            - messageType
-          type: object
+          $ref: '#/components/schemas/DatasourceConfig'
         interval:
           description: The interval at which to poll the feed
           type: number
@@ -12387,8 +12871,21 @@ components:
               - target
             type: object
       type: object
-    DatasourceSegmentMap:
-    DatasourceTagMap:
+    DatasourceConfig:
+      properties:
+        messageType:
+          description: The type of message to send
+          type: string
+          example: re.notifica.notification.Alert
+        url:
+          description: The URL to fetch the RSS Feed from
+          type: string
+          example: http://notifica.re/blog/feed.xml
+          format: uri
+      required:
+        - url
+        - messageType
+      type: object
     Date:
       type: string
       format: date-time
@@ -12405,12 +12902,6 @@ components:
           type: string
         value:
           $ref: '#/components/schemas/Date'
-      type: object
-    Error:
-      properties:
-        error:
-          type: string
-      required: error
       type: object
     EventCriteria:
       properties:
@@ -13607,11 +14098,6 @@ components:
           example: Hello world
       required:
         - message
-    ObjectCreated:
-      type: object
-      properties:
-        _id:
-          $ref: '#/components/schemas/ObjectId'
     ObjectId:
       type: string
       example: 1d9e80ef851d212aca82cf23
@@ -13670,6 +14156,49 @@ components:
                 type: string
           example: Android
       type: object
+    ResponseKeyCreated:
+      allOf:
+        - $ref: '#/components/schemas/ResponseCreated'
+        - properties:
+            key:
+              type: string
+          type: object
+    ResponseMessageCreated:
+      allOf:
+        - $ref: '#/components/schemas/ResponseCreated'
+        - $ref: '#/components/schemas/ResponseMessage'
+    ResponseError:
+      properties:
+        error:
+          type: string
+      required: error
+      type: object
+    ResponseMessageCount:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - properties:
+            count:
+              type: number
+              example: 2
+          required: count
+          type: object
+    ResponseStatus:
+      properties:
+        status:
+          type: string
+      required: status
+      type: object
+    ResponseMessage:
+      properties:
+        message:
+          type: string
+      required: message
+      type: object
+    ResponseCreated:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
     SegmentsCriteria:
       properties:
         quantifier:
