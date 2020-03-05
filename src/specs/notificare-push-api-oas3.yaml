@@ -65,12 +65,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                value:
-                  account: "5245bc5b3e66a3b01f0024d4"
-                  token: "5245bc5b3e66a3b01f2224d4"
-                  expires: "2013-11-25T15:19:10.000Z"
-                  needsSecondFactor: false
+              schema:
+                $ref: '#/components/schemas/AccountSession'
           description: Created
         '401':
           content:
@@ -132,11 +128,8 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                account: "5245bc5b3e66a3b01f0024d4"
-                token: "5245bc5b3e66a3b01f2224d4"
-                expires: "2013-11-25T15:19:10.000Z"
-                needsSecondFactor: false
+              schema:
+                $ref: '#/components/schemas/AccountSession'
           description: Created
       tags:
         - Account
@@ -156,7 +149,7 @@ paths:
                 - code
               type: object
       operationId: postAccountLoginTotp
-      summary: Create TOTP
+      summary: Login TOTP
   /account/2fa:
     get:
       security:
@@ -166,14 +159,28 @@ paths:
           description: OK
           content:
             application/json; charset=utf-8:
-              example:
-                use2FA: false
-                totp:
-                  configured: false
-                  verified: false
-                  date: '2013-11-25T15:19:10.000Z'
-                u2f:
-                  configured: false
+              schema:
+                properties:
+                  use2FA:
+                    type: boolean
+                    default: false
+                  totp:
+                    properties:
+                      configured:
+                        type: boolean
+                        default: false
+                      verified:
+                        type: boolean
+                        default: false
+                      date:
+                        $ref: '#/components/schemas/Date'
+                    type: object
+                  u2f:
+                    properties:
+                      configured:
+                        type: boolean
+                        default: false
+                    type: object
       tags:
         - Account
       description: >-
@@ -190,9 +197,15 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                key: "xxx"
-                url: "otpauth://totp/xxx?secret=xxx&period=30&issuer=xxx"
+              schema:
+                properties:
+                  key:
+                    type: string
+                    example: 'xxx'
+                  url:
+                    type: string
+                    example: 'otpauth://totp/xxx?secret=xxx&period=30&issuer=xxx'
+                type: object
           description: Registered TOTP
         '403':
           content:
@@ -319,59 +332,11 @@ paths:
           schema:
             type: number
       responses:
-        '201':
+        '200':
           content:
             application/json; charset=utf-8:
-              example:
-                applications:
-                  - _id: 5245bc5b3e66a3b01f0024d4
-                    account: 5245bc5b3e66a3b01f0024d4
-                    actionCategories:
-                      - actions:
-                          - camera: false
-                            destructive: false
-                            keyboard: false
-                            label: follow
-                            target: ''
-                            type: re.notifica.action.Callback
-                        name: MyTemplate
-                        type: re.notifica.notification.Alert
-                    active: true
-                    apnsConfig:
-                      info:
-                        issuer:
-                          C: US
-                          CN: >-
-                            Apple Worldwide Developer Relations
-                            Certification Authority
-                          O: Apple Inc.
-                          OU: Apple Worldwide Developer Relations
-                        notAfter: '2014-11-25T15:19:10.000Z'
-                        notBefore: '2013-11-25T15:19:10.000Z'
-                        serial: xxxxxx
-                        subject:
-                          C: NL
-                          CN: >-
-                            Apple Development IOS Push Services:
-                            re.notifica.test
-                          OU: XXXXXXXXXX
-                          UID: re.notifica.test
-                      certificate: raw certificate
-                    applicationKey: xxxxxxxxxxxxx
-                    applicationSecret: xxxxxxxxxxxx
-                    authProviders:
-                      - provider: twitter
-                    blocked: false
-                    category: Other
-                    date: '2012-11-28T15:31:54.904Z'
-                    gcmConfig:
-                      key: xxxxxxxxxxxxxxxxxxxxx
-                    locationTtl: 7
-                    masterSecret: xxxxxxxxxx
-                    name: Your App
-                    production: false
-                    regionConfig:
-                      proximityUUID: f7826da6-4fa2-4e98-8024-bc5b71e0893e
+              schema:
+                $ref: '#/components/schemas/ApplicationList'
           description: Created
       tags:
         - Application
@@ -442,56 +407,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                applications:
-                  - _id: 5245bc5b3e66a3b01f0024d4
-                    account: 5245bc5b3e66a3b01f0024d4
-                    actionCategories:
-                      - actions:
-                          - camera: false
-                            destructive: false
-                            keyboard: false
-                            label: follow
-                            target: ''
-                            type: re.notifica.action.Callback
-                        name: MyTemplate
-                        type: re.notifica.notification.Alert
-                    active: true
-                    apnsConfig:
-                      info:
-                        issuer:
-                          C: US
-                          CN: >-
-                            Apple Worldwide Developer Relations
-                            Certification Authority
-                          O: Apple Inc.
-                          OU: Apple Worldwide Developer Relations
-                        notAfter: '2014-11-25T15:19:10.000Z'
-                        notBefore: '2013-11-25T15:19:10.000Z'
-                        serial: xxxxxx
-                        subject:
-                          C: NL
-                          CN: >-
-                            Apple Development IOS Push Services:
-                            re.notifica.test
-                          OU: XXXXXXXXXX
-                          UID: re.notifica.test
-                      certificate: raw certificate
-                    applicationKey: xxxxxxxxxxxxx
-                    applicationSecret: xxxxxxxxxxxx
-                    authProviders:
-                      - provider: twitter
-                    blocked: false
-                    category: Other
-                    date: '2012-11-28T15:31:54.904Z'
-                    gcmConfig:
-                      key: xxxxxxxxxxxxxxxxxxxxx
-                    locationTtl: 7
-                    masterSecret: xxxxxxxxxx
-                    name: Your App
-                    production: false
-                    regionConfig:
-                      proximityUUID: f7826da6-4fa2-4e98-8024-bc5b71e0893e
+              schema:
+                $ref: '#/components/schemas/ApplicationList'
           description: Created
       tags:
         - Application
@@ -516,56 +433,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                application:
-                  _id: 5245bc5b3e66a3b01f0024d4
-                  account: xxxxxxxxxxx
-                  actionCategories:
-                    - actions:
-                        - camera: false
-                          destructive: false
-                          keyboard: false
-                          label: follow
-                          target: ''
-                          type: re.notifica.action.Callback
-                      name: MyTemplate
-                      type: re.notifica.notification.Alert
-                  active: true
-                  apnsConfig:
-                    info:
-                      issuer:
-                        C: US
-                        CN: >-
-                          Apple Worldwide Developer Relations Certification
-                          Authority
-                        O: Apple Inc.
-                        OU: Apple Worldwide Developer Relations
-                      notAfter: '2014-11-25T15:19:10.000Z'
-                      notBefore: '2013-11-25T15:19:10.000Z'
-                      serial: xxxxxx
-                      subject:
-                        C: NL
-                        CN: >-
-                          Apple Development IOS Push Services:
-                          re.notifica.test
-                        OU: XXXXXXXXXX
-                        UID: re.notifica.test
-                    certificate: raw certificate
-                  applicationKey: xxxxxxxxxxxxx
-                  applicationSecret: xxxxxxxxxxxx
-                  authProviders:
-                    - provider: twitter
-                  blocked: false
-                  category: Other
-                  date: '2012-11-28T15:31:54.904Z'
-                  gcmConfig:
-                    key: xxxxxxxxxxxxxxxxxxxxx
-                  locationTtl: 7
-                  masterSecret: xxxxxxxxxx
-                  name: Your App
-                  production: false
-                  regionConfig:
-                    proximityUUID: f7826da6-4fa2-4e98-8024-bc5b71e0893e
+              schema:
+                properties:
+                  application:
+                    $ref: '#/components/schemas/ApplicationModel'
+                type: object
           description: Application
       tags:
         - Application
@@ -6847,7 +6719,7 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailTags
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailtags'
+        $ref: '#/components/requestBodies/NotificationTestEmailTags'
       summary: Test Email Message to Tags
   '/notification/test/email/user/{userID}':
     post:
@@ -7393,10 +7265,7 @@ paths:
                     the number of times the card can be redeemed.
                   type: number
                 passbook:
-                  allOf:
-                    - $ref: '#/components/schemas/ObjectId'
-                    - properties: {}
-                      type: object
+                  $ref: '#/components/schemas/ObjectId'
                   description: The passbook template used to create a pass.
                 redeem:
                   description: >-
@@ -7794,10 +7663,7 @@ paths:
                     the number of times the card can be redeemed.
                   type: number
                 passbook:
-                  allOf:
-                    - $ref: '#/components/schemas/ObjectId'
-                    - properties: {}
-                      type: object
+                  $ref: '#/components/schemas/ObjectId'
                   description: The passbook template used to create a pass.
                 redeem:
                   description: >-
@@ -10793,9 +10659,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                trigger:
-                  $ref: '#/components/schemas/ResponseCreated'
+              schema:
+                properties:
+                  trigger:
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Trigger
@@ -10824,7 +10691,7 @@ paths:
         Notification object.
       operationId: postTrigger
       requestBody:
-        $ref: '#/components/requestBodies/Create_TriggerBody'
+        $ref: '#/components/requestBodies/TriggerCreate'
       summary: Create Trigger
   '/trigger/{trigger}':
     get:
@@ -11660,7 +11527,7 @@ paths:
         `applicationKey` and  `masterSecret`.
       operationId: postUserSegment
       requestBody:
-        $ref: '#/components/requestBodies/Create_User_SegmentBody'
+        $ref: '#/components/requestBodies/UserSegmentCreate'
       summary: Create User Segment
   /usersegment/batch:
     post:
@@ -12050,7 +11917,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Beacon'
+            $ref: '#/components/schemas/BeaconUpdate'
     ImportBeacon:
       content:
         application/json:
@@ -12151,7 +12018,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Datasource'
+            $ref: '#/components/schemas/DatasourceUpdate'
     DatasourceTest:
       content:
         application/json:
@@ -12397,7 +12264,140 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/NotificationTestSmsBase'
+    TriggerCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TriggerCreate'
+    UserSegmentCreate:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserSegmentCreate'
   schemas:
+    AccountSession:
+      properties:
+        account:
+          $ref: '#/components/schemas/ObjectId'
+        token:
+          description: The token to use for further authentication requests
+          type: string
+          example: 2c6c5423fa6c64edb330e999e3912538d40c170e88f779aafad970f2f4d8090b
+        expires:
+          $ref: '#/components/schemas/Date'
+        needsSecondFactor:
+          description: This session needs a second factor before it can be used
+          type: boolean
+          default: false
+    ApplicationList:
+      properties:
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationModel'
+        count:
+          type: number
+          example: 1
+      type: object
+    ApplicationModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            account:
+              $ref: '#/components/schemas/ObjectId'
+            date:
+              $ref: '#/components/schemas/Date'
+            applicationKey:
+              description: The application key to use as username for authentication
+              type: string
+              example: xxxxxxxxxxxx
+            applicationSecret:
+              description: The application secret to use as password for authentication
+              type: string
+              example: xxxxxxxxxxxx
+            masterSecret:
+              description: The master secret to use as password for authentication
+              type: string
+              example: xxxxxxxxxxxx
+          type: object
+        - $ref: '#/components/schemas/ApplicationBase'
+    ApplicationBase:
+      properties:
+        active:
+          type: boolean
+          default: true
+        apnsConfig:
+          properties:
+            certificate:
+              type: string
+              format: byte
+            info:
+              properties:
+                issuer:
+                  properties:
+                    C:
+                      type: string
+                      example: US
+                    CN:
+                      type: string
+                      example: Apple Worldwide Developer Relations Certification Authority
+                    O:
+                      type: string
+                      example: Apple Inc.
+                    OU:
+                      type: string
+                      example: Apple Worldwide Developer Relations
+                  type: object
+                notAfter:
+                  $ref: '#/components/schemas/Date'
+                notBefore:
+                  $ref: '#/components/schemas/Date'
+                serial:
+                  type: string
+                  example: 1eda39f7b752e468
+                subject:
+                  properties:
+                    C:
+                      type: string
+                      example: NL
+                    CN:
+                      type: string
+                      example: 'Apple Development IOS Push Services: re.notifica.demo'
+                    OU:
+                      type: string
+                      example: Y47BY73NFN
+                    O:
+                      type: string
+                      example: Notificare B.V.
+                    UID:
+                      type: string
+                      example: re.notifica.demo
+                  type: object
+              type: object
+          type: object
+        gcmConfig:
+          properties:
+            key:
+              type: string
+              format: byte
+        category:
+          type: string
+          example: Other
+        locationTtl:
+          type: number
+          example: 7
+        name:
+          type: string
+          example: Your App
+        regionConfig:
+          properties:
+            proximityUUID:
+              type: string
+              format: uuid
+              example: f7826da6-4fa2-4e98-8024-bc5b71e0893e
+          type: object
+      type: object
     AssetOrder:
       properties:
         customSortOrder:
@@ -12725,7 +12725,7 @@ components:
       type: object
     DatasourceCreate:
       allOf:
-        - $ref: '#/components/schemas/Datasource'
+        - $ref: '#/components/schemas/DatasourceBase'
         - properties:
             name:
               description: The source's name
@@ -14224,6 +14224,16 @@ components:
             - all
             - any
             - none
+          type: string
+      type: object
+    TriggerCreate:
+      properties:
+        name:
+          type: string
+      type: object
+    UserSegmentCreate:
+      properties:
+        name:
           type: string
       type: object
 tags:
