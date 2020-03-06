@@ -367,21 +367,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                category:
-                  description: Your application's category.
-                  type: string
-                name:
-                  description: Your application's name.
-                  type: string
-                production:
-                  description: If your application is set to production or not.
-                  type: boolean
-              required:
-                - name
-                - production
-                - category
-              type: object
+              $ref: '#/components/schemas/ApplicationCreate'
       summary: Create Application
   /application/shared:
     get:
@@ -476,18 +462,7 @@ paths:
         content:
           application/json:
             schema:
-              example:
-                category: Business
-                name: My Amazing App
-                production: true
-              properties:
-                category:
-                  type: string
-                name:
-                  type: string
-                production:
-                  type: boolean
-              type: object
+              $ref: '#/components/schemas/ApplicationUpdate'
       summary: Update Application
     delete:
       security:
@@ -753,7 +728,10 @@ paths:
         `masterSecret`.
       operationId: putAssetOrder
       requestBody:
-        $ref: '#/components/requestBodies/AssetOrder'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetOrder'
       summary: Update Asset Order
   /asset/group:
     get:
@@ -814,7 +792,10 @@ paths:
         `masterSecret`.
       operationId: postAssetGroup
       requestBody:
-        $ref: '#/components/requestBodies/AssetGroupCreate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetGroupCreate'
       summary: Create Asset Group
   '/asset/group/byname/{name}':
     get:
@@ -921,7 +902,10 @@ paths:
         `masterSecret`.
       operationId: putAssetGroupById
       requestBody:
-        $ref: '#/components/requestBodies/AssetGroupUpdate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetGroupBase'
       summary: Update Asset Group
     delete:
       security:
@@ -975,7 +959,10 @@ paths:
         `masterSecret`.
       operationId: postBeacon
       requestBody:
-        $ref: '#/components/requestBodies/BeaconCreate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeaconCreate'
       summary: Create Beacon
   '/beacon/forregion/{region}':
     get:
@@ -1075,7 +1062,10 @@ paths:
         `masterSecret`.
       operationId: putBeaconById
       requestBody:
-        $ref: '#/components/requestBodies/BeaconUpdate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeaconUpdate'
       summary: Update Beacon
     delete:
       security:
@@ -1167,7 +1157,10 @@ paths:
         `masterSecret`.
       operationId: postDatasource
       requestBody:
-        $ref: '#/components/requestBodies/DatasourceCreate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasourceCreate'
       summary: Create Datasource
   /datasource/test:
     post:
@@ -1192,7 +1185,10 @@ paths:
         `masterSecret`.
       operationId: postDatasourceTest
       requestBody:
-        $ref: '#/components/requestBodies/DatasourceTest'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasourceTest'
       summary: Test New Datasource
   '/datasource/{id}':
     get:
@@ -1250,7 +1246,10 @@ paths:
         `masterSecret`.
       operationId: putDatasourceById
       requestBody:
-        $ref: '#/components/requestBodies/DatasourceUpdate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasourceUpdate'
       summary: Update Datasource
     delete:
       security:
@@ -1341,53 +1340,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags: []
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
-                  - tags: []
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    last_active: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -1426,53 +1380,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates: []
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -1548,53 +1457,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates: []
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -1653,53 +1517,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates: []
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -1741,53 +1560,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
-                  - tags:
-                      - toys
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates: []
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -1838,31 +1612,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags: []
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -1903,53 +1654,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags: []
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
-                  - tags: []
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -1993,53 +1699,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                devices:
-                  - tags: []
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
-                  - tags: []
-                    _id: 5245bc5b3e66a3b01f0024d4
-                    active: true
-                    appVersion: '1.0'
-                    application: 52458981394c07916000492c
-                    deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                    deviceString: MacIntel
-                    language: en
-                    lastActive: '2014-03-11T16:20:55.084Z'
-                    location:
-                      coordinates:
-                        - 4.2345
-                        - 5.6789
-                      type: Point
-                    medium: push
-                    osString: Mac OS X 10.9.2
-                    osVersion: 10.9.2
-                    platform: Mac OS X
-                    sdkVersion: 0.0.1
-                    timeZoneOffset: -5
-                    transport: Websocket
-                    userID: info@notifica.re
+              schema:
+                $ref: '#/components/schemas/DeviceList'
           description: OK
       tags:
         - Device
@@ -2298,41 +1959,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                tags:
-                  description: A list of tags you wish to assign to the email address.
-                  items:
-                    type: string
-                  type: array
-                  example: ['tag1']
-                email:
-                  description: The email address you wish to subscribe to your app.
-                  type: string
-                  format: email
-                language:
-                  description: The language you wish to assign the contact to.
-                  type: string
-                  example: 'nl'
-                region:
-                  description: The region you wish to assign the contact to.
-                  type: string
-                  example: 'NL'
-                userID:
-                  description: The userID your wish to assign the contact to.
-                  type: string
-                  example: '173661892772'
-                userName:
-                  description: The userName your wish to assign the contact to.
-                  type: string
-                  example: Test User
-                verify:
-                  description: >-
-                    If you wish to require verification before activating the
-                    email contact set this property to `true`.
-                  type: boolean
-              required:
-                - email
-              type: object
+              $ref: '#/components/schemas/EmailCreate'
       summary: Create Email Contact
   '/event/custom/{type}/{userID}':
     post:
@@ -2381,15 +2008,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                data:
-                  additionalProperties:
-                    type: string
-                  example:
-                    key1: value1
-                    key2: value2
-                  type: object
-              type: object
+              $ref: '#/components/schemas/EventCreate'
       summary: Create Custom Event
   '/event/fortype/{type}':
     get:
@@ -2514,21 +2133,7 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                events:
-                  - _id: 542f153401d51284b
-                    application: 5354f3545a544452ff4c7c0
-                    sessionID: 5SX4tAsd534MjuHL
-                    time: '2014-10-03T21:43:04.231Z'
-                    type: re.notifica.event.application.Install
-                    userID: null
-                  - _id: 542f153401d51284b
-                    application: 5354f3545a544452ff4c7c0
-                    sessionID: 5SX4tAsd534MjuHL
-                    time: '2014-10-03T21:43:04.231Z'
-                    type: re.notifica.event.application.Install
-                    userID: null
-                count: 2
+              $ref: '#/components/schemas/EventList'
           description: OK
       tags:
         - Event
@@ -2552,14 +2157,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                event:
-                  _id: 542f153401d51284b
-                  application: 5354f3545a544452ff4c7c0
-                  sessionID: 5SX4tAsd534MjuHL
-                  time: '2014-10-03T21:43:04.231Z'
-                  type: re.notifica.event.application.Install
-                  userID: null
+              schema:
+                $ref: '#/components/schemas/EventModel'
           description: OK
       tags:
         - Event
@@ -11893,31 +11492,6 @@ components:
       type: http
       scheme: basic
   requestBodies:
-    AssetOrder:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AssetOrder'
-    AssetGroupCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AssetGroupCreate'
-    AssetGroupUpdate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AssetGroupBase'
-    BeaconCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BeaconCreate'
-    BeaconUpdate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BeaconUpdate'
     ImportBeacon:
       content:
         application/json:
@@ -12009,21 +11583,6 @@ components:
               type:
                 type: string
             type: object
-    DatasourceCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/DatasourceCreate'
-    DatasourceUpdate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/DatasourceUpdate'
-    DatasourceTest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/DatasourceTest'
     NotificationPushTriggered:
       content:
         application/json:
@@ -12322,6 +11881,29 @@ components:
               example: xxxxxxxxxxxx
           type: object
         - $ref: '#/components/schemas/ApplicationBase'
+    ApplicationUpdate:
+      $ref: '#/components/schemas/ApplicationBase'
+    ApplicationCreate:
+      allOf:
+        - $ref: '#/components/schemas/ApplicationBase'
+        - properties:
+            category:
+              description: Your application's category.
+              type: string
+              example: Other
+            name:
+              description: Your application's name.
+              type: string
+              example: Your App
+            production:
+              description: If your application is set to production or not.
+              type: boolean
+              default: false
+          type: object
+          required:
+            - category
+            - name
+            - production
     ApplicationBase:
       properties:
         active:
@@ -12382,12 +11964,14 @@ components:
               type: string
               format: byte
         category:
+          description: Your application's category.
           type: string
           example: Other
         locationTtl:
           type: number
           example: 7
         name:
+          description: Your application's name.
           type: string
           example: Your App
         regionConfig:
@@ -12902,6 +12486,171 @@ components:
           type: string
         value:
           $ref: '#/components/schemas/Date'
+      type: object
+    DeviceList:
+      properties:
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceModel'
+        count:
+          type: number
+          example: 1
+      type: object
+    DeviceModel:
+      allOf:
+        - properties:
+            _id:
+              description: Notificare ID of the Datasource
+              readOnly: true
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              description: Application this device belongs to
+              readOnly: true
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+        - $ref: '#/components/schemas/DeviceBase'
+    DeviceBase:
+      properties:
+        active:
+          type: boolean
+          default: true
+        appVersion:
+          type: string
+          example: 1.0
+        deviceID:
+          type: string
+          example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
+        deviceString:
+          type: string
+          example: MacIntel
+        language:
+          type: string
+          default: en
+          example: nl
+        lastActive:
+          $ref: '#/components/schemas/Date'
+        location:
+          $ref: '#/components/schemas/Point'
+        medium:
+          type: string
+          default: push
+          enum: [push, email, sms]
+        osString:
+          type: string
+          example: Mac OS X 10.9.2
+        osVersion:
+          type: string
+          example: 10.9.2
+        platform:
+          type: string
+          example: Web
+          enum: [iOS, tvOS, Android, Web]
+        sdkVersion:
+          type: string
+          example: 2.1.1
+        timeZoneOffset:
+          type: number
+          default: '0'
+          example: -5
+        transport:
+          type: string
+          default: Notificare
+          enum: [APNS, GCM, WebPush, WebsitePush, Email, SMS, Notificare]
+        userID:
+          type: string
+          example: 188720716616
+        tags:
+          type: array
+          items:
+            type: string
+          example: [tag1, tag2]
+      type: object
+    EmailCreate:
+      properties:
+        tags:
+          description: A list of tags you wish to assign to the email address.
+          items:
+            type: string
+          type: array
+          example: ['tag1']
+        email:
+          description: The email address you wish to subscribe to your app.
+          type: string
+          format: email
+        language:
+          description: The language you wish to assign the contact to.
+          type: string
+          example: 'nl'
+        region:
+          description: The region you wish to assign the contact to.
+          type: string
+          example: 'NL'
+        userID:
+          description: The userID your wish to assign the contact to.
+          type: string
+          example: '173661892772'
+        userName:
+          description: The userName your wish to assign the contact to.
+          type: string
+          example: Test User
+        verify:
+          description: >-
+            If you wish to require verification before activating the
+            email contact set this property to `true`.
+          type: boolean
+      required:
+        - email
+      type: object
+    EventCreate:
+      properties:
+        data:
+          additionalProperties:
+            type: string
+          example:
+            test: a test value
+            test2: another test
+          type: object
+        type: object
+    EventList:
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventModel'
+        count:
+          type: number
+          example: 1
+      type: object
+    EventModel:
+      allOf:
+        - properties:
+            _id:
+              description: Notificare ID of the Event
+              readOnly: true
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              description: Application this event belongs to
+              readOnly: true
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+        - $ref: '#/components/schemas/EventBase'
+    EventBase:
+      properties:
+        type:
+          type: string
+          example: re.notifica.event.application.Install
+        time:
+          $ref: '#/components/schemas/Date'
+        sessionID:
+          type: string
+          example: 5SX4tAsd534MjuHL
+        deviceID:
+          type: string
+          example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
+        userID:
+          type: string
+          example: 188720716616
       type: object
     EventCriteria:
       properties:
