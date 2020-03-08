@@ -1593,21 +1593,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: The maximum number of results to retrieve.
-          example: '10'
-          in: query
-          name: limit
-          required: false
-          schema:
-            default: 100
-            type: number
-        - description: The number of results to skip
-          example: '0'
-          in: query
-          name: skip
-          required: false
-          schema:
-            type: number
       responses:
         '200':
           content:
@@ -1619,7 +1604,8 @@ paths:
         - Device
       description: >-
         Get a device by its specific subscription Id. The subscription Id is
-        generated automatically for each device created.
+        generated automatically for each device created. It returns a list of
+        one device.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -1735,13 +1721,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                tags:
-                  - deviceCount: 2
-                    tag: toys
-                  - deviceCount: 5
-                    tag: kitchen
-                count: 2
+              schema:
+                $ref: '#/components/schemas/DeviceTagList'
           description: OK
       tags:
         - Tag
@@ -1768,13 +1749,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                tags:
-                  - deviceCount: 2
-                    tag: toys
-                  - deviceCount: 5
-                    tag: kitchen
-                count: 2
+              schema:
+                $ref: '#/components/schemas/DeviceTagList'
           description: OK
       tags:
         - Tag
@@ -1806,30 +1782,9 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
+              properties:
                 device:
-                  tags: []
-                  _id: 5245bc5b3e66a3b01f0024d4
-                  active: true
-                  appVersion: '1.0'
-                  application: 52458981394c07916000492c
-                  deviceID: 00a9b9bf-c099-45aa-9278-64d6a3f22476
-                  deviceString: MacIntel
-                  language: en
-                  lastActive: '2014-03-11T16:20:55.084Z'
-                  location:
-                    coordinates:
-                      - 4.2345
-                      - 5.6789
-                    type: Point
-                  medium: push
-                  osString: Mac OS X 10.9.2
-                  osVersion: 10.9.2
-                  platform: Mac OS X
-                  sdkVersion: 0.0.1
-                  timeZoneOffset: -5
-                  transport: Websocket
-                  userID: info@notifica.re
+                  $ref: '#/components/schemas/DeviceModel'
           description: OK
       tags:
         - Device
@@ -2175,17 +2130,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                exportJobs:
-                  - _id: 54fec699beb5cb2f6f9839ed
-                    application: 5354f08474adc4183214c143
-                    data: null
-                    date: '2015-03-10T10:25:29.340Z'
-                    result: >-
-                      created export file export-user-1425983129369.csv (919
-                      bytes)
-                    status: success
-                    type: re.notifica.export.User
+              schema:
+                $ref: '#/components/schemas/ExportJobList'
           description: OK
       tags:
         - Export
@@ -2210,34 +2156,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                exportJobs:
-                  - _id: 54fec699beb5cb2f6f9839ed
-                    application: 5354f08474adc4183214c143
-                    data:
-                      all: true
-                      before: '2017-01-13'
-                      campaign: 5354f08474adc4183214c143
-                      fence: 5354f08474adc4183214c143
-                      includeTags: true
-                      notification: 5354f08474adc4183214c143
-                      region: 5354f08474adc4183214c143
-                      serial: 5354f08474adc4183214c143
-                      showCombinedSegments: true
-                      showPreferences: true
-                      showSegments:
-                        - 5354f08474adc4183214c143
-                      since: '2017-01-12'
-                      tagsSeparator: '|'
-                      type: re.notifica.event.application.Open
-                      useSegmentNames: true
-                      userID: 5354f08474adc4183214c143
-                    date: '2015-03-10T10:25:29.340Z'
-                    result: >-
-                      created export file export-user-1425983129369.csv (919
-                      bytes)
-                    status: success
-                    type: re.notifica.export.User
+              schema:
+                $ref: '#/components/schemas/ExportJobList'
           description: OK
       tags:
         - Export
@@ -2887,13 +2807,15 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    expires: '2015-03-10T10:25:29.340Z'
-                    token: 54fec699beb5cb2f6f9839ed/54fec699beb5cb2f6f9839ed
+              schema:
+                properties:
+                  expires:
+                    $ref: '#/components/schemas/Date'
+                  token:
+                    type: string
+                    example: 54fec699beb5cb2f6f9839ed/54fec699beb5cb2f6f9839ed
+                type: object
           description: OK
-          headers: {}
       tags:
         - Export
       description: >-
@@ -2920,34 +2842,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                exportJob:
-                  _id: 54fec699beb5cb2f6f9839ed
-                  application: 5354f08474adc4183214c143
-                  data:
-                    all: true
-                    before: '2017-01-13'
-                    campaign: 5354f08474adc4183214c143
-                    fence: 5354f08474adc4183214c143
-                    includeTags: true
-                    notification: 5354f08474adc4183214c143
-                    region: 5354f08474adc4183214c143
-                    serial: 5354f08474adc4183214c143
-                    showCombinedSegments: true
-                    showPreferences: true
-                    showSegments:
-                      - 5354f08474adc4183214c143
-                    since: '2017-01-12'
-                    tagsSeparator: '|'
-                    type: re.notifica.event.application.Open
-                    useSegmentNames: true
-                    userID: 5354f08474adc4183214c143
-                  date: '2015-03-10T10:25:29.340Z'
-                  result: >-
-                    created export file export-user-1425983129369.csv (919
-                    bytes)
-                  status: success
-                  type: re.notifica.export.User
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ExportJobModel'
           description: OK
       tags:
         - Export
@@ -3007,16 +2905,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                locations:
-                  address: Marconistraat 16
-                  boundingBox:
-                    - 52.18818
-                    - 52.5995
-                    - 4.59959
-                    - 4.49994
-                  displayName: '16, Marconistraat, Rotterdam, Netherlands'
-                  license: Data (c) OpenStreetMap...
+              schema:
+                properties:
+                  location:
+                    type: object
+                    $ref: '#/components/schemas/GeoModel'
           description: OK
       tags:
         - Geo
@@ -3041,28 +2934,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                locations:
-                  - address: Marconistraat 16
-                    boundingBox:
-                      - 52.18818
-                      - 52.5995
-                      - 4.59959
-                      - 4.49994
-                    displayName: '16, Marconistraat, Rotterdam, Netherlands'
-                    latitude: 52.28828
-                    license: Data (c) OpenStreetMap...
-                    longitude: 4.51661
-                  - address: Marconistraat 16
-                    boundingBox:
-                      - 52.18818
-                      - 52.5995
-                      - 4.59959
-                      - 4.49994
-                    displayName: '16, Marconistraat, Rotterdam, Netherlands'
-                    latitude: 52.28828
-                    license: Data (c) OpenStreetMap...
-                    longitude: 4.51661
+              schema:
+                $ref: '#/components/schemas/GeoModelList'
           description: OK
       tags:
         - Geo
@@ -3095,17 +2968,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                timezone:
-                  _id: 54fec699beb5cb2f6f9839ed
-                  abbreviation: CET
-                  countryCode: NL
-                  countryName: Netherlands
-                  dst: false
-                  name: Europe/Amsterdam
-                  referenceKey: '276'
-                  start: '2015-03-10T10:25:29.340Z'
-                  timeZoneOffset: 1
+              schema:
+                properties:
+                  timezone:
+                    $ref: '#/components/schemas/GeoTimezoneModel'
+                type: object
           description: OK
       tags:
         - Geo
@@ -3121,6 +2988,10 @@ paths:
     get:
       responses:
         '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ImportJobModelList'
           description: OK
       tags:
         - Import
@@ -3143,8 +3014,11 @@ paths:
             type: string
       responses:
         '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ImportJobModelList'
           description: OK
-          headers: {}
       tags:
         - Import
       description: >-
@@ -3284,7 +3158,10 @@ paths:
         + userName (only used when userID is present. Defaults to 'anonymous')
       operationId: postImportDevice
       requestBody:
-        $ref: '#/components/requestBodies/ImportDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobDevice'
       summary: Import Devices/Contacts/Numbers
   /import/re.notifica.import.User:
     post:
@@ -3319,7 +3196,10 @@ paths:
         + userName
       operationId: postImportUser
       requestBody:
-        $ref: '#/components/requestBodies/ImportUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobBase'
       summary: Import Users
   /import/re.notifica.import.UserSegment:
     post:
@@ -3362,7 +3242,10 @@ paths:
         + userID
       operationId: postImportUserSegment
       requestBody:
-        $ref: '#/components/requestBodies/ImportUserSegment'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobUserSegment'
       summary: Import Users Into Segment
   /import/re.notifica.import.Region:
     post:
@@ -3437,7 +3320,10 @@ paths:
         + country
       operationId: postImportRegion
       requestBody:
-        $ref: '#/components/requestBodies/ImportRegion'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobBase'
       summary: Import Regions
   /import/re.notifica.import.Beacon:
     post:
@@ -3496,7 +3382,10 @@ paths:
         + notification, message  to be set for the beacon
       operationId: postImportBeacon
       requestBody:
-        $ref: '#/components/requestBodies/ImportBeacon'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobBeacon'
       summary: Import Beacons
   /import/re.notifica.import.Pass:
     post:
@@ -3583,7 +3472,10 @@ paths:
         Template)
       operationId: postImportPass
       requestBody:
-        $ref: '#/components/requestBodies/ImportPass'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobPass'
       summary: Import Passes
   /import/re.notifica.import.PassUpdate:
     post:
@@ -3617,7 +3509,10 @@ paths:
         + pass_xxx (where xxx is any field defined in the Passbook Template)
       operationId: postImportPassUpdate
       requestBody:
-        $ref: '#/components/requestBodies/ImportPassUpdate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobPassUpdate'
       summary: Import Pass Fields Update
   /import/re.notifica.import.Notification:
     post:
@@ -3692,7 +3587,10 @@ paths:
         `{{userID}}` or `{{userName}}`.
       operationId: postImportNotification
       requestBody:
-        $ref: '#/components/requestBodies/ImportNotification'
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/ImportJobNotification'
       summary: Import Private Messages
   /import/re.notifica.import.GroupedNotification:
     post:
@@ -3738,7 +3636,10 @@ paths:
         the template)
       operationId: postImportGroupedNotification
       requestBody:
-        $ref: '#/components/requestBodies/ImportGroupedNotification'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobGroupedNotification'
       summary: Import Grouped Messages
   '/import/{import}':
     get:
@@ -3753,19 +3654,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                importJob:
-                  _id: 545cc517ff584870b89fb98
-                  account: 50d771ff87e53afff2600001c
-                  application: 5354f0bbdddd4452ff4c7c0
-                  data:
-                    clear: false
-                    user_segment: 53a0a047fff17d3215a94f6
-                  date: '2014-11-07T13:11:51.316Z'
-                  path: /imports/3d99d18148e6f3dbcf4ffccc...
-                  result: 'imported 0 records, skipped 3 records'
-                  status: success
-                  type: re.notifica.import.UserSegment
+              schema:
+                properties:
+                 importJob:
+                   $ref: '#/components/schemas/ImportJobModel'
+                type: object
           description: OK
       tags:
         - Import
@@ -3877,51 +3770,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                links:
-                  - _id: "545cc517ff584870b89fb98"
-                    account: "50d771ff87e53afff2600001c"
-                    hash: "50fUr-56"
-                    application: "5354f0bbdddd4452ff4c7c0"
-                    name: "Test"
-                    type: "re.notifica.link.Redirect"
-                    target:
-                      web: "https://notifica.re/example"
-                      ios: "https://notifica.re/example-ios"
-                      android: "https://notifica.re/example-android"
-                    opened: 10,
-                    uniqueOpened: 5,
-                    rules:
-                      type: array
-                      item:
-                        $ref: '#/components/schemas/MessageRule'
-                    customEvents:
-                      type: array
-                      item:
-                        type: string
-                      example: ['CustomEvent']
-                  - _id: "545cc517ff584870b89fb98"
-                    account: "50d771ff87e53afff2600001c"
-                    hash: "50fUr-56"
-                    application: "5354f0bbdddd4452ff4c7c0"
-                    name: "Test"
-                    type: "re.notifica.link.Redirect"
-                    target:
-                      web: "https://notifica.re/example"
-                      ios: "https://notifica.re/example-ios"
-                      android: "https://notifica.re/example-android"
-                    opened: 10,
-                    uniqueOpened: 5,
-                    rules:
-                      type: array
-                      item:
-                        $ref: '#/components/schemas/MessageRule'
-                    customEvents:
-                      type: array
-                      item:
-                        type: string
-                      example: ['CustomEvent']
-                count: 2
+              schema:
+                $ref: '#/components/schemas/LinkModelList'
           description: OK
       tags:
         - Links
@@ -3954,37 +3804,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                name:
-                  example: "Another Link"
-                  type: string
-                type:
-                  example: "re.notifica.link.Redirect"
-                  type: string
-                target:
-                  type: object
-                  properties:
-                    web:
-                      example: "https://notifica.re/example"
-                      type: string
-                      format: uri
-                    ios:
-                      example: "https://notifica.re/example-ios"
-                      type: string
-                      format: uri
-                    android:
-                      example: "https://notifica.re/example-android"
-                      type: string
-                      format: uri
-                rules:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/MessageRule'
-                customEvents:
-                  type: array
-                  items:
-                    type: string
-                  example: [CustomEvent]
+              $ref: '#/components/schemas/LinkBase'
       summary: Create Link
   '/link/{link}':
     get:
@@ -3999,29 +3819,11 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                link:
-                  _id: "545cc517ff584870b89fb98"
-                  account: "50d771ff87e53afff2600001c"
-                  hash: "50fUr-56"
-                  application: "5354f0bbdddd4452ff4c7c0"
-                  name: "Test"
-                  type: "re.notifica.link.Redirect"
-                  target:
-                    web: "https://notifica.re/example"
-                    ios: "https://notifica.re/example-ios"
-                    android: "https://notifica.re/example-android"
-                  opened: 10,
-                  uniqueOpened: 5,
-                  rules:
-                    type: array
-                    item:
-                      $ref: '#/components/schemas/MessageRule'
-                  customEvents:
-                    type: array
-                    item:
-                      type: string
-                    example: ['CustomEvent']
+              schema:
+                properties:
+                  link:
+                    $ref: '#/components/schemas/LinkModel'
+                type: object
           description: OK
       tags:
         - Links
@@ -4061,37 +3863,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                name:
-                  example: "Another Link"
-                  type: string
-                type:
-                  example: "re.notifica.link.Redirect"
-                  type: string
-                target:
-                  type: object
-                  properties:
-                    web:
-                      example: "https://notifica.re/example"
-                      type: string
-                      format: uri
-                    ios:
-                      example: "https://notifica.re/example-ios"
-                      type: string
-                      format: uri
-                    android:
-                      example: "https://notifica.re/example-android"
-                      type: string
-                      format: uri
-                rules:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/MessageRule'
-                customEvents:
-                  type: array
-                  items:
-                    type: string
-                  example: [CustomEvent]
+              $ref: '#/components/schemas/LinkBase'
       summary: Update Link
     delete:
       security:
@@ -4196,56 +3968,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                notifications:
-                  - _id: 566acc80cbe343d7136ec9bf
-                    account: 548985629f634350713ec9ee
-                    actionCategory: null
-                    actions:
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c1
-                        keyboard: false
-                        label: 'yes'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c0
-                        keyboard: false
-                        label: 'no'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                    application: 5489b42ff23e5815132b492a
-                    archived: false
-                    attachments: []
-                    badge: null
-                    cleared: false
-                    content: []
-                    deviceID: null
-                    location:
-                      coordinates:
-                        - 4.422683699999993
-                        - 51.91263190000001
-                      distance: 0.6928425313346089
-                      type: Point
-                    medium: push
-                    message: Ready for beers?
-                    rules: []
-                    scheduled: false
-                    scope: application
-                    segments: []
-                    showInList: true
-                    sound: default
-                    subtitle: This is a subtitle
-                    tags: []
-                    time: '2015-12-11T13:15:44.298Z'
-                    title: This is a title
-                    triggered: false
-                    ttl: null
-                    type: re.notifica.notification.Alert
-                    userID: testuser@example.com
+              schema:
+                $ref: '#/components/schemas/NotificationList'
           description: OK
       tags:
         - Messages
@@ -4295,56 +4019,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                notifications:
-                  - _id: 566acc80cbe343d7136ec9bf
-                    account: 548985629f634350713ec9ee
-                    actionCategory: null
-                    actions:
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c1
-                        keyboard: false
-                        label: 'yes'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c0
-                        keyboard: false
-                        label: 'no'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                    application: 5489b42ff23e5815132b492a
-                    archived: false
-                    attachments: []
-                    badge: null
-                    cleared: false
-                    content: []
-                    deviceID: null
-                    location:
-                      coordinates:
-                        - 4.422683699999993
-                        - 51.91263190000001
-                      distance: 0.6928425313346089
-                      type: Point
-                    medium: push
-                    message: Ready for beers?
-                    rules: []
-                    scheduled: false
-                    scope: application
-                    segments: []
-                    showInList: true
-                    sound: default
-                    subtitle: This is a subtitle
-                    tags: []
-                    time: '2015-12-11T13:15:44.298Z'
-                    title: This is a title
-                    triggered: false
-                    ttl: null
-                    type: re.notifica.notification.Alert
-                    userID: testuser@example.com
+              schema:
+                $ref: '#/components/schemas/NotificationList'
           description: OK
       tags:
         - Messages
@@ -4382,7 +4058,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationPushBroadcast
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushBroadcast'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushBroadcast'
       summary: Create Push Message Broadcast
   /notification/push/criteria:
     post:
@@ -4410,7 +4089,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationPushCriteria
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushCriteria'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushCriteria'
       summary: Create Push Message to Criteria
   /notification/push/event:
     post:
@@ -4439,7 +4121,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationPushEvent
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushEvent'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushEvent'
       summary: Create Push Message to Events
   /notification/push/segments:
     post:
@@ -4468,7 +4153,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationPushSegments
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushSegments'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushSegments'
       summary: Create Push Message to Segments
   /notification/push/tags:
     post:
@@ -4496,7 +4184,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationPushTags
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushTags'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushTags'
       summary: Create Push Message to Tags
   '/notification/push/user/{userID}':
     post:
@@ -4534,7 +4225,10 @@ paths:
         the `applicationKey` and `masterSecret`.
       operationId: postNotificationPushUser
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushUser'
       summary: Create Push Message to User
   '/notification/push/device/{deviceID}':
     post:
@@ -4572,7 +4266,10 @@ paths:
         the `applicationKey` and `masterSecret`.
       operationId: postNotificationPushDevice
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushDevice'
       summary: Create Push Message to Device
   /notification/push/triggered:
     post:
@@ -4599,7 +4296,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationPushTriggered
       requestBody:
-        $ref: '#/components/requestBodies/NotificationPushTriggered'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPushTriggered'
       summary: Create Triggered Push Message
   /notification/email/broadcast:
     post:
@@ -4627,7 +4327,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationEmailBroadcast
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailBroadcast'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailBroadcast'
       summary: Create Email Message Broadcast
   /notification/email/criteria:
     post:
@@ -4655,7 +4358,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationEmailCriteria
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailCriteria'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailCriteria'
       summary: Create Email Message to Criteria
   /notification/email/event:
     post:
@@ -4684,7 +4390,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationEmailEvent
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailEvent'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailEvent'
       summary: Create Email Message to Events
   /notification/email/segments:
     post:
@@ -4712,7 +4421,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationEmailSegments
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailSegments'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailSegments'
       summary: Create Email Message to Segments
   /notification/email/tags:
     post:
@@ -4740,7 +4452,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationEmailTags
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailTags'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailTags'
       summary: Create Email Message to Tags
   '/notification/email/user/{userID}':
     post:
@@ -4776,7 +4491,10 @@ paths:
         the `applicationKey` and `masterSecret`.
       operationId: postNotificationEmailUser
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailUser'
       summary: Create Email Message to User
   '/notification/email/device/{deviceID}':
     post:
@@ -4812,7 +4530,10 @@ paths:
         the `applicationKey` and `masterSecret`.
       operationId: postNotificationEmailDevice
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailDevice'
       summary: Create Email Message to Contact
   /notification/email/triggered:
     post:
@@ -4839,7 +4560,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationEmailTriggered
       requestBody:
-        $ref: '#/components/requestBodies/NotificationEmailTriggered'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationEmailTriggered'
       summary: Create Triggered Email Message
   /notification/sms/broadcast:
     post:
@@ -4867,7 +4591,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationSmsBroadcast
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsBroadcast'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsBroadcast'
       summary: Create SMS Message Broadcast
   /notification/sms/criteria:
     post:
@@ -4895,7 +4622,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationSmsCriteria
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsCriteria'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsCriteria'
       summary: Create SMS Message to Criteria
   /notification/sms/event:
     post:
@@ -4924,7 +4654,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationSmsEvent
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsEvent'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsEvent'
       summary: Create SMS Message to Events
   /notification/sms/segments:
     post:
@@ -4952,7 +4685,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationSmsSegments
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsSegments'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsSegments'
       summary: Create SMS Message to Segments
   /notification/sms/tags:
     post:
@@ -4980,7 +4716,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationSmsTags
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsTags'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsTags'
       summary: Create SMS Message to Tags
   '/notification/sms/user/{userID}':
     post:
@@ -5016,7 +4755,10 @@ paths:
         the `applicationKey` and `masterSecret`.
       operationId: postNotificationSmsUser
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsUser'
       summary: Create SMS Message to User
   '/notification/sms/device/{deviceID}':
     post:
@@ -5052,7 +4794,10 @@ paths:
         the `applicationKey` and `masterSecret`.
       operationId: postNotificationSmsDevice
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsDevice'
       summary: Create SMS Message to Phone
   /notification/sms/triggered:
     post:
@@ -5079,7 +4824,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationSmsTriggered
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSmsTriggered'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSmsTriggered'
       summary: Create Triggered SMS Message
   /notification/system:
     post:
@@ -5111,7 +4859,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationSystem
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSystemBroadcast'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSystemBroadcast'
       summary: Create System Push Message
   '/notification/system/user/{userID}':
     post:
@@ -5148,7 +4899,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationSystemUser
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSystemUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSystemUser'
       summary: System Push to User
   '/notification/system/device/{deviceID}':
     post:
@@ -5184,7 +4938,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationSystemDevice
       requestBody:
-        $ref: '#/components/requestBodies/NotificationSystemDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSystemDevice'
       summary: System Push to Device
   '/notification/user/{userID}':
     get:
@@ -5217,56 +4974,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                notifications:
-                  - _id: 566acc80cbe343d7136ec9bf
-                    account: 548985629f634350713ec9ee
-                    actionCategory: null
-                    actions:
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c1
-                        keyboard: false
-                        label: 'yes'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c0
-                        keyboard: false
-                        label: 'no'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                    application: 5489b42ff23e5815132b492a
-                    archived: false
-                    attachments: []
-                    badge: null
-                    cleared: false
-                    content: []
-                    deviceID: null
-                    location:
-                      coordinates:
-                        - 4.422683699999993
-                        - 51.91263190000001
-                      distance: 0.6928425313346089
-                      type: Point
-                    medium: push
-                    message: Ready for beers?
-                    rules: []
-                    scheduled: false
-                    scope: user
-                    segments: []
-                    showInList: true
-                    sound: default
-                    subtitle: This is a subtitle
-                    tags: []
-                    time: '2015-12-11T13:15:44.298Z'
-                    title: This is a title
-                    triggered: false
-                    ttl: null
-                    type: re.notifica.notification.Alert
-                    userID: testuser@example.com
+              schema:
+                $ref: '#/components/schemas/NotificationList'
           description: OK
       tags:
         - Messages
@@ -5307,56 +5016,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                notifications:
-                  - _id: 566acc80cbe343d7136ec9bf
-                    account: 548985629f634350713ec9ee
-                    actionCategory: null
-                    actions:
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c1
-                        keyboard: false
-                        label: 'yes'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                      - camera: false
-                        id: 566acc80cbe343d7136ec9c0
-                        keyboard: false
-                        label: 'no'
-                        rules: []
-                        target: ''
-                        type: re.notifica.action.Callback
-                    application: 5489b42ff23e5815132b492a
-                    archived: false
-                    attachments: []
-                    badge: null
-                    cleared: false
-                    content: []
-                    deviceID: 5245bc5b3e66a3b01f0024d4xxxx
-                    location:
-                      coordinates:
-                        - 4.422683699999993
-                        - 51.91263190000001
-                      distance: 0.6928425313346089
-                      type: Point
-                    medium: push
-                    message: Ready for beers?
-                    rules: []
-                    scheduled: false
-                    scope: device
-                    segments: []
-                    showInList: true
-                    sound: default
-                    subtitle: This is a subtitle
-                    tags: []
-                    time: '2015-12-11T13:15:44.298Z'
-                    title: This is a title
-                    triggered: false
-                    ttl: null
-                    type: re.notifica.notification.Alert
-                    userID: null
+              schema:
+                $ref: '#/components/schemas/NotificationList'
           description: OK
       tags:
         - Messages
@@ -5380,56 +5041,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                notification:
-                  tags: []
-                  __v: 0
-                  _id: 566acc80cbe343d7136ec9bf
-                  account: 548985629f634350713ec9ee
-                  actionCategory: null
-                  actions:
-                    - camera: false
-                      id: 566acc80cbe343d7136ec9c1
-                      keyboard: false
-                      label: 'yes'
-                      rules: []
-                      target: ''
-                      type: re.notifica.action.Callback
-                    - camera: false
-                      id: 566acc80cbe343d7136ec9c0
-                      keyboard: false
-                      label: 'no'
-                      rules: []
-                      target: ''
-                      type: re.notifica.action.Callback
-                  application: 5489b42ff23e5815132b492a
-                  archived: false
-                  attachments: []
-                  badge: null
-                  cleared: false
-                  content: []
-                  deviceID: null
-                  location:
-                    coordinates:
-                      - 4.422683699999993
-                      - 51.91263190000001
-                    distance: 0.6928425313346089
-                    type: Point
-                  medium: push
-                  message: Ready for beers?
-                  rules: []
-                  scheduled: false
-                  scope: application
-                  segments: []
-                  showInList: true
-                  sound: default
-                  subtitle: This is a subtitle
-                  time: '2015-12-11T13:15:44.298Z'
-                  title: This is a title
-                  triggered: false
-                  ttl: null
-                  type: re.notifica.notification.Alert
-                  userID: testuser@example.com
+              schema:
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/NotificationModel'
           description: OK
       tags:
         - Messages
@@ -5455,20 +5070,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                info:
-                  application: 5354f0bb3fff5452ff4c7c0
-                  devices: 3
-                  duration: 749
-                  fails: 0
-                  id: 543d90d0f4e6e1we3ad6576
-                  notification: 543d90d0wew6e10309ad6575
-                  opened: 0
-                  queued: 3
-                  replied: 0
-                  sent: 3
-                  status: finished
-                  users: 0
+                schema:
+                  properties:
+                    info:
+                      $ref: '#/components/schemas/NotificationInfoModel'
           description: OK
       tags:
         - Messages
@@ -5521,15 +5126,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                log:
-                  - _id: 543d90d0f4e6e1we3ad6576
-                    application: 5354f0bb3fff5452ff4c7c0
-                    date: '2016-02-29T10:46:00.111Z'
-                    deviceID: d31b6529
-                    message: Invalid token size
-                    notification: 56d421uu073cc157eu3137
-                    transport: APNS
+              schema:
+                properties:
+                  log:
+                    $ref: '#/components/schemas/NotificationLogModel'
           description: OK
       tags:
         - Messages
@@ -6222,7 +5822,10 @@ paths:
         authenticated with the `applicationKey` and `masterSecret`.
       operationId: postNotificationTestEmailBroadcast
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailBroadcast'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestEmailBase'
       summary: Test Email Message Broadcast
   /notification/test/email/criteria:
     post:
@@ -6247,7 +5850,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailCriteria
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailCriteria'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestEmailCriteria'
       summary: Test Email Message to Criteria
   /notification/test/email/event:
     post:
@@ -6272,7 +5878,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailEvent
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailEvent'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestEmailEvent'
       summary: Test Email Message to Events
   /notification/test/email/segments:
     post:
@@ -6295,7 +5904,8 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailSegments
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailSegments'
+        schema:
+          $ref: '#/components/schemas/NotificationTestEmailSegments'
       summary: Test Email Message to Segments
   /notification/test/email/tags:
     post:
@@ -6318,7 +5928,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailTags
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailTags'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestEmailTags'
       summary: Test Email Message to Tags
   '/notification/test/email/user/{userID}':
     post:
@@ -6348,7 +5961,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailUser
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestEmailUser'
       summary: Test Email Message to User
   '/notification/test/email/device/{deviceID}':
     post:
@@ -6378,7 +5994,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailDevice
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestEmailDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestEmailDevice'
       summary: Test Email Message to Contact
   /notification/test/push/broadcast:
     post:
@@ -6399,7 +6018,10 @@ paths:
         with the `applicationKey` and `masterSecret`.
       operationId: postNotificationTestPushBroadcast
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestPushBroadcast'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestPushBroadcast'
       summary: Test Push Message Broadcast
   /notification/test/push/criteria:
     post:
@@ -6424,7 +6046,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestPushCriteria
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestPushCriteria'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestPushCriteria'
       summary: Test Push Message to Criteria
   /notification/test/push/event:
     post:
@@ -6449,7 +6074,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestPushEvent
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestPushEvent'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestPushEvent'
       summary: Test Push Message to Events
   /notification/test/push/segments:
     post:
@@ -6472,7 +6100,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestPushSegments
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestPushSegments'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestPushSegments'
       summary: Test Push Message to Segments
   /notification/test/push/tags:
     post:
@@ -6495,7 +6126,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestPushTags
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestPushTags'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestPushTags'
       summary: Test Push Message to Tags
   '/notification/test/push/user/{userID}':
     post:
@@ -6527,7 +6161,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestPushUser
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestPushUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestPushUser'
       summary: Test Push Message to User
   '/notification/test/push/device/{deviceID}':
     post:
@@ -6559,7 +6196,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestPushDevice
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestPushDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestPushDevice'
       summary: Test Push Message to Device
   /notification/test/sms/broadcast:
     post:
@@ -6579,7 +6219,10 @@ paths:
         with the `applicationKey` and `masterSecret`.
       operationId: postNotificationTestSmsBroadcast
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestSmsBroadcast'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestSmsBase'
       summary: Test SMS Message Broadcast
   /notification/test/sms/criteria:
     post:
@@ -6604,7 +6247,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestSmsCriteria
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestSmsCriteria'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestSmsCriteria'
       summary: Test SMS Message to Criteria
   /notification/test/sms/event:
     post:
@@ -6629,7 +6275,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestSmsEvent
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestSmsEvent'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestSmsEvent'
       summary: Test SMS Message to Events
   /notification/test/sms/segments:
     post:
@@ -6652,7 +6301,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestSmsSegments
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestSmsSegments'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestSmsSegments'
       summary: Test SMS Message to Segments
   /notification/test/sms/tags:
     post:
@@ -6675,7 +6327,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestSmsTags
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestSmsTags'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestSmsTags'
       summary: Test SMS Message to Tags
   '/notification/test/sms/user/{userID}':
     post:
@@ -6705,7 +6360,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestSmsUser
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestSmsUser'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestSmsUser'
       summary: Test SMS Message to User
   '/notification/test/sms/device/{deviceID}':
     post:
@@ -6735,7 +6393,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestSmsDevice
       requestBody:
-        $ref: '#/components/requestBodies/NotificationTestSmsDevice'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestSmsDevice'
       summary: Test SMS Message to Phone
   /pass:
     get:
@@ -7512,7 +7173,10 @@ paths:
         + `redeem_limit`
       operationId: postPassbook
       requestBody:
-        $ref: '#/components/requestBodies/PassbookCreate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassbookCreate'
       summary: Create Pass Template
   '/passbook/{passbook}':
     get:
@@ -7674,36 +7338,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 3
-                products:
-                  - _id: 542f479660a365ad5a47a794
-                    active: true
-                    application: 5354f0bb3fa544452ff4c7c0
-                    identifier: re.notifica.office.nonconsumable
-                    name: Non-Consumable
-                    stores:
-                      - AppStore
-                      - GooglePlay
-                    type: onetime
-                  - _id: 5442c0927f8ec974633ed40c
-                    active: true
-                    application: 5354f0bb3fa544452ff4c7c0
-                    identifier: re.notifica.office.prod2
-                    name: Prod2
-                    stores:
-                      - AppStore
-                      - GooglePlay
-                    type: onetime
-                  - _id: 544788ed9a6050cd6f008b8d
-                    active: true
-                    application: 5354f0bb3fa544452ff4c7c0
-                    identifier: re.notifica.office.consumable
-                    name: Consumable
-                    stores:
-                      - AppStore
-                      - GooglePlay
-                    type: consumable
+              schema:
+                $ref: '#/components/schemas/ProductList'
           description: OK
       tags:
         - Product
@@ -7735,7 +7371,10 @@ paths:
         `masterSecret`.
       operationId: postProduct
       requestBody:
-        $ref: '#/components/requestBodies/ProductCreate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
       summary: Create Product
   '/product/foridentifier/{sku}':
     get:
@@ -7751,17 +7390,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                product:
-                  _id: 544788ed9a6050cd6f008b8d
-                  active: true
-                  application: 5354f0bb3fa544452ff4c7c0
-                  identifier: re.notifica.office.consumable
-                  name: Consumable
-                  stores:
-                    - AppStore
-                    - GooglePlay
-                  type: consumable
+              schema:
+                properties:
+                  product:
+                    $ref: '#/components/schemas/ProductModel'
           description: OK
       tags:
         - Product
@@ -7785,17 +7417,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                product:
-                  _id: 544788ed9a6050cd6f008b8d
-                  active: true
-                  application: 5354f0bb3fa544452ff4c7c0
-                  identifier: re.notifica.office.consumable
-                  name: Consumable
-                  stores:
-                    - AppStore
-                    - GooglePlay
-                  type: consumable
+              schema:
+                properties:
+                  product:
+                    $ref: '#/components/schemas/ProductModel'
           description: OK
       tags:
         - Product
@@ -7837,28 +7462,7 @@ paths:
         content:
           application/json:
             schema:
-              example:
-                active: true
-                identifier: re.notifica.office.consumable
-                name: Consumable
-                stores:
-                  - AppStore
-                  - GooglePlay
-                type: consumable
-              properties:
-                active:
-                  type: boolean
-                identifier:
-                  type: string
-                name:
-                  type: string
-                stores:
-                  items:
-                    type: string
-                  type: array
-                type:
-                  type: string
-              type: object
+              $ref: '#/components/schemas/ProductBase'
       summary: Update Product
     delete:
       security:
@@ -10290,7 +9894,10 @@ paths:
         Notification object.
       operationId: postTrigger
       requestBody:
-        $ref: '#/components/requestBodies/TriggerCreate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerCreate'
       summary: Create Trigger
   '/trigger/{trigger}':
     get:
@@ -11126,7 +10733,10 @@ paths:
         `applicationKey` and  `masterSecret`.
       operationId: postUserSegment
       requestBody:
-        $ref: '#/components/requestBodies/UserSegmentCreate'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSegmentCreate'
       summary: Create User Segment
   /usersegment/batch:
     post:
@@ -11491,348 +11101,6 @@ components:
         Username is session token, password is arbitrary string, e.g., `xxx`
       type: http
       scheme: basic
-  requestBodies:
-    ImportBeacon:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportBeacon'
-    ImportDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportDevice'
-    ImportGroupedNotification:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportGroupedNotification'
-    ImportNotification:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportNotification'
-    ImportPass:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportPass'
-    ImportPassUpdate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportPassUpdate'
-    ImportRegion:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportBase'
-    ImportUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportBase'
-    ImportUserSegment:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ImportUserSegment'
-    PassbookCreate:
-      content:
-        application/json:
-          schema:
-            properties:
-              data:
-                $ref: '#/components/schemas/PassData'
-                description: >-
-                  The data object containing all the information, colours and
-                  fields for a pass.
-              passStyle:
-                description: >-
-                  A pass template can have several styles. A style will define
-                  how your pass looks and behaves. This string will indicate
-                  what style to use (boarding, coupon, ticket, card, generic).
-                type: string
-            required:
-              - passStyle
-              - data
-            type: object
-    ProductCreate:
-      content:
-        application/json:
-          schema:
-            example:
-              active: true
-              identifier: re.notifica.office.consumable
-              name: Consumable
-              stores:
-                - AppStore
-                - GooglePlay
-              type: consumable
-            properties:
-              active:
-                type: boolean
-              identifier:
-                type: string
-              name:
-                type: string
-              stores:
-                items:
-                  type: string
-                type: array
-              type:
-                type: string
-            type: object
-    NotificationPushTriggered:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushTriggered'
-    NotificationPushDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushDevice'
-    NotificationPushUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushUser'
-    NotificationPushTags:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushTags'
-    NotificationPushSegments:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushSegments'
-    NotificationPushCriteria:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushCriteria'
-    NotificationPushEvent:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushEvent'
-    NotificationPushBroadcast:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationPushBroadcast'
-    NotificationSystemDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSystemDevice'
-    NotificationSystemUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSystemUser'
-    NotificationSystemBroadcast:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSystemBroadcast'
-    NotificationEmailTriggered:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailTriggered'
-    NotificationEmailDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailDevice'
-    NotificationEmailUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailUser'
-    NotificationEmailTags:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailTags'
-    NotificationEmailSegments:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailSegments'
-    NotificationEmailCriteria:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailCriteria'
-    NotificationEmailEvent:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailEvent'
-    NotificationEmailBroadcast:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationEmailBroadcast'
-    NotificationSmsTriggered:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsTriggered'
-    NotificationSmsDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsDevice'
-    NotificationSmsUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsUser'
-    NotificationSmsTags:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsTags'
-    NotificationSmsSegments:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsSegments'
-    NotificationSmsCriteria:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsCriteria'
-    NotificationSmsEvent:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsEvent'
-    NotificationSmsBroadcast:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationSmsBroadcast'
-    NotificationTestPushDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestPushDevice'
-    NotificationTestPushUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestPushUser'
-    NotificationTestPushTags:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestPushTags'
-    NotificationTestPushSegments:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestPushSegments'
-    NotificationTestPushCriteria:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestPushCriteria'
-    NotificationTestPushEvent:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestPushEvent'
-    NotificationTestPushBroadcast:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestPushBroadcast'
-    NotificationTestEmailDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestEmailDevice'
-    NotificationTestEmailUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestEmailUser'
-    NotificationTestEmailTags:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestEmailTags'
-    NotificationTestEmailSegments:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestEmailSegments'
-    NotificationTestEmailCriteria:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestEmailCriteria'
-    NotificationTestEmailEvent:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestEmailEvent'
-    NotificationTestEmailBroadcast:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestEmailBase'
-    NotificationTestSmsDevice:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestSmsDevice'
-    NotificationTestSmsUser:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestSmsUser'
-    NotificationTestSmsTags:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestSmsTags'
-    NotificationTestSmsSegments:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestSmsSegments'
-    NotificationTestSmsCriteria:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestSmsCriteria'
-    NotificationTestSmsEvent:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestSmsEvent'
-    NotificationTestSmsBroadcast:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotificationTestSmsBase'
-    TriggerCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TriggerCreate'
-    UserSegmentCreate:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UserSegmentCreate'
   schemas:
     AccountSession:
       properties:
@@ -12501,7 +11769,7 @@ components:
       allOf:
         - properties:
             _id:
-              description: Notificare ID of the Datasource
+              description: Notificare ID of the Device
               readOnly: true
               $ref: '#/components/schemas/ObjectId'
             application:
@@ -12566,6 +11834,29 @@ components:
             type: string
           example: [tag1, tag2]
       type: object
+    DeviceTagList:
+      properties:
+        tags:
+          type: array
+          $ref: '#/components/schemas/DeviceTagModel'
+        count:
+          type: number
+          example: 2
+      type: object
+      example:
+        - deviceCount: 2
+          tag: toys
+        - deviceCount: 5
+          tag: kitchen
+    DeviceTagModel:
+      properties:
+        tag:
+          type: string
+          example: toys
+        deviceCount:
+          type: number
+          example: 2
+        type: object
     EmailCreate:
       properties:
         tags:
@@ -12601,6 +11892,63 @@ components:
           type: boolean
       required:
         - email
+      type: object
+    ExportJobList:
+      properties:
+        exportJobs:
+          type: array
+          $ref: '#/components/schemas/ExportJobModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    ExportJobModel:
+      allOf:
+        - properties:
+            _id:
+              description: Notificare ID of the Export Job
+              readOnly: true
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              description: Application this export job belongs to
+              readOnly: true
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+        - $ref: '#/components/schemas/ExportJobBase'
+    ExportJobBase:
+      properties:
+        data:
+          additionalProperties: true
+          example:
+            all: true
+            before: '2017-01-13'
+            campaign: 5354f08474adc4183214c143
+            fence: 5354f08474adc4183214c143
+            includeTags: true
+            notification: 5354f08474adc4183214c143
+            region: 5354f08474adc4183214c143
+            serial: 5354f08474adc4183214c143
+            showCombinedSegments: true
+            showPreferences: true
+            showSegments:
+              - 5354f08474adc4183214c143
+            since: '2017-01-12'
+            tagsSeparator: '|'
+            type: re.notifica.event.application.Open
+            useSegmentNames: true
+            userID: 5354f08474adc4183214c143
+        date:
+          $ref: '#/components/schemas/Date'
+        result:
+          type: string
+          example: created export file export-user-1425983129369.csv (919 bytes)
+        status:
+          type: string
+          enum: [success, error]
+          example: success
+        type:
+          type: string
+          example: re.notifica.export.User
       type: object
     EventCreate:
       properties:
@@ -12685,9 +12033,65 @@ components:
         - startDate
         - endDate
       type: object
-    ImportBeacon:
+    GeoModelList:
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoModel'
+      type: object
+    GeoTimezoneModel:
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        abbreviation:
+          type: string
+          example: CET
+        countryCode:
+          type: string
+          example: NL
+        countryName:
+          type: string
+          example: Netherlands
+        dst:
+          type: boolean
+          example: false
+        name:
+          type: string
+          example: Europe/Amsterdam
+        referenceKey:
+          type: string
+          example: '276'
+        start:
+          $ref: '#/components/schemas/Date'
+        timeZoneOffset:
+          type: number
+          example: 1
+      type: object
+    GeoModel:
+      properties:
+        address:
+          type: string
+          example: Marconistraat 16
+        boundingBox:
+          type: array
+          items:
+            type: number
+          example:
+            - 52.18818
+            - 52.5995
+            - 4.59959
+            - 4.49994
+        displayName:
+          type: string
+          example: '16, Marconistraat, Rotterdam, Netherlands'
+        license:
+          type: string
+          example: Data (c) OpenStreetMap...
+      type: object
+    ImportJobBeacon:
       allOf:
-        - $ref: '#/components/schemas/ImportBase'
+        - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
               properties:
@@ -12716,9 +12120,9 @@ components:
                   default: UTC
               type: object
           type: object
-    ImportDevice:
+    ImportJobDevice:
       allOf:
-        - $ref: '#/components/schemas/ImportBase'
+        - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
               properties:
@@ -12788,9 +12192,9 @@ components:
                   example: Test User
               type: object
           type: object
-    ImportGroupedNotification:
+    ImportJobGroupedNotification:
       allOf:
-        - $ref: '#/components/schemas/ImportBase'
+        - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
               properties:
@@ -12817,9 +12221,9 @@ components:
               type: string
               example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
           type: object
-    ImportNotification:
+    ImportJobNotification:
       allOf:
-        - $ref: '#/components/schemas/ImportBase'
+        - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
               properties:
@@ -12848,9 +12252,9 @@ components:
               type: string
               example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
           type: object
-    ImportPass:
+    ImportJobPass:
       allOf:
-        - $ref: '#/components/schemas/ImportBase'
+        - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
               properties:
@@ -12895,9 +12299,9 @@ components:
                   default: false
               type: object
           type: object
-    ImportPassUpdate:
+    ImportJobPassUpdate:
       allOf:
-        - $ref: '#/components/schemas/ImportBase'
+        - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
               properties:
@@ -12919,9 +12323,9 @@ components:
                   $ref: '#/components/schemas/ObjectId'
               type: object
           type: object
-    ImportUserSegment:
+    ImportJobUserSegment:
       allOf:
-        - $ref: '#/components/schemas/ImportBase'
+        - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
               properties:
@@ -12943,7 +12347,42 @@ components:
               required:
                 - userSegment
           type: object
-    ImportBase:
+    ImportJobModelList:
+      properties:
+        importJobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportJobModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    ImportJobModel:
+      allOf:
+        - $ref: '#/components/schemas/ImportJobBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            data:
+              additionalProperties: true
+              example:
+                clear: false
+                userSegment: 53a0a047fff17d3215a94f6
+            date:
+              $ref: '#/components/schemas/Date'
+            result:
+              type: string
+              example: 'imported 0 records, skipped 3 records'
+            status:
+              type: string
+              example: success
+            type:
+              type: string
+              example: re.notifica.import.UserSegment
+          type: object
+    ImportJobBase:
       properties:
         path:
           type: string
@@ -12951,6 +12390,71 @@ components:
       type: object
       required:
         - path
+    LinkModelList:
+      properties:
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    LinkModel:
+      allOf:
+        - $ref: '#/components/schemas/LinkBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            hash:
+              type: string
+              example: 50fUr-56
+            opened:
+              type: number
+              example: 10
+            uniqueOpened:
+              type: number
+              example: 5
+          type: object
+    LinkBase:
+      properties:
+        name:
+          example: "Another Link"
+          type: string
+        type:
+          example: "re.notifica.link.Redirect"
+          type: string
+        target:
+          type: object
+          properties:
+            web:
+              example: "https://notifica.re/example"
+              type: string
+              format: uri
+            ios:
+              example: "https://notifica.re/example-ios"
+              type: string
+              format: uri
+            android:
+              example: "https://notifica.re/example-android"
+              type: string
+              format: uri
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageRule'
+        customEvents:
+          type: array
+          items:
+            type: string
+          example: [CustomEvent]
+      type: object
+      required:
+        - name
+        - type
+        - target
     LocationsCriteria:
       properties:
         locations:
@@ -13115,6 +12619,125 @@ components:
         - name
         - address
       type: object
+    NotificationLogModel:
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        application:
+          $ref: '#/components/schemas/ObjectId'
+        notification:
+          $ref: '#/components/schemas/ObjectId'
+        date:
+          $ref: '#/components/schemas/Date'
+        deviceID:
+          type: string
+          example: d31b6529
+        message:
+          type: string
+          example: Invalid token size
+        transport:
+          type: string
+          example: APNS
+    NotificationInfoModel:
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        application:
+          $ref: '#/components/schemas/ObjectId'
+        notification:
+          $ref: '#/components/schemas/ObjectId'
+        status:
+          type: string
+          enum: [saved, gathering, sending, error, finished]
+        gathering:
+          type: boolean
+          default: false
+        duration:
+          type: number
+          example: 749
+        queued:
+          type: number
+          example: 3
+        sent:
+          type: number
+          example: 4
+        fails:
+          type: number
+          example: 1
+        devices:
+          type: number
+          example: 3
+        users:
+          type: number
+          example: 2
+        opened:
+          type: number
+          example: 2
+        uniqueOpened:
+          type: number
+          example: 1
+        replied:
+          type: number
+          example: 1
+        replies:
+          type: object
+          properties:
+            total:
+              type: number
+              example: 1
+            unique:
+              type: number
+              example: 1
+            seconds:
+              type: number
+              example: 10
+            uniqueSeconds:
+              type: number
+              example: 10
+            labels:
+              type: array
+              items:
+                type: string
+              example: [yes, no]
+            perLabel:
+              type: array
+              items:
+                type: number
+              example: [1, 0]
+    NotificationList:
+      properties:
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationModel'
+        count:
+          type: number
+          example: 1
+      type: object
+    NotificationModel:
+      allOf:
+        - $ref: '#/components/schemas/NotificationPushBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            medium:
+              description: The medium of the message
+              type: string
+              enum: [push, email, sms]
+              default: push
+            subject:
+              description: Subject of your email message
+              type: string
+              example: Hello world
+            sender:
+              description: >-
+                The sender of your message, if different from the
+                default sender in your application. Email domain must
+                match the domain of the application.
+              $ref: '#/components/schemas/MessageSender'
+          type: object
     NotificationPushTriggered:
       allOf:
         - $ref: '#/components/schemas/NotificationPushBroadcast'
@@ -13851,7 +13474,73 @@ components:
       type: string
       example: 1d9e80ef851d212aca82cf23
     PassData:
-      properties: {}
+      additionalProperties: true
+      type: object
+    PassbookCreate:
+      properties:
+        data:
+          $ref: '#/components/schemas/PassData'
+          description: >-
+            The data object containing all the information, colours and
+            fields for a pass.
+        passStyle:
+          description: >-
+            A pass template can have several styles. A style will define
+            how your pass looks and behaves. This string will indicate
+            what style to use (boarding, coupon, ticket, card, generic).
+          type: string
+      required:
+        - passStyle
+        - data
+      type: object
+    ProductCreate:
+      allOf:
+        - $ref: '#/components/schemas/ProductBase'
+        - type: object
+          required:
+            - name
+            - type
+            - identifier
+    ProductList:
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    ProductModel:
+      allOf:
+        - $ref: '#/components/schemas/ProductBase'
+        - type: object
+          properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+    ProductBase:
+      properties:
+        active:
+          type: boolean
+        identifier:
+          type: string
+          example: re.notifica.office.consumable
+        name:
+          type: string
+          example: Consumable
+        stores:
+          items:
+            type: string
+            enum: [AppStore, GooglePlay]
+            example:
+              - AppStore
+              - GooglePlay
+          type: array
+        type:
+          type: string
+          enum: [consumable, onetime, subscription]
       type: object
     Point:
       properties:
