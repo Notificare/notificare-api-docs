@@ -1,33 +1,59 @@
-<!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Swagger UI</title>
-    <style>
-        html
-        {
-            box-sizing: border-box;
-            overflow: -moz-scrollbars-vertical;
-            overflow-y: scroll;
-        }
-
-        *,
-        *:before,
-        *:after
-        {
-            box-sizing: inherit;
-        }
-
-        body
-        {
-            margin:0;
-            background: #fafafa;
-        }
-    </style>
+    <title>Notificare Push API</title>
+    <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,500,600,700" />
+    <link rel="stylesheet" href="https://use.typekit.net/fjh4cfl.css" />
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
 </head>
-
 <body>
-<div id="swagger-ui"></div>
+<div class="header">
+    <img alt="Notificare Docs" src="/images/logo.svg" width="224" height="44">
+</div>
+<div class="main-content">
+    <div id="redoc-container"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
+<script type="text/javascript">
+  (function() {
+    Redoc.init(
+      "specs/notificare-push-api-oas3.yaml",
+      {
+        "theme": {
+            "colors": {
+                "primary": {
+                    "main": "rgba(35, 44, 42, 1)",
+                    "light": "#67817b",
+                    "dark": "#232C2A",
+                    "contrastText": "#fff"
+                }
+            },
+            typography: {
+                fontFamily: "'proxima-nova', 'Muli', 'Helvetica Neue', Helvetica, Arial, Sans-Serif",
+                fontSize: '16px',
+                headings: {
+                    fontFamily: "'proxima-nova', 'Muli', 'Helvetica Neue', Helvetica, Arial, Sans-Serif"
+                }
+            },
+            menu: {
+                backgroundColor: '#232C2A',
+                textColor: '#ffffff',
+            },
+            rightPanel: {
+                backgroundColor: '#232C2A',
+                width: '40%',
+                textColor: '#ffffff',
+            }
+        },
+        scrollYOffset: 80
+      },
+      document.getElementById('redoc-container'));
+  })();
+</script>
 </body>
 </html>

@@ -1,1 +1,28 @@
-@import url(~swagger-ui/dist/swagger-ui.css);
+body{
+   margin: 0;
+   padding: 0;
+
+   .header{
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      height: 80px;
+      background: #232C2A;
+      color: white;
+      z-index: 999;
+
+      img{
+         margin-left: 25px;
+         max-width: 200px;
+      }
+   }
+
+   .main-content{
+      padding: 80px 0 0 0;
+   }
+
+}
