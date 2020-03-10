@@ -20,10 +20,10 @@ module.exports = merge(prod, {
       s3UploadOptions: {
         Bucket: 'api-docs.notifica.re'
       },
-      // cloudfrontInvalidateOptions: {
-      //   DistributionId: process.env.CLOUDFRONT_DISTRIBUTION_ID,
-      //   Items: ["/*"]
-      // }
+      cloudfrontInvalidateOptions: {
+        DistributionId: process.env.CLOUDFRONT_DISTRIBUTION_ID,
+        Items: ["/*"]
+      }
     })
   ],
 });

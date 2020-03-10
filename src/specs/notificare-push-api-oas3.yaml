@@ -44,15 +44,12 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: 1.86
+  version: '1.86'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
     email: support@notifica.re
     url: https://support.notifica.re
-  externalDocs:
-    description: Find out more
-    url: https://docs.notifica.re
 servers:
   - url: 'https://push.notifica.re'
   - url: 'http://localhost:3006'
@@ -1400,9 +1397,6 @@ paths:
               properties:
                 geometry:
                   $ref: '#/components/schemas/Polygon'
-                  description: >-
-                    A simple polygon geoJSON object used to query the devices'
-                    location
               required:
                 - geometry
               type: object
@@ -1782,9 +1776,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              properties:
-                device:
-                  $ref: '#/components/schemas/DeviceModel'
+              schema:
+                properties:
+                  device:
+                    $ref: '#/components/schemas/DeviceModel'
           description: OK
       tags:
         - Device
@@ -2088,7 +2083,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              $ref: '#/components/schemas/EventList'
+              schema:
+                $ref: '#/components/schemas/EventList'
           description: OK
       tags:
         - Event
@@ -2205,9 +2201,6 @@ paths:
                       type: boolean
                     criteria:
                       $ref: '#/components/schemas/Criteria'
-                      description: >-
-                        Optionally you can include a criteria object to filter the
-                        export results
                     includeTags:
                       description: Specify if export job should include all device tags
                       type: boolean
@@ -2265,19 +2258,10 @@ paths:
                       type: boolean
                     lastActive:
                       $ref: '#/components/schemas/DateCriteria'
-                      description: >-
-                        Optionally you can filter the export results based on the
-                        last active date
                     registrationDate:
                       $ref: '#/components/schemas/DateCriteria'
-                      description: >-
-                        Optionally you can filter the export results based on the
-                        registration date
                     segmentsCriteria:
                       $ref: '#/components/schemas/SegmentsCriteria'
-                      description: >-
-                        Optionally you can include a segment criteria object to
-                        filter the export results
                     showCombinedSegments:
                       description: >-
                         When showSegments is true or it includes a list of segments,
@@ -2304,10 +2288,8 @@ paths:
                         you can specify if export jobs should contain the name of
                         the segments instead of their IDs
                       type: boolean
-                  type: object
               required:
                 - data
-              type: object
       summary: Export Users
   /export/re.notifica.export.UserData:
     post:
@@ -2435,12 +2417,14 @@ paths:
                       description: >-
                         Specify if export job should only include notifications
                         created before a certain date
-                      type: '#/components/schemas/Date'
+                      type: string
+                      format: 'date-time'
                     since:
                       description: >-
                         Specify if export job should only include notifications
                         created after a certain date
-                      type: '#/components/schemas/Date'
+                      type: string
+                      format: 'date-time'
                     useSegmentNames:
                       description: >-
                         Specify if export jobs should contain the name of the
@@ -2482,7 +2466,6 @@ paths:
                 data:
                   properties:
                     notification:
-                      description: The id of the notification you wish to export replies from
                       $ref: '#/components/schemas/ObjectId'
                   required:
                     - notification
@@ -2525,58 +2508,59 @@ paths:
                       description: The type of the event you wish to export records from
                       type: string
                     before:
-                      $ref: '#/components/schemas/Date'
                       description: >-
                         Specify if export job should only include events created
                         before a certain date
+                      type: string
+                      format: 'date-time'
                     since:
-                      $ref: '#/components/schemas/Date'
                       description: >-
                         Specify if export job should only include events created
                         after a certain date
+                      type: string
+                      format: 'date-time'
                     criteria:
                       $ref: '#/components/schemas/Criteria'
-                      description: >-
-                        Optionally you can include a criteria object to filter the
-                        export results
                     dataFilter:
                       $ref: '#/components/schemas/DataFilterCriteria'
-                      description: >-
-                        Optionally you can include data filters to generate
-                        fine-grained export results. Only available for custom
-                        events.
                     fence:
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                       description: >-
                         If type is `re.notifica.event.beacon.Session`, optionally
                         you can specify the ID of a region (where the beacons are
                         located) to include only events for those beacons
                     region:
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                       description: >-
                         If type is `re.notifica.event.region.Session`, optionally
                         you can specify the ID of a region to include only events
                         for that region
                     group:
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                       description: >-
                         If type is any `re.notifica.event.asset.*`, optionally you
                         can specify the ID of an asset group to include only events
                         for that asset group
                     notification:
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                       description: >-
                         If type is any `re.notifica.event.notification.*`,
                         optionally you can specify the ID of a notification to
                         include only events for that notification
                     scannable:
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                       description: >-
                         If type is any `re.notifica.event.scannable.*`, optionally
                         you can specify the ID of a scannable to include only events
                         for that scannable
                     pass:
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                       description: >-
                         If type is any `re.notifica.event.pass.*`, optionally you
                         can specify the id of a pass to include only events for
@@ -2628,7 +2612,8 @@ paths:
                   properties:
                     passbook:
                       description: The id of the existing pass template
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                   required:
                     - passbook
                   type: object
@@ -2670,7 +2655,8 @@ paths:
                   properties:
                     campaign:
                       description: The id of the campaign you wish to export results from
-                      $ref: '#/components/schemas/ObjectId'
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
                   required:
                     - campaign
                   type: object
@@ -2908,7 +2894,6 @@ paths:
               schema:
                 properties:
                   location:
-                    type: object
                     $ref: '#/components/schemas/GeoModel'
           description: OK
       tags:
@@ -5215,7 +5200,7 @@ paths:
               schema:
                 properties:
                   schedule:
-                    '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - Message Schedule
@@ -5543,24 +5528,17 @@ paths:
                   type: array
                 extra:
                   $ref: '#/components/schemas/MessageExtra'
-                  description: >-
-                    A valid one-level JSON object. This is useful if you need to
-                    send extra data that you will need to proccess soon the
-                    notification arrives.
                 languages:
                   description: >-
                     The list of localized content language identifiers used in
                     localizedContent. When included, you must also provide a
                     list of localizedContent objects in the same order.
-                  items: {}
+                  items:
+                    type: string
                   type: array
+                  example: [nl, pt]
                 lights:
                   $ref: '#/components/schemas/MessageLights'
-                  description: >-
-                    An object containing a color string ("white", "red",
-                    "#rrggbb", "#aarrggbb") and the on/off time in milliseconds.
-                    Colors are only applicable to Android and will be displayed
-                    by hardware as accurately as possible.
                 localizedContent:
                   description: >-
                     Provides content for all the language identifiers provided
@@ -5600,9 +5578,6 @@ paths:
                   type: array
                 sender:
                   $ref: '#/components/schemas/MessageSender'
-                  description: >-
-                    An object containing the sender name and address for this
-                    template. Applicable only for email templates.
                 sound:
                   description: >-
                     Name of sound to play. `default` means use the default sound
@@ -5904,8 +5879,10 @@ paths:
         `masterSecret`.
       operationId: postNotificationTestEmailSegments
       requestBody:
-        schema:
-          $ref: '#/components/schemas/NotificationTestEmailSegments'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationTestEmailSegments'
       summary: Test Email Message to Segments
   /notification/test/email/tags:
     post:
@@ -6514,18 +6491,14 @@ paths:
                   type: string
                 data:
                   $ref: '#/components/schemas/PassData'
-                  description: >-
-                    The data object from a passbook template, where the fields
-                    (headerFields, primaryFields, secondaryFields,
-                    auxiliaryFields, backFields) should contain a value
-                    property.
                 limit:
                   description: >-
                     When using `limit` as a redeem option, you should provide
                     the number of times the card can be redeemed.
                   type: number
                 passbook:
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
                   description: The passbook template used to create a pass.
                 redeem:
                   description: >-
@@ -6557,8 +6530,9 @@ paths:
         '200':
           content:
             image/png:
-              type: string
-              format: binary
+              schema:
+                type: string
+                format: binary
           description: OK
       tags:
         - Pass
@@ -6588,8 +6562,9 @@ paths:
         '200':
           content:
             image/png:
-              type: string
-              format: binary
+              schema:
+                type: string
+                format: binary
           description: OK
       tags:
         - Pass
@@ -6764,8 +6739,9 @@ paths:
         '200':
           content:
             application/vnd.pkpass:
-              type: string
-              format: binary
+              schema:
+                type: string
+                format: binary
           description: OK
       tags:
         - Pass
@@ -6912,18 +6888,14 @@ paths:
                   type: string
                 data:
                   $ref: '#/components/schemas/PassData'
-                  description: >-
-                    The data object from a passbook template, where the fields
-                    (headerFields, primaryFields, secondaryFields,
-                    auxiliaryFields, backFields) should contain a value
-                    property.
                 limit:
                   description: >-
                     When using `limit` as a redeem option, you should provide
                     the number of times the card can be redeemed.
                   type: number
                 passbook:
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
                   description: The passbook template used to create a pass.
                 redeem:
                   description: >-
@@ -7274,9 +7246,6 @@ paths:
               properties:
                 data:
                   $ref: '#/components/schemas/PassData'
-                  description: >-
-                    The data object containing all the information, colours and
-                    fields for a pass.
                 passStyle:
                   description: >-
                     A pass template can have several styles. A style will define
@@ -7480,7 +7449,7 @@ paths:
             application/json; charset=utf-8:
               schema:
                 $ref: '#/components/schemas/ResponseMessage'
-              examples:
+              example:
                 message: product deleted
           description: OK
       tags:
@@ -7781,7 +7750,9 @@ paths:
               properties:
                 tags:
                   description: The list of tags this region should be associated with.
-                  items: {}
+                  items:
+                    type: string
+                    example: [store]
                   type: array
                 address:
                   description: >-
@@ -7790,10 +7761,6 @@ paths:
                   type: string
                 advancedGeometry:
                   $ref: '#/components/schemas/Polygon'
-                  description: >-
-                    The advanced geometry for this region. If included, the
-                    geometry field is optional and will be automatically
-                    calculated for you.
                 category:
                   description: >-
                     The category of this region. Regions should be categorised
@@ -7815,9 +7782,6 @@ paths:
                   type: number
                 geometry:
                   $ref: '#/components/schemas/Point'
-                  description: >-
-                    The geometry for this region. If no advancedGeometry is
-                    used, this field is mandatory.
                 icon:
                   description: >-
                     The icon used for this region. Must be a publicly accessible
@@ -8127,10 +8091,6 @@ paths:
                   type: string
                 advancedGeometry:
                   $ref: '#/components/schemas/Polygon'
-                  description: >-
-                    The advanced geometry for this region. If included, the
-                    geometry field is optional and will be automatically
-                    calculated for you.
                 category:
                   description: >-
                     The category of this region. Regions should be categorised
@@ -8157,9 +8117,6 @@ paths:
                   type: number
                 geometry:
                   $ref: '#/components/schemas/Point'
-                  description: >-
-                    The geometry for this region. If no advancedGeometry is
-                    used, this field is mandatory.
                 icon:
                   description: >-
                     The icon used for this region. Must be a publicly accessible
@@ -8240,20 +8197,20 @@ paths:
           content:
             application/json; charset=utf-8:
               example:
-              count: 2
-              replies:
-                - _id: 5331703332c17e3077d5a765
-                  deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
-                  label: 'yes'
-                  notification: 53317011f90827d27c6e9c94
-                  time: '2014-03-25T12:01:55.713Z'
-                  userID: testuser@example.com
-                - _id: 5331703332c17e3077d5a765
-                  deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
-                  label: 'yes'
-                  notification: 53317011f90827d27c6e9c94
-                  time: '2014-03-25T12:01:55.713Z'
-                  userID: testuser@example.com
+                count: 2
+                replies:
+                  - _id: 5331703332c17e3077d5a765
+                    deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
+                    label: 'yes'
+                    notification: 53317011f90827d27c6e9c94
+                    time: '2014-03-25T12:01:55.713Z'
+                    userID: testuser@example.com
+                  - _id: 5331703332c17e3077d5a765
+                    deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
+                    label: 'yes'
+                    notification: 53317011f90827d27c6e9c94
+                    time: '2014-03-25T12:01:55.713Z'
+                    userID: testuser@example.com
           description: OK
       tags:
         - Reply
@@ -11351,13 +11308,16 @@ components:
           example: Test Group
         notAfter:
           description: Asset groups will not be visible after this date.
-          $ref: '#/components/schemas/Date'
+          type: string
+          format: 'date-time'
         notBefore:
           description: Asset groups will not be visible before this date.
-          $ref: '#/components/schemas/Date'
+          type: string
+          format: 'date-time'
         segment:
           description: The segment for this asset group
-          $ref: '#/components/schemas/ObjectId'
+          type: string
+          example: 1d9e80ef851d212aca82cf23
       required:
         - name
         - assets
@@ -11404,6 +11364,10 @@ components:
               description: Your beacon's minor identifier (must be unique per major)
               type: number
               example: 100
+            notification:
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+              description: An Id of a previously created notification.
           required:
             - name
             - region
@@ -11429,7 +11393,8 @@ components:
         - properties:
             _id:
               description: Notificare ID of the beacon
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
         - $ref: '#/components/schemas/BeaconBase'
     BeaconBase:
       properties:
@@ -11439,7 +11404,7 @@ components:
           example: 99
         data:
           description: A free form object that can be assigned to a beacon.
-          additonalProperties:
+          additionalProperties:
             type: string
           example:
             key1: value1
@@ -11462,8 +11427,9 @@ components:
           type: string
           example: Test beacon
         notification:
-          $ref: '#/components/schemas/ObjectId'
-          description: An Id of a previously created notification. (deprecated)
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+          description: An Id of a previously created notification.
         proximity:
           description: >-
             Your notification proximity. Accepts one of these:
@@ -11522,20 +11488,30 @@ components:
       example: [[4.23456, 52.184884], [5.23456, 50.184884],[4.23456, 52.184884]]
       type: array
     Criteria:
+      description: >-
+        Criteria to select an audience
       properties:
         locationsCriteria:
+          description: >-
+            Device locations criteria
           items:
             $ref: '#/components/schemas/LocationsCriteria'
           type: array
         propertiesCriteria:
+          description: >-
+            Device properties criteria
           items:
             $ref: '#/components/schemas/PropertiesCriteria'
           type: array
         segmentsCriteria:
+          description: >-
+            User segments criteria
           items:
             $ref: '#/components/schemas/SegmentsCriteria'
           type: array
         tagsCriteria:
+          description: >-
+            Device tags criteria
           items:
             $ref: '#/components/schemas/TagsCriteria'
           type: array
@@ -11545,6 +11521,8 @@ components:
         $ref: '#/components/schemas/DataFilterCriterion'
       type: array
     DataFilterCriterion:
+      description: >-
+        Filter events by comparing data in specific keys and values
       properties:
         operator:
           enum:
@@ -11608,19 +11586,23 @@ components:
             _id:
               description: Notificare ID of the Datasource
               readOnly: true
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             lastRun:
               description: Time of last polling
               readOnly: true
-              $ref: '#/components/schemas/Date'
+              type: string
+              format: 'date-time'
             lastParsed:
               description: Time of last parsing
               readOnly: true
-              $ref: '#/components/schemas/Date'
+              type: string
+              format: 'date-time'
             nextRun:
               description: Time of next polling
               readOnly: true
-              $ref: '#/components/schemas/Date'
+              type: string
+              format: 'date-time'
           type: object
         - $ref: '#/components/schemas/DatasourceBase'
     DatasourceTest:
@@ -11771,11 +11753,13 @@ components:
             _id:
               description: Notificare ID of the Device
               readOnly: true
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             application:
               description: Application this device belongs to
               readOnly: true
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
           type: object
         - $ref: '#/components/schemas/DeviceBase'
     DeviceBase:
@@ -11838,7 +11822,8 @@ components:
       properties:
         tags:
           type: array
-          $ref: '#/components/schemas/DeviceTagModel'
+          items:
+            $ref: '#/components/schemas/DeviceTagModel'
         count:
           type: number
           example: 2
@@ -11856,7 +11841,6 @@ components:
         deviceCount:
           type: number
           example: 2
-        type: object
     EmailCreate:
       properties:
         tags:
@@ -11897,7 +11881,8 @@ components:
       properties:
         exportJobs:
           type: array
-          $ref: '#/components/schemas/ExportJobModel'
+          items:
+            $ref: '#/components/schemas/ExportJobModel'
         count:
           type: number
           example: 2
@@ -11908,11 +11893,13 @@ components:
             _id:
               description: Notificare ID of the Export Job
               readOnly: true
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             application:
               description: Application this export job belongs to
               readOnly: true
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
           type: object
         - $ref: '#/components/schemas/ExportJobBase'
     ExportJobBase:
@@ -11959,7 +11946,6 @@ components:
             test: a test value
             test2: another test
           type: object
-        type: object
     EventList:
       properties:
         events:
@@ -11976,11 +11962,13 @@ components:
             _id:
               description: Notificare ID of the Event
               readOnly: true
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             application:
               description: Application this event belongs to
               readOnly: true
-              $ref: '#/components/schemas/ObjectId'
+              type: string
+              example: 1d9e80ef851d212aca82cf23
           type: object
         - $ref: '#/components/schemas/EventBase'
     EventBase:
@@ -12005,26 +11993,50 @@ components:
         data:
           properties:
             region:
-              $ref: '#/components/schemas/ObjectId'
+              description: >-
+                The region's id of an event of type re.notifica.event.region.Session or re.notifica.event.beacon.Session
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             fence:
-              $ref: '#/components/schemas/ObjectId'
+              description: >-
+                The beacon's fence region id of an event of type re.notifica.event.beacon.Session
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             pass:
-              $ref: '#/components/schemas/ObjectId'
+              description: >-
+                The pass id of an event of type re.notifica.event.pass.Add, re.notifica.event.pass.Remove or re.notifica.event.pass.Redeem
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             serial:
+              description: >-
+                The pass serial of an event of type re.notifica.event.pass.Add, re.notifica.event.pass.Remove or re.notifica.event.pass.Redeem
               type: string
               format: uuid
             group:
-              $ref: '#/components/schemas/ObjectId'
+              description: >-
+                The asset group's id of an event of type re.notifica.event.asset.Load
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             scannable:
-              $ref: '#/components/schemas/ObjectId'
+              description: >-
+                The scannable's id of an event of type re.notifica.event.scannable.Scan
+              type: string
+              example: 1d9e80ef851d212aca82cf23
             notification:
-              $ref: '#/components/schemas/ObjectId'
+              description: >-
+                The notification's id of an event of type re.notifica.event.notification.Sent,
+                re.notifica.event.notification.Receive, re.notifica.event.notification.Open
+                or re.notifica.event.notification.Influenced
+              type: string
+              example: 1d9e80ef851d212aca82cf23
           type: object
         endDate:
-          $ref: '#/components/schemas/Date'
+          type: string
+          format: 'date-time'
           description: defaults to now
         startDate:
-          $ref: '#/components/schemas/Date'
+          type: string
+          format: 'date-time'
           description: defaults to now
         type:
           type: string
@@ -12200,12 +12212,14 @@ components:
               properties:
                 notificationTemplate:
                   description: Use previously created template for messages
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
                 notificationSchedule:
                   description: Schedule message
                   properties:
                     time:
-                      $ref: '#/components/schemas/Date'
+                      type: string
+                      format: 'date-time'
                     timezone:
                       type: string
                       example: Europe/Amsterdam
@@ -12214,7 +12228,6 @@ components:
                       default: false
                   type: object
                 notificationCriteria:
-                  description: Criteria for notification
                   $ref: '#/components/schemas/Criteria'
               type: object
             path:
@@ -12229,7 +12242,8 @@ components:
               properties:
                 notificationTemplate:
                   description: Use previously created template for messages
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
                 notificationSchedule:
                   description: Schedule message
                   properties:
@@ -12240,7 +12254,6 @@ components:
                       example: Europe/Amsterdam
                   type: object
                 notificationCriteria:
-                  description: Criteria for notification
                   $ref: '#/components/schemas/Criteria'
                 medium:
                   description: Medium to send to if no template given
@@ -12260,9 +12273,9 @@ components:
               properties:
                 notificationTemplate:
                   description: Use previously created template for messages
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
                 notificationCriteria:
-                  description: Criteria for notification
                   $ref: '#/components/schemas/Criteria'
                 passData:
                   description: Pass data values if not given in import data
@@ -12275,11 +12288,13 @@ components:
                         to: OPO
                       type: object
                     relevantDate:
-                      $ref: '#/components/schemas/Date'
+                      type: string
+                      format: 'date-time'
                   type: object
                 passbook:
                   description: The pass template to use
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
                 redeem:
                   description: Set redeem type for new pass
                   type: string
@@ -12320,7 +12335,8 @@ components:
                   type: object
                 passbook:
                   description: The pass template to use
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
               type: object
           type: object
     ImportJobUserSegment:
@@ -12331,7 +12347,8 @@ components:
               properties:
                 userSegment:
                   description: The segment to import into
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
                 clear:
                   description: Clear the segment before importing users
                   type: boolean
@@ -12342,7 +12359,8 @@ components:
                   default: false
                 notificationTemplate:
                   description: The template to use for the notification
-                  $ref: '#/components/schemas/ObjectId'
+                  type: string
+                  example: 1d9e80ef851d212aca82cf23
               type: object
               required:
                 - userSegment
@@ -12458,12 +12476,19 @@ components:
     LocationsCriteria:
       properties:
         locations:
+          description: >-
+            Filter or select devices based on their location.
+            Locations can be circular or polygon-shaped.
           items:
             oneOf:
               - $ref: '#/components/schemas/Polygon'
               - $ref: '#/components/schemas/Circle'
           type: array
         quantifier:
+          description: >-
+            `all` means devices that are in all of these locations,
+            `any` means devices that are in one or more of these locations,
+            `none` means devices that are in none of these locations
           enum:
             - all
             - any
@@ -12526,6 +12551,10 @@ components:
         - data
       type: object
     MessageExtra:
+      description: >-
+        A valid one-level JSON object. This is useful if you need to
+        send extra data that you will need to proccess soon the
+        notification arrives.
       additionalProperties:
         type: string
       example:
@@ -12533,6 +12562,11 @@ components:
         key2: value2
       type: object
     MessageLights:
+      description: >-
+        An object containing a color string ("white", "red",
+        "#rrggbb", "#aarrggbb") and the on/off time in milliseconds.
+        Colors are only applicable to Android and will be displayed
+        by hardware as accurately as possible.
       properties:
         color:
           description: Color string
@@ -12608,6 +12642,9 @@ components:
         - params
       type: object
     MessageSender:
+      description: >-
+        An object containing the sender name and address for this
+        template. Applicable only for email templates.
       properties:
         address:
           type: string
@@ -12732,10 +12769,6 @@ components:
               type: string
               example: Hello world
             sender:
-              description: >-
-                The sender of your message, if different from the
-                default sender in your application. Email domain must
-                match the domain of the application.
               $ref: '#/components/schemas/MessageSender'
           type: object
     NotificationPushTriggered:
@@ -12896,10 +12929,6 @@ components:
               type: array
             extra:
               $ref: '#/components/schemas/MessageExtra'
-              description: >-
-                A valid one-level JSON object. This is useful if you need to
-                send extra data that you will need to process soon the
-                notification arrives.
             sound:
               description: >-
                 Name of sound to play. `default` means use the default sound
@@ -12908,14 +12937,7 @@ components:
               type: string
               example: default
             lights:
-              description: >-
-                An object containing a color string ("white", "red",
-                "#rrggbb", "#aarrggbb") and the on/off time in milliseconds.
-                Colors are only applicable to Android and will be displayed by
-                hardware as accurately as possible.
-              items:
-                $ref: '#/components/schemas/MessageLights'
-              type: array
+              $ref: '#/components/schemas/MessageLights'
             channel:
               description: >-
                 This is an Android only property. If the channel is defined in the app,
@@ -12970,6 +12992,13 @@ components:
         - $ref: '#/components/schemas/NotificationSystemBase'
         - type: object
           properties:
+            type:
+              description: >-
+                Defines a type of for your silent message. Types of notifications are
+                represented by namespaces. Custom notification types should a reverse
+                domain style string: com.domain.*.
+              type: string
+              example: your.domain.system.type
             criteria:
               $ref: '#/components/schemas/Criteria'
             segments:
@@ -12999,10 +13028,6 @@ components:
               example: your.domain.system.type
             extra:
               $ref: '#/components/schemas/MessageExtra'
-              description: >-
-                A valid one-level JSON object. This is useful if you need to
-                send extra data that you will need to process soon the
-                notification arrives.
           required:
             - type
     NotificationEmailTriggered:
@@ -13101,17 +13126,10 @@ components:
                 $ref: '#/components/schemas/MessageContent'
               type: array
             attachments:
-              description: >-
-                An object containing the URL to an image either uploaded into
-                our platform or hosted in any public web server.
               items:
                 $ref: '#/components/schemas/MessageAttachment'
               type: array
             sender:
-              description: >-
-                The sender of your message, if different from the
-                default sender in your application. Email domain must
-                match the domain of the application.
               $ref: '#/components/schemas/MessageSender'
             rules:
               description: >-
@@ -13474,15 +13492,19 @@ components:
       type: string
       example: 1d9e80ef851d212aca82cf23
     PassData:
+      description: >-
+        The data object containing all the information, colours and
+        fields for a pass.
+        If cloned from a passbook template, the fields
+        (headerFields, primaryFields, secondaryFields,
+        auxiliaryFields, backFields) should be updated
+        with a value property.
       additionalProperties: true
       type: object
     PassbookCreate:
       properties:
         data:
           $ref: '#/components/schemas/PassData'
-          description: >-
-            The data object containing all the information, colours and
-            fields for a pass.
         passStyle:
           description: >-
             A pass template can have several styles. A style will define
@@ -13497,6 +13519,16 @@ components:
       allOf:
         - $ref: '#/components/schemas/ProductBase'
         - type: object
+          properties:
+            identifier:
+              type: string
+              example: re.notifica.office.consumable
+            name:
+              type: string
+              example: Consumable
+            type:
+              type: string
+              enum: [consumable, onetime, subscription]
           required:
             - name
             - type
@@ -13567,11 +13599,24 @@ components:
         - type
       type: object
     PropertiesCriteria:
+      description: >-
+        A list of filters for device properties. The results are intersected / AND'ed
       items:
         $ref: '#/components/schemas/PropertiesCriterion'
       type: array
     PropertiesCriterion:
       properties:
+        description:
+          description: >-
+            Filter or select devices based on the value of their properties.
+            `eq` means equal
+            `ne` means not equal
+            `lt` means less than, string-compared
+            `lte` means less than or equal, string-compared
+            `gt` means greater than, string-compared
+            `gte` means greater than or equal, string-compared
+            `in` means in, needs an array of values
+            `nin` means not in, needs an array of values
         operator:
           enum:
             - eq
@@ -13584,6 +13629,8 @@ components:
             - nin
           type: string
         property:
+          description: >-
+            Filter or select devices based on the value of their properties.
           type: string
           example: platform
         value:
@@ -13640,12 +13687,18 @@ components:
     SegmentsCriteria:
       properties:
         quantifier:
+          description: >-
+            `all` means users that are in all of these segments,
+            `any` means users that are in one or more of these segments,
+            `none` means users that are in none of these segments
           enum:
             - all
             - any
             - none
           type: string
         segments:
+          description: >-
+            Filter or select users based on these segments.
           items:
             $ref: '#/components/schemas/ObjectId'
           type: array
@@ -13653,11 +13706,17 @@ components:
     TagsCriteria:
       properties:
         tags:
+          description: >-
+            Filter or select devices based on these tags.
           items:
             type: string
             example: tag_test
           type: array
         quantifier:
+          description: >-
+            `all` means devices that have all these tags,
+            `any` means devices that have one or more of these tags,
+            `none` means devices that have none of these tags
           enum:
             - all
             - any

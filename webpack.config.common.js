@@ -5,17 +5,27 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 
 const generateHTMLPlugins = () => glob.sync('./src/**/*.html').map(
-  dir => new HTMLWebpackPlugin({
-    filename: path.basename(dir), // Output
-    template: dir, // Input
-  }),
+  dir => {
+    console.log(dir);
+    if (path.basename(dir) === 'index.html') {
+      return new HTMLWebpackPlugin({
+        filename: path.basename(dir), // Output
+        template: dir, // Input
+      })
+    } else {
+      return new HTMLWebpackPlugin({
+        filename: path.join(path.basename(dir, '.html'), 'index.html'), // Output
+        template: dir, // Input
+      })
+    }
+  },
 );
 
 module.exports = {
   node: {
     fs: 'empty',
   },
-  entry: ['./src/js/app.js', './src/style/main.scss'],
+  entry: ['./src/js/app.js'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'app.bundle.js',
@@ -36,7 +46,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              outputPath: 'static/',
+              outputPath: 'images/',
             },
           },
         ],
@@ -58,6 +68,10 @@ module.exports = {
       {
         from: './src/static/',
         to: './static/',
+      },
+      {
+        from: './src/images/',
+        to: './images/',
       },
       {
         from: './src/specs/',
