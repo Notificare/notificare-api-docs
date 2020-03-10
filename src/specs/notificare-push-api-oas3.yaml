@@ -6397,49 +6397,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                passes:
-                  - _id: 5501894253058ca5269a9928
-                    application: 5354f0bb3fa544452ff4c7c0
-                    barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
-                    data:
-                      auxiliaryFields: []
-                      backFields: []
-                      background: null
-                      backgroundColor: 'rgb(0,0,0)'
-                      barcode:
-                        format: PKBarcodeFormatQR
-                        messageEncoding: iso-8859-1
-                      description: coupon example
-                      footer: null
-                      foregroundColor: 'rgb(255,255,255)'
-                      headerFields: []
-                      icon: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                      labelColor: 'rgb(255,255,255)'
-                      logo: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                      logoText: My Company
-                      primaryFields:
-                        - key: discount
-                          label: discount
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 20% off
-                      secondaryFields:
-                        - key: expires
-                          label: expires
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                          value: 31-12-2015
-                      strip: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                      suppressStripShine: false
-                      thumbnail: null
-                      transitType: null
-                    passbook: 54e135049c2cad772e7c0de0
-                    serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              schema:
+                $ref: '#/components/schemas/PassList'
           description: OK
       tags:
         - Pass
@@ -6480,40 +6439,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                active:
-                  description: A property flagging if the pass is active or not.
-                  type: boolean
-                barcode:
-                  description: >-
-                    A custom string to be used as the pass barcode. We will
-                    generate one for you if this property is not present.
-                  type: string
-                data:
-                  $ref: '#/components/schemas/PassData'
-                limit:
-                  description: >-
-                    When using `limit` as a redeem option, you should provide
-                    the number of times the card can be redeemed.
-                  type: number
-                passbook:
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-                  description: The passbook template used to create a pass.
-                redeem:
-                  description: >-
-                    A pass supports one of 3 modes (always, once, limit) for
-                    redemption.
-                  enum:
-                    - always
-                    - once
-                    - limit
-                  type: string
-              required:
-                - passbook
-                - redeem
-                - data
-              type: object
+              $ref: '#/components/schemas/PassCreate'
       summary: Create Pass
   '/pass/barcode/forserial/{serial}':
     get:
@@ -6607,47 +6533,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                pass:
-                  _id: 5501894253058ca5269a9928
-                  application: 5354f0bb3fa544452ff4c7c0
-                  data:
-                    auxiliaryFields: []
-                    backFields: []
-                    background: null
-                    backgroundColor: 'rgb(0,0,0)'
-                    barcode:
-                      format: PKBarcodeFormatQR
-                      messageEncoding: iso-8859-1
-                    description: coupon example
-                    footer: null
-                    foregroundColor: 'rgb(255,255,255)'
-                    headerFields: []
-                    icon: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                    labelColor: 'rgb(255,255,255)'
-                    logo: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                    logoText: lebkov
-                    primaryFields:
-                      - key: discount
-                        label: discount
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                        value: 20% off
-                    secondaryFields:
-                      - key: expires
-                        label: expires
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                        value: 31-12-2015
-                    strip: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                    suppressStripShine: false
-                    thumbnail: null
-                    transitType: null
-                  passbook: 54e135049c2cad772e7c0de0
-                  serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/PassModel'
           description: OK
       tags:
         - Pass
@@ -6673,47 +6562,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                pass:
-                  _id: 5501894253058ca5269a9928
-                  application: 5354f0bb3fa544452ff4c7c0
-                  data:
-                    auxiliaryFields: []
-                    backFields: []
-                    background: null
-                    backgroundColor: 'rgb(0,0,0)'
-                    barcode:
-                      format: PKBarcodeFormatQR
-                      messageEncoding: iso-8859-1
-                    description: coupon example
-                    footer: null
-                    foregroundColor: 'rgb(255,255,255)'
-                    headerFields: []
-                    icon: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                    labelColor: 'rgb(255,255,255)'
-                    logo: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                    logoText: lebkov
-                    primaryFields:
-                      - key: discount
-                        label: discount
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                        value: 20% off
-                    secondaryFields:
-                      - key: expires
-                        label: expires
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                        value: 31-12-2015
-                    strip: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                    suppressStripShine: false
-                    thumbnail: null
-                    transitType: null
-                  passbook: 54e135049c2cad772e7c0de0
-                  serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/PassModel'
           description: OK
       tags:
         - Pass
@@ -6794,48 +6646,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                pass:
-                  _id: 5501894253058ca5269a9928
-                  application: 5354f0bb3fa544452ff4c7c0
-                  barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
-                  data:
-                    auxiliaryFields: []
-                    backFields: []
-                    background: null
-                    backgroundColor: 'rgb(0,0,0)'
-                    barcode:
-                      format: PKBarcodeFormatQR
-                      messageEncoding: iso-8859-1
-                    description: coupon example
-                    footer: null
-                    foregroundColor: 'rgb(255,255,255)'
-                    headerFields: []
-                    icon: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                    labelColor: 'rgb(255,255,255)'
-                    logo: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                    logoText: lebkov
-                    primaryFields:
-                      - key: discount
-                        label: discount
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                        value: 20% off
-                    secondaryFields:
-                      - key: expires
-                        label: expires
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                        value: 31-12-2015
-                    strip: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                    suppressStripShine: false
-                    thumbnail: null
-                    transitType: null
-                  passbook: 54e135049c2cad772e7c0de0
-                  serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/PassModel'
           description: OK
       tags:
         - Pass
@@ -6877,36 +6691,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                active:
-                  description: A property flagging if the pass is active or not.
-                  type: boolean
-                barcode:
-                  description: >-
-                    A custom string to be used as the pass barcode. We will
-                    generate one for you if this property is not present.
-                  type: string
-                data:
-                  $ref: '#/components/schemas/PassData'
-                limit:
-                  description: >-
-                    When using `limit` as a redeem option, you should provide
-                    the number of times the card can be redeemed.
-                  type: number
-                passbook:
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-                  description: The passbook template used to create a pass.
-                redeem:
-                  description: >-
-                    A pass supports one of 3 modes (always, once, limit) for
-                    redemption.
-                  type: string
-              required:
-                - passbook
-                - redeem
-                - data
-              type: object
+              $ref: '#/components/schemas/PassBase'
       summary: Update Pass
     delete:
       security:
@@ -6958,47 +6743,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                passbooks:
-                  - _id: 5501894253058ca5269a9928
-                    active: false
-                    application: 5354f0bb3fa544452ff4c7c0
-                    data:
-                      auxiliaryFields: []
-                      backFields: []
-                      background: null
-                      backgroundColor: 'rgb(0,0,0)'
-                      barcode:
-                        format: PKBarcodeFormatQR
-                        messageEncoding: iso-8859-1
-                      description: coupon example
-                      footer: null
-                      foregroundColor: 'rgb(255,255,255)'
-                      headerFields: []
-                      icon: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                      labelColor: 'rgb(255,255,255)'
-                      logo: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                      logoText: lebkov
-                      primaryFields:
-                        - key: discount
-                          label: discount
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                      secondaryFields:
-                        - key: expires
-                          label: expires
-                          string: true
-                          textAlignment: PKTextAlignmentLeft
-                      strip: >-
-                        https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                      suppressStripShine: false
-                      thumbnail: null
-                      transitType: null
-                    name: coupon example
-                    passStyle: coupon
+              schema:
+                $ref: '#/components/schemas/PassbookList'
           description: OK
       tags:
         - Pass Templates
@@ -7163,45 +6909,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                passbook:
-                  _id: 5501894253058ca5269a9928
-                  application: 5354f0bb3fa544452ff4c7c0
-                  data:
-                    auxiliaryFields: []
-                    backFields: []
-                    background: null
-                    backgroundColor: 'rgb(0,0,0)'
-                    barcode:
-                      format: PKBarcodeFormatQR
-                      messageEncoding: iso-8859-1
-                    description: coupon example
-                    footer: null
-                    foregroundColor: 'rgb(255,255,255)'
-                    headerFields: []
-                    icon: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                    labelColor: 'rgb(255,255,255)'
-                    logo: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                    logoText: lebkov
-                    primaryFields:
-                      - key: discount
-                        label: discount
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                    secondaryFields:
-                      - key: expires
-                        label: expires
-                        string: true
-                        textAlignment: PKTextAlignmentLeft
-                    strip: >-
-                      https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                    suppressStripShine: false
-                    thumbnail: null
-                    transitType: null
-                  name: coupon example
-                  passStyle: coupon
+              schema:
+                properties:
+                  passbook:
+                    $ref: '#/components/schemas/PassbookModel'
           description: OK
       tags:
         - Pass Templates
@@ -9768,40 +9479,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 2
-                triggers:
-                  - active: false
-                    dayEnd: null
-                    dayStart: null
-                    frequency: once
-                    interval: 8600
-                    name: One Time Welcome
-                    notAfter: null
-                    notBefore: null
-                    notification: 5245bc5b3e66a3b01f0024d4
-                    rules: []
-                    skipDays: []
-                    source: 5245bc5b3e66a3b01f0024d4
-                    type: re.notifica.trigger.region.Enter
-                  - active: true
-                    dayEnd: '08:00:00'
-                    dayStart: '19:00:00'
-                    frequency: always
-                    interval: 8600
-                    name: On Store exit
-                    notAfter: '2014-11-28T15:31:54'
-                    notBefore: '2012-11-28T15:31:54'
-                    notification: 5245bc5b3e66a3b01f0024d4
-                    rules:
-                      - params:
-                          - 3445bc5b4563b01f0f5
-                        type: re.notifica.rule.segment.Add
-                    skipDays:
-                      - 1
-                      - 2
-                    source: 5245bc5b3e66a3b01f0024d4
-                    type: re.notifica.trigger.region.Exit
+              schema:
+                $ref: '#/components/schemas/TriggerList'
           description: OK
       tags:
         - Trigger
@@ -9856,6 +9535,110 @@ paths:
             schema:
               $ref: '#/components/schemas/TriggerCreate'
       summary: Create Trigger
+  '/trigger/forsource/{source}':
+    get:
+      parameters:
+        - description: Show triggers for this source
+          in: path
+          name: source
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: Show archived triggers
+          example: 1
+          in: query
+          name: archived
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/TriggerList'
+          description: OK
+      tags:
+        - Trigger
+      description: >-
+        Get triggers for a source region or beacon
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getTriggerForSource
+      summary: List Triggers For Source
+  '/trigger/forregion/{region}':
+    get:
+      parameters:
+        - description: Show triggers for this region
+          in: path
+          name: region
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: Search for triggers with this name
+          example: 1
+          in: query
+          name: search
+          required: false
+          schema:
+            type: string
+            default: Trig
+        - description: Show archived triggers
+          example: 1
+          in: query
+          name: archived
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/TriggerList'
+          description: OK
+      tags:
+        - Trigger
+      description: >-
+        Get triggers for a region and its beacons
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getTriggerForRegion
+      summary: List Triggers For Region
   '/trigger/{trigger}':
     get:
       parameters:
@@ -9869,26 +9652,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                trigger:
-                  active: true
-                  dayEnd: '08:00'
-                  dayStart: '19:00'
-                  frequency: always
-                  interval: 8600
-                  name: On Store exit
-                  notAfter: '2014-11-28 15:31'
-                  notBefore: '2012-11-28 15:31'
-                  notification: 5245bc5b3e66a3b01f0024d4
-                  rules:
-                    - params:
-                        - 3445bc5b4563b01f0f5
-                      type: re.notifica.rule.segment.Add
-                  skipDays:
-                    - 0
-                    - 6
-                  source: 5245bc5b3e66a3b01f0024d4
-                  type: re.notifica.trigger.region.Exit
+              schema:
+                properties:
+                  trigger:
+                    $ref: '#/components/schemas/TriggerModel'
           description: OK
       tags:
         - Trigger
@@ -9930,76 +9697,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                active:
-                  description: This trigger is active or not.
-                  type: boolean
-                dayEnd:
-                  description: Triggers will not fire after this time of day.
-                  type: string
-                dayStart:
-                  description: Triggers will not fire before this time of day.
-                  type: string
-                delayMinutes:
-                  description: >-
-                    Trigger will fire after this amount of minutes, if not
-                    canceled by the opposite geo-transition.
-                  type: number
-                frequency:
-                  description: >-
-                    How often the trigger should be fired. Can be `once`,
-                    `always` or `time`. The latter value requires an interval to
-                    be provided.
-                  enum:
-                    - once
-                    - always
-                    - time
-                  type: string
-                interval:
-                  description: >-
-                    Minimal interval in seconds before a trigger will be fired
-                    again.
-                  type: number
-                name:
-                  description: The name as it appears in the list.
-                  type: string
-                notAfter:
-                  description: Triggers will not fire after this date.
-                  type: string
-                notBefore:
-                  description: Triggers will not fire before this date.
-                  type: string
-                notification:
-                  description: >-
-                    Previously created notification to be sent when trigger is
-                    fired. See notes above.
-                  type: string
-                rules:
-                  description: >-
-                    Rules to be executed upon firing of this trigger. See
-                    Notifications for an overview of rules.
-                  items: {}
-                  type: array
-                skipDays:
-                  description: Triggers will not fire on any of these days. Sunday is `0`.
-                  items: {}
-                  type: array
-                source:
-                  description: >-
-                    The region or beacon this trigger is attached to. See notes
-                    above.
-                  type: string
-                type:
-                  description: >-
-                    Defines the type of trigger. Types of triggers are
-                    represented by namespaces. Trigger types should be match the
-                    following namespace: re.notifica.trigger.*. Please refer to
-                    Trigger Types for all available types.
-                  type: string
-              required:
-                - name
-                - source
-              type: object
+              $ref: '#/components/schemas/TriggerBase'
       summary: Update Trigger
     delete:
       security:
@@ -10045,8 +9743,11 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                filename: /imports/9f..
+              schema:
+                properties:
+                  filename:
+                    type: string
+                    example: /imports/9f..
           description: Created
       tags:
         - Upload
@@ -13491,6 +13192,44 @@ components:
     ObjectId:
       type: string
       example: 1d9e80ef851d212aca82cf23
+    PassField:
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        string:
+          type: boolean
+        number:
+          type: boolean
+        date:
+          type: boolean
+        dataDetectorTypes:
+          type: string
+          enum: [PKDataDetectorTypePhoneNumber, PKDataDetectorTypeLink, PKDataDetectorTypeAddress, PKDataDetectorTypeCalendarEvent]
+        textAlignment:
+          type: string
+          enum: [PKTextAlignmentLeft, PKTextAlignmentCenter, PKTextAlignmentRight, PKTextAlignmentNatural]
+        dateStyle:
+          type: string
+          enum: [PKDateStyleNone, PKDateStyleShort, PKDateStyleMedium, PKDateStyleLong, PKDateStyleFull]
+        timeStyle:
+          type: string
+          enum: [PKDateStyleNone, PKDateStyleShort, PKDateStyleMedium, PKDateStyleLong, PKDateStyleFull]
+        ignoresTimeZone:
+          type: boolean
+          default: false
+        isRelative:
+          type: boolean
+          default: false
+        currencyCode:
+          type: string
+          example: EUR
+        numberStyle:
+          type: string
+          enum: [PKNumberStyleDecimal, PKNumberStylePercent, PKNumberStyleScientific, PKNumberStyleSpellOut]
     PassData:
       description: >-
         The data object containing all the information, colours and
@@ -13499,8 +13238,164 @@ components:
         (headerFields, primaryFields, secondaryFields,
         auxiliaryFields, backFields) should be updated
         with a value property.
-      additionalProperties: true
-      type: object
+      properties:
+        auxiliaryFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        backFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        headerFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        primaryFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        secondaryFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        background:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        backgroundColor:
+          type: string
+          example: 'rgb(0,0,0)'
+        barcode:
+          properties:
+            format:
+              type: string
+              example: PKBarcodeFormatQR
+            messageEncoding:
+              type: string
+              example: iso-8859-1
+        description:
+          type: string
+          example: coupon example
+        footer:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        foregroundColor:
+          type: string
+          example: 'rgb(255,255,255)'
+        icon:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        labelColor:
+          type: string
+          example: 'rgb(255,255,255)'
+        logo:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        logoText:
+          type: string
+          example: Notificare
+        strip:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        suppressStripShine:
+          type: boolean
+          default: false
+        thumbnail:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        transitType:
+          type: string
+          enum: [PKTransitTypeAir, PKTransitTypeBoat, PKTransitTypeTrain, PKTransitTypeBus, PKTransitTypeGeneric]
+    PassList:
+      properties:
+        passbooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassModel'
+        count:
+          type: number
+          example: 10
+    PassModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            passbook:
+              $ref: '#/components/schemas/ObjectId'
+            barcode:
+              type: string
+              example: 18847737723
+        - $ref: '#/components/schemas/PassBase'
+    PassCreate:
+      properties:
+        passbook:
+          $ref: '#/components/schemas/ObjectId'
+        barcode:
+          type: string
+          example: 18847737723
+        data:
+          $ref: '#/components/schemas/PassData'
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
+      required:
+        - passbook
+        - redeem
+        - data
+    PassBase:
+      properties:
+        data:
+          $ref: '#/components/schemas/PassData'
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
+    PassbookList:
+      properties:
+        passbooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassbookModel'
+        count:
+          type: number
+          example: 10
+    PassbookModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+        - $ref: '#/components/schemas/PassbookCreate'
     PassbookCreate:
       properties:
         data:
@@ -13511,9 +13406,14 @@ components:
             how your pass looks and behaves. This string will indicate
             what style to use (boarding, coupon, ticket, card, generic).
           type: string
+          enum: [coupon, boarding, ticket, card, generic]
+        name:
+          type: string
+          example: coupon example
       required:
         - passStyle
         - data
+        - name
       type: object
     ProductCreate:
       allOf:
@@ -13723,11 +13623,127 @@ components:
             - none
           type: string
       type: object
-    TriggerCreate:
+    TriggerList:
       properties:
-        name:
+        triggers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TriggerModel'
+        count:
+          type: number
+          example: 10
+    TriggerModel:
+      allOf:
+        - $ref: '#/components/schemas/TriggerBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            source:
+              description: >-
+                The region or beacon this trigger is attached to. See notes
+                above.
+              type: string
+    TriggerCreate:
+      allOf:
+        - $ref: '#/components/schemas/TriggerBase'
+        - properties:
+            name:
+              description: The name as it appears in the list.
+              type: string
+            source:
+              description: >-
+                The region or beacon this trigger is attached to. See notes
+                above.
+              type: string
+    TriggerBase:
+      properties:
+        active:
+          description: This trigger is active or not.
+          type: boolean
+          default: false
+        criteria:
+          $ref: '#/components/schemas/Criteria'
+        campaign:
+          description: >-
+            If a trigger belongs to a campaing, this is the campaign id
+          readOnly: true
+          example: 1d9e80ef851d212aca82cf23
           type: string
-      type: object
+        dayEnd:
+          description: Triggers will not fire after this time of day.
+          type: string
+          example: 18:00
+        dayStart:
+          description: Triggers will not fire before this time of day.
+          type: string
+          example: 10:00
+        delayMinutes:
+          description: >-
+            Trigger will fire after this amount of minutes, if not
+            canceled by the opposite geo-transition.
+          type: number
+          example: 0
+        frequency:
+          description: >-
+            How often the trigger should be fired. Can be `once`,
+            `always` or `time`. The latter value requires an interval to
+            be provided.
+          enum:
+            - once
+            - always
+            - time
+          type: string
+        interval:
+          description: >-
+            Minimal interval in seconds before a trigger will be fired
+            again.
+          type: number
+          example: 86400
+        name:
+          description: The name as it appears in the list.
+          example: Enter Rotterdam
+          type: string
+        notAfter:
+          description: Triggers will not fire after this date.
+          type: string
+          format: 'date-time'
+        notBefore:
+          description: Triggers will not fire before this date.
+          type: string
+          format: 'date-time'
+        notification:
+          description: >-
+            Previously created notification to be sent when trigger is
+            fired. See notes above.
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        occasion:
+          description: Only fire the nth time
+          type: number
+          example: 2
+        rules:
+          description: >-
+            Rules to be executed upon firing of this trigger. See
+            Notifications for an overview of rules.
+          items:
+            $ref: '#/components/schemas/MessageRule'
+          type: array
+        skipDays:
+          description: Triggers will not fire on any of these days. Sunday is `0`.
+          items:
+            type: number
+          type: array
+          example: [0, 7]
+        type:
+          description: >-
+            Defines the type of trigger. Types of triggers are
+            represented by namespaces. Trigger types should be match the
+            following namespace: re.notifica.trigger.*. Please refer to
+            Trigger Types for all available types.
+          type: string
+          example: re.notifica.trigger.region.Enter
     UserSegmentCreate:
       properties:
         name:

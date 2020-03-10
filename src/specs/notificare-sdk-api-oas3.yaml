@@ -1,0 +1,1081 @@
+openapi: 3.0.0
+info:
+  description: >-
+    This is an official Notificare API that enables access to certain features
+    of our platform specially designed to be used in native mobile SDKs. Its
+    sole purpose is to provide access to strategic endpoints via a mobile app.
+
+    The API endpoints below are all authenticated with `applicationKey` and
+    `applicationSecret`, if you do not have these yet, you should grab them from
+    your app in Notificare Dashboard under the section Settings > App Keys.
+
+    Use Basic HTTP Authentication where `applicationKey` should be your username
+    and `applicationSecret` your password.
+
+
+    For technical support please [contact us](http://notifica.re/contact).
+  title: Notificare SDK API
+  version: ''
+servers:
+  - url: 'https://push.notifica.re/'
+paths:
+  /application/info:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    application:
+                      _id: xxx
+                      actionCategories: []
+                      androidPackageName: null
+                      appStoreId: null
+                      category: Business
+                      inboxConfig:
+                        autoBadge: true
+                        useInbox: true
+                      name: Notificare App
+                      regionConfig:
+                        proximityUUID: null
+                      services:
+                        apns: true
+                        appsOnDemand: true
+                        automation: true
+                        gcm: true
+                        inAppPurchase: true
+                        inbox: true
+                        liveApi: true
+                        locationServices: true
+                        oauth2: true
+                        passbook: true
+                        reports: true
+                        richPush: true
+                        screens: true
+                        storage: true
+                        triggers: true
+                        websitePush: true
+                        websockets: true
+                      userDataFields: []
+                      websitePushConfig:
+                        info:
+                          subject:
+                            C: US
+                            CN: 'Website Push ID: web.com.mydomain'
+                            O: Notificare B.V.
+                            OU: xxxx
+                            UID: web.com.mydomain
+                        allowedDomains:
+                          - 'http://mydomain.com'
+                        icon: /website-push/xxx/xxx
+                        urlFormatString: 'http://mydomain.com/?notification=%@'
+          description: OK
+          headers: {}
+      tags:
+        - Application
+      description: ''
+      operationId: Retrieve information about the application
+      summary: Retrieve information about the application
+  '/asset/file/{key}':
+    get:
+      parameters:
+        - description: The key identifier for an asset file.
+          example: >-
+            3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+          in: path
+          name: key
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            image/png:
+              examples:
+                response:
+                  value: ''
+          description: OK
+          headers: {}
+      tags:
+        - Asset
+      description: ''
+      operationId: Retrieve a specific asset file
+      summary: Retrieve a specific asset file
+  '/asset/forgroup/{name}':
+    get:
+      parameters:
+        - description: The name of the asset group.
+          example: MY_GROUP_NAME
+          in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    assets:
+                      - _id: xxx
+                        button:
+                          action: null
+                          label: null
+                        description: ''
+                        key: xxx/xxx
+                        metaData:
+                          contentLength: 501
+                          contentType: application/json
+                          originalFileName: myjsonfile.json
+                        title: My Asset Group
+          description: OK
+          headers: {}
+      tags:
+        - Asset
+      description: ''
+      operationId: Retrieve a group of assets by name
+      summary: Retrieve a group of assets by name
+  '/beacon/forregion/{region}':
+    get:
+      parameters:
+        - description: The id of an active region.
+          example: 5245bc5b3e66a3b01f0024d4
+          in: path
+          name: region
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          headers: {}
+      tags:
+        - Beacon
+      description: ''
+      operationId: Get all beacons for a certain region
+      summary: Get all beacons for a certain region
+  '/beacon/forregion/{region}/{minor}':
+    get:
+      parameters:
+        - description: The id of an active region.
+          example: 5245bc5b3e66a3b01f0024d4
+          in: path
+          name: region
+          required: true
+          schema:
+            type: string
+        - description: The minor of a beacon.
+          example: '123456'
+          in: path
+          name: minor
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    beacon:
+                      _id: xxx
+                      major: '654321'
+                      minor: '123456'
+                      name: My 1st Beacon
+                      notification: xxx
+                      proximity: immediate
+          description: OK
+          headers: {}
+      tags:
+        - Beacon
+      description: ''
+      operationId: Get a beacon by its region and minor
+      summary: Get a beacon by its region and minor
+  /device:
+    post:
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: |-
+        + Properties
+
+            + appVersion (required, string, `1.0`)...The version of your application.
+            + deviceID (required, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The unique identifier for your device.
+            + deviceString (required, string, `MacIntel`)...An identifier of the device's model.
+            + language (required, string, `en-GB`)...An ISO 639-1 language code that identifies the language in the device.
+            + oldDeviceID (optional, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The old device identifier in case a new one is assigned, this makes sure data in the old device transits to the new one.
+            + osVersion (required, string, `10.12.3`)...The operating system version of the device.
+            + platform (required, string, `Chrome`)...An object containing three previously created message Ids for each proximity level.
+            + sdkVersion (required, number, `1.9.0`)...The version of the SDK used. This allows the platform to understand what functionalities are available.
+            + timeZoneOffset (required, number, `1`)...The timezone offset of the device.
+            + transport (required, string, `GCM`)...The identifier of the push channel allowed in the device.
+            + userID (optional, string, `1234567890`)...The unique identifier that you can use to send private messages to this user.
+            + userName (optional, string, `John Doe`)...A name for the user of the device.
+      operationId: Register a device
+      summary: Register a device
+  '/device/{deviceID}':
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Update an existing device
+      summary: Update an existing device
+  '/device/{deviceID}/addtag':
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Add a tag to a device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tag: one_tag
+              properties:
+                tag:
+                  type: string
+              type: object
+      summary: Add a tag to a device
+  '/device/{deviceID}/addtags':
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Add one or more tags to a device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tags:
+                  - one_tag
+                  - two_tags
+              properties:
+                tags:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      summary: Add one or more tags to a device
+  '/device/{deviceID}/cleardnd':
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Clear the device's Do Not Disturb period
+      summary: Clear the device's Do Not Disturb period
+  '/device/{deviceID}/cleartags':
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Clear all tags from a device
+      summary: Clear all tags from a device
+  '/device/{deviceID}/dnd':
+    get:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    dnd:
+                      end: '07:00'
+                      start: '01:00'
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Get the device's Do Not Disturb period
+      summary: Get the device's Do Not Disturb period
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Update the device's User Data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                firstName: John
+                lastName: Doe
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+              type: object
+      summary: Update the device's User Data
+  '/device/{deviceID}/removetag':
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Remove a tag from a device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tag: one_tag
+              properties:
+                tag:
+                  type: string
+              type: object
+      summary: Remove a tag from a device
+  '/device/{deviceID}/removetags':
+    put:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    device:
+                      message: device updated
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Remove one or more tags from a device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tags:
+                  - one_tag
+                  - two_tags
+              properties:
+                tags:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      summary: Remove one or more tags from a device
+  '/device/{deviceID}/tags':
+    get:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    tags:
+                      - one_tag
+                      - two_tags
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Get all the tags for a device
+      summary: Get all the tags for a device
+  '/device/{deviceID}/userdata':
+    get:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    userData:
+                      firstName: John
+                      lastName: Doe
+          description: OK
+          headers: {}
+      tags:
+        - Device
+      description: ''
+      operationId: Get the device's User Data
+      summary: Get the device's User Data
+  /event:
+    post:
+      responses:
+        '202':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value: {}
+          description: Accepted
+          headers: {}
+      tags:
+        - Event
+      description: >-
+        ## Event Types:
+
+
+        | type | description |
+
+        |:---------:|----------------------------------|
+
+        | re.notifica.event.application.Install | Stored whenever a new device
+        installs the app. |
+
+        | re.notifica.event.application.Uninstall | Stored whenever an app was
+        removed from the device, as reported by APNS or GCM feedback. |
+
+        | re.notifica.event.application.Open | Stored whenever the application
+        becomes active. |
+
+        | re.notifica.event.application.Close | Stored whenever the application
+        goes to background. |
+
+        | re.notifica.event.notification.Influenced | Stored whenever a
+        notification when app is not active. |
+
+        | re.notifica.event.notification.Receive | Stored whenever a
+        notification arrives. |
+
+        | re.notifica.event.notification.Open | Stored whenever a notification
+        is open. |
+
+        | re.notifica.event.region.Session | Stored whenever a user enters and
+        leaves a region. |
+
+        | re.notifica.event.beacon.Session | Stored whenever a user is on the
+        proximity of a beacon. |
+
+        | re.notifica.event.pass.Add | Stored whenever a pass is added to a
+        device's wallet. |
+
+        | re.notifica.event.pass.Remove | Stored whenever a pass is removed from
+        a device's wallet. |
+
+        | re.notifica.event.pass.Redeem | Stored whenever a pass is redeemed. |
+
+        | re.notifica.event.product.Buy | Stored whenever a purchase is done. |
+
+        | re.notifica.event.product.Buy.{store} | Stored whenever a purchase is
+        done, where store is AppStore or GooglePlay. |
+
+        | re.notifica.event.product.Buy.{store}.{identifier} | Stored whenever a
+        purchase is done, where store is AppStore or GooglePlay. |
+
+        | re.notifica.event.custom.{name} | Any other event stored by your
+        application. |
+
+
+        + Properties
+
+            + sessionID (required, string, `1627576d6d6d66d676627`)...The session identifier that allows to cross reference events.
+            + deviceID (required, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The unique identifier for your device corresponding to the APNS, FCM or Webpush token.
+            + userID (optional, string, `1234567890`)...The unique identifier that you can use to send messages to this device.
+            + type (required, string, `re.notifica.event.application.Open`)...A reverse domain style namespace that identifies the type of event.
+            + notification (optional, string, `1627576d6d6d66d676627`)...The notification identifier when applicable.
+            + data (optional, object, `{"campaignID":"12526dd66d666d66772d"}`)...A free form object that allows you to store any type of data for an event.
+      operationId: Register an event
+      summary: Register an event
+  '/notification/inbox/fordevice/{deviceID}':
+    delete:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    count: 0
+                    message: cleared inbox
+          description: OK
+          headers: {}
+      tags:
+        - Notification
+      description: ''
+      operationId: Clear all items in a specific device's inbox
+      summary: Clear all items in a specific device's inbox
+    get:
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+        - description: >-
+            A date that we will use to retrieve items. When provided we will
+            only retrieve items since that date.
+          example: '2015-12-11T13:15:44.298Z'
+          in: query
+          name: since
+          required: false
+          schema:
+            type: string
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip.
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          headers: {}
+      tags:
+        - Notification
+      description: ''
+      operationId: Get a specific device's inbox
+      summary: Get a specific device's inbox
+  '/notification/inbox/{id}':
+    delete:
+      parameters:
+        - description: The unique identifier for the inbox item.
+          example: 566acc80cbe343d7136ec9bf
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    message: inbox item removed
+          description: OK
+          headers: {}
+      tags:
+        - Notification
+      description: ''
+      operationId: Delete inbox item in a specific device's inbox
+      summary: Delete inbox item in a specific device's inbox
+  '/notification/{id}':
+    get:
+      parameters:
+        - description: The notification's unique identifier.
+          example: 1627576d6d6d66d676627
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          headers: {}
+      tags:
+        - Notification
+      description: ''
+      operationId: Get a specific notification
+      summary: Get a specific notification
+  '/pass/forbarcode/{barcode}':
+    get:
+      parameters:
+        - description: The pass barcode.
+          example: ABC-123456789
+          in: path
+          name: barcode
+          required: true
+          schema:
+            default: '100'
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    pass:
+                      _id: 5501894253058ca5269a9928
+                      application: 5354f0bb3fa544452ff4c7c0
+                      barcode: ABC-123456789
+                      data:
+                        auxiliaryFields: []
+                        backFields: []
+                        background: null
+                        backgroundColor: 'rgb(0,0,0)'
+                        barcode:
+                          format: PKBarcodeFormatQR
+                          messageEncoding: iso-8859-1
+                        description: coupon example
+                        footer: null
+                        foregroundColor: 'rgb(255,255,255)'
+                        headerFields: []
+                        icon: >-
+                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                        labelColor: 'rgb(255,255,255)'
+                        logo: >-
+                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                        logoText: My Company
+                        primaryFields:
+                          - key: discount
+                            label: discount
+                            string: true
+                            textAlignment: PKTextAlignmentLeft
+                            value: 20% off
+                        secondaryFields:
+                          - key: expires
+                            label: expires
+                            string: true
+                            textAlignment: PKTextAlignmentLeft
+                            value: 31-12-2015
+                        strip: >-
+                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                        suppressStripShine: false
+                        thumbnail: null
+                        transitType: null
+                      passbook: 54e135049c2cad772e7c0de0
+                      serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+          description: OK
+          headers: {}
+      tags:
+        - Pass
+      description: ''
+      operationId: Get a pass with a specific barcode
+      summary: Get a pass with a specific barcode
+  '/pass/forserial/{serial}':
+    get:
+      parameters:
+        - description: The pass serial number.
+          example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+          in: path
+          name: serial
+          required: true
+          schema:
+            default: '100'
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    pass:
+                      _id: 5501894253058ca5269a9928
+                      application: 5354f0bb3fa544452ff4c7c0
+                      barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+                      data:
+                        auxiliaryFields: []
+                        backFields: []
+                        background: null
+                        backgroundColor: 'rgb(0,0,0)'
+                        barcode:
+                          format: PKBarcodeFormatQR
+                          messageEncoding: iso-8859-1
+                        description: coupon example
+                        footer: null
+                        foregroundColor: 'rgb(255,255,255)'
+                        headerFields: []
+                        icon: >-
+                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+                        labelColor: 'rgb(255,255,255)'
+                        logo: >-
+                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
+                        logoText: My Company
+                        primaryFields:
+                          - key: discount
+                            label: discount
+                            string: true
+                            textAlignment: PKTextAlignmentLeft
+                            value: 20% off
+                        secondaryFields:
+                          - key: expires
+                            label: expires
+                            string: true
+                            textAlignment: PKTextAlignmentLeft
+                            value: 31-12-2015
+                        strip: >-
+                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
+                        suppressStripShine: false
+                        thumbnail: null
+                        transitType: null
+                      passbook: 54e135049c2cad772e7c0de0
+                      serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+          description: OK
+          headers: {}
+      tags:
+        - Pass
+      description: ''
+      operationId: Get a pass with a specific serial
+      summary: Get a pass with a specific serial
+  /region:
+    get:
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    regions:
+                      - _id: 5245bc5b3e66a3b01f0024d4
+                        geometry:
+                          coordinates:
+                            - 4.2345
+                            - 5.6789
+                          type: Point
+                        major: '123456'
+                        name: My Region
+                        timezone: Europe/Amsterdam
+          description: OK
+          headers: {}
+      tags:
+        - Region
+      description: ''
+      operationId: Get all regions for an application
+      summary: Get all regions for an application
+  /reply:
+    post:
+      responses:
+        '202':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value: {}
+          description: Accepted
+          headers: {}
+      tags:
+        - Reply
+      description: |-
+        + Properties
+
+            + notification (required, string, `123eee456ddd789dddd0`)...The unique identifier of a notification.
+            + label (required, string, `Yes`)...The label of the action which executed the reply.
+            + deviceID (required, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The unique identifier for your device corresponding to the APNS, FCM or Webpush token.
+            + userID (optional, string, `1234567890`)...The unique identifier that you can use to send messages to this device.
+            + data (optional, object, `{"message": "some text provided by the user"}`)...Arbitrary data to be stored for this reply. Currently our platform can handle `message` (text provided by the user) and `media` (URL of a media file uploaded to Notificare)
+      operationId: Register a reply
+      summary: Register a reply
+  '/trigger/{type}':
+    post:
+      parameters:
+        - description: The type of trigger being executed.
+          example: re.notifica.trigger.region.Enter
+          in: path
+          name: type
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    triggers:
+                      id: 123eee456ddd789dddd0
+          description: Created
+          headers: {}
+      tags:
+        - Trigger
+      description: ''
+      operationId: Register a trigger
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                deviceID: xxx
+                region: xxx
+              properties:
+                deviceID:
+                  type: string
+                region:
+                  type: string
+              type: object
+      summary: Register a trigger
+components:
+  requestBodies:
+    Add_a_tag_to_a_deviceBody:
+      content:
+        application/json:
+          schema:
+            example:
+              tag: one_tag
+            properties:
+              tag:
+                type: string
+            type: object
+    Add_one_or_more_tags_to_a_deviceBody:
+      content:
+        application/json:
+          schema:
+            example:
+              tags:
+                - one_tag
+                - two_tags
+            properties:
+              tags:
+                items:
+                  type: string
+                type: array
+            type: object
+  schemas:
+    Add_Device_Tag: {}
+    Add_Device_Tags: {}
+    Application: {}
+    Asset_File: {}
+    Asset_Groups: {}
+    Beacon: {}
+    Beacons_For_Region: {}
+    Clear_All_Device_Tags: {}
+    Clear_Device_DnD: {}
+    Delete_Inbox_Item: {}
+    Device_DnD: {}
+    Device_Tags: {}
+    Device_User_Data: {}
+    Inbox: {}
+    New_Device: {}
+    New_Event: {}
+    New_Reply: {}
+    New_Trigger: {}
+    Notification: {}
+    Pass_By_Barcode: {}
+    Pass_By_Serial: {}
+    Regions: {}
+    Remove_Device_Tag: {}
+    Remove_Device_Tags: {}
+    Update_Device: {}
+    Update_Device_DnD: {}
+    Update_Device_User_Data: {}
+tags:
+  - description: All methods to handle application related operations.
+    name: Application
+  - description: All methods to handle asset groups related operations.
+    name: Asset
+  - description: All methods to handle beacon related operations.
+    name: Beacon
+  - description: All methods to handle device related operations.
+    name: Device
+  - description: All methods to handle event related operations.
+    name: Event
+  - description: All methods to handle notification related operations.
+    name: Notification
+  - description: All methods to handle pass related operations.
+    name: Pass
+  - description: All methods to handle region related operations.
+    name: Region
+  - description: All methods to handle replies related operations.
+    name: Reply
+  - description: All methods to handle trigger related operations.
+    name: Trigger
+
