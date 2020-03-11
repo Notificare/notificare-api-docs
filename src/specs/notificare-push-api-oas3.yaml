@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.86'
+  version: '1.87'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -52,7 +52,6 @@ info:
     url: https://support.notifica.re
 servers:
   - url: 'https://push.notifica.re'
-  - url: 'http://localhost:3006'
 paths:
   /account/login:
     post:
@@ -963,6 +962,8 @@ paths:
       summary: Create Beacon
   '/beacon/forregion/{region}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active region.
           in: path
@@ -1003,6 +1004,8 @@ paths:
       summary: List Beacons For Region
   '/beacon/{id}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The beacon id of an active beacon.
           example: 5245bc5b3e66a3b01f0024d4
@@ -1095,6 +1098,8 @@ paths:
       summary: Delete Beacon
   /datasource:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The name of the datasource to search for.
           example: blog
@@ -1189,6 +1194,8 @@ paths:
       summary: Test New Datasource
   '/datasource/{id}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The source's id.
           in: path
@@ -1309,6 +1316,8 @@ paths:
       summary: Test Existing Datasource
   /device:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -1403,6 +1412,8 @@ paths:
       summary: List Devices For Polygon
   '/device/bylocation/{lat1}/{long1}/{lat2}/{long2}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The desired south-east latitude
           example: '4.2345'
@@ -1468,6 +1479,8 @@ paths:
       summary: List Devices For Bounds
   '/device/bylocation/{latitude}/{longitude}/{distance}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The desired latitude
           example: '4.2345'
@@ -1527,6 +1540,8 @@ paths:
       summary: List Devices By Location
   '/device/forregion/{region}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of the region
           example: 5245bc5b3e66a3b01f0024d4
@@ -1570,6 +1585,8 @@ paths:
       summary: List Devices For Region
   '/device/forsubscription/{subscription}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The subscription Id the device is associated with
           example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
@@ -1607,6 +1624,8 @@ paths:
       summary: Get Device For Subscription
   '/device/fortag/{tag}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The tag the device is associated with
           example: toys
@@ -1650,6 +1669,8 @@ paths:
       summary: List Devices For Tag
   '/device/foruser/{userID}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The user ID is the one the client device registered with, e.g., the
@@ -1695,6 +1716,8 @@ paths:
       summary: List Devices For User
   /device/tags:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -1731,6 +1754,8 @@ paths:
       summary: List Tags
   '/device/tags/{tag}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The string to search for
           example: toys
@@ -1757,6 +1782,8 @@ paths:
       summary: Search Tags
   '/device/{deviceID}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The deviceID is the unique identifier provided by APNS or GCM.
           example: 00a9b9bf-xxx9278-64d6a3f22476
@@ -1962,6 +1989,8 @@ paths:
       summary: Create Custom Event
   '/event/fortype/{type}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The type of event.
           example: re.notifica.event.application.Install
@@ -2097,6 +2126,8 @@ paths:
       summary: List Events For Type
   '/event/{id}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The event's Id.
           in: path
@@ -2122,6 +2153,8 @@ paths:
       summary: Get Event
   /export:
     get:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
@@ -2140,6 +2173,8 @@ paths:
       summary: List Export Jobs
   '/export/fortype/{type}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The export type
           example: re.notifica.export.User
@@ -2752,6 +2787,8 @@ paths:
       summary: Export Automation Connectors Summary
   '/export/result/{export}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of a export job
           in: path
@@ -2817,6 +2854,8 @@ paths:
       summary: Create Export Download Link
   '/export/{export}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The export job Id.
           in: path
@@ -2872,6 +2911,8 @@ paths:
       summary: Delete Export Job
   /geo/reverse:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The latitude
           example: 52.1881
@@ -2907,6 +2948,8 @@ paths:
       summary: Get Reverse Geocoding
   /geo/search:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The address to search for
           example: Meerum
@@ -2934,6 +2977,8 @@ paths:
       summary: Get Forward Geocoding
   /geo/timezone:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The latitude
           example: 52.1881
@@ -2971,6 +3016,8 @@ paths:
       summary: Get Timezone Information
   /import:
     get:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
@@ -2989,6 +3036,8 @@ paths:
       summary: List Import Jobs
   '/import/fortype/{type}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The import type of a previously created job.
           example: re.notifica.import.UserSegment
@@ -3628,6 +3677,8 @@ paths:
       summary: Import Grouped Messages
   '/import/{import}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The import id of a previously created job.
           in: path
@@ -3751,6 +3802,8 @@ paths:
       summary: Abort Import
   /link:
     get:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
@@ -3793,6 +3846,8 @@ paths:
       summary: Create Link
   '/link/{link}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of the link
           in: path
@@ -3878,6 +3933,8 @@ paths:
       summary: Delete Link
   /notification:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -3968,6 +4025,8 @@ paths:
       summary: List Messages
   /notification/all:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -4930,6 +4989,8 @@ paths:
       summary: System Push to Device
   '/notification/user/{userID}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The user ID is the one the client device registered with, e.g., the
@@ -4973,6 +5034,8 @@ paths:
       summary: Listt User Messages
   '/notification/device/{deviceID}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The deviceID
@@ -5015,6 +5078,8 @@ paths:
       summary: List Device Messages
   '/notification/{notification}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The notification ID given whenever you create a message.
           in: path
@@ -5042,6 +5107,8 @@ paths:
       summary: Get Message
   '/notification/{notification}/info':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: >-
             The notification ID given whenever you create or retrieve a message
@@ -5071,6 +5138,8 @@ paths:
       summary: Get Message Info
   /notification/log:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -5149,6 +5218,8 @@ paths:
       summary: Delete Message Log
   /notification/schedule:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -5250,6 +5321,8 @@ paths:
       summary: Create Scheduled Message
   '/notification/schedule/fornotification/{notification}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The notification Id for the message
           in: path
@@ -5299,6 +5372,8 @@ paths:
       summary: Get Scheduled Tasks For Message
   '/notification/schedule/{schedule}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The schedule Id
           in: path
@@ -5429,6 +5504,8 @@ paths:
       summary: Cancel Schedule
   /notification/template:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -5623,6 +5700,8 @@ paths:
       summary: Create Template
   '/notification/template/{template}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the template
           in: path
@@ -6377,6 +6456,8 @@ paths:
       summary: Test SMS Message to Phone
   /pass:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -6521,6 +6602,8 @@ paths:
       summary: Generate a Barcode By Barcode
   '/pass/forbarcode/{barcode}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The barcode of the pass.
           example: 5245bc5b3e66a3b01f0024d4
@@ -6549,6 +6632,8 @@ paths:
       summary: Pass For Barcode
   '/pass/forserial/{serial}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The serial of the pass.
           in: path
@@ -6635,6 +6720,8 @@ paths:
       summary: Redeem Pass
   '/pass/{pass}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of pass.
           in: path
@@ -6723,6 +6810,8 @@ paths:
       summary: Delete Pass
   /passbook:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -6898,6 +6987,8 @@ paths:
       summary: Create Pass Template
   '/passbook/{passbook}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active passbook template.
           in: path
@@ -6998,6 +7089,8 @@ paths:
       summary: Delete Pass Template
   /product:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -7058,6 +7151,8 @@ paths:
       summary: Create Product
   '/product/foridentifier/{sku}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The SKU (identifier) of an active product.
           example: re.notifica.office.consumable
@@ -7086,6 +7181,8 @@ paths:
       summary: Get Product By SKU
   '/product/{product}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of an active product.
           in: path
@@ -7174,6 +7271,8 @@ paths:
       summary: Delete Product
   /purchase:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -7235,6 +7334,8 @@ paths:
       summary: List Purchases
   '/purchase/byidentifier/{identifier}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The SKU (identifier) of a purchase.
           example: re.notifica.office.consumable
@@ -7288,6 +7389,8 @@ paths:
       summary: Get Purchase By SKU
   '/purchase/bytransaction/{transaction}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The transaction id of a purchase.
           example: '1000000133399653'
@@ -7340,6 +7443,8 @@ paths:
       summary: Get Purchase By Transaction
   '/purchase/{purchase}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id of a purchase.
           in: path
@@ -7391,6 +7496,8 @@ paths:
       summary: Get Purchase
   /region:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -7573,6 +7680,8 @@ paths:
       summary: Delete All Regions In Category
   '/region/forcountry/{country}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The country you want to search regions for.
           example: NL
@@ -7624,6 +7733,8 @@ paths:
       summary: List Regions By Country
   '/region/fortimezone/{timezone}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The timezone you want to search regions for.
           example: Europe
@@ -7675,6 +7786,8 @@ paths:
       summary: List Regions For Timezone
   '/region/search/{search}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: Search matching a name of an active region.
           example: My
@@ -7726,6 +7839,8 @@ paths:
       summary: Search Regions
   '/region/{region}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The region id of an active region.
           in: path
@@ -7881,6 +7996,8 @@ paths:
       summary: Delete Region
   '/reply/fornotification/{notification}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The notification id of an active notification.
           in: path
@@ -7934,6 +8051,8 @@ paths:
       summary: List Replies For Notification
   '/reply/{reply}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The id for this reply.
           in: path
@@ -8029,6 +8148,8 @@ paths:
       summary: Create SMS Number
   '/stats/device/{dimension}/lastmonth':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The desired dimension.
           example: osVersion
@@ -8041,14 +8162,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    value: 2.3.6
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
-                    value: 2.3.6
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceStats'
           description: OK
       tags:
         - Application Stats
@@ -8107,6 +8226,8 @@ paths:
       summary: Get Last Month Devices By Dimension
   '/stats/device/{dimension}/{year}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The desired dimension.
           example: osVersion
@@ -8126,14 +8247,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    value: 2.3.6
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
-                    value: 2.3.6
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceStats'
           description: OK
       tags:
         - Application Stats
@@ -8192,6 +8311,8 @@ paths:
       summary: Get Yearly Devices By Dimension
   '/stats/device/{dimension}/{year}/{month}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The desired dimension.
           example: osVersion
@@ -8218,14 +8339,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    value: 2.3.6
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
-                    value: 2.3.6
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceStats'
           description: OK
       tags:
         - Application Stats
@@ -8284,6 +8403,8 @@ paths:
       summary: Get Monthly Devices By Dimension
   '/stats/device/{dimension}/{year}/{month}/{day}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The desired dimension.
           example: osVersion
@@ -8317,14 +8438,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    value: 2.3.6
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
-                    value: 2.3.6
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceStats'
           description: OK
       tags:
         - Application Stats
@@ -8366,6 +8485,8 @@ paths:
       summary: Get Daily Devices By Dimension
   '/stats/event/{type}/lastmonth':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The event type.
           example: re.notifica.event.application.Install
@@ -8378,12 +8499,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventStats'
           description: OK
       tags:
         - Application Stats
@@ -8433,6 +8554,8 @@ paths:
       summary: Get Last Month Events By Type
   '/stats/event/{type}/lastweek':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The event type.
           example: re.notifica.event.application.Install
@@ -8445,12 +8568,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventStats'
           description: OK
       tags:
         - Application Stats
@@ -8500,6 +8623,8 @@ paths:
       summary: Get Last Week Events By Type
   '/stats/event/{type}/total':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The event type.
           example: re.notifica.event.application.Install
@@ -8512,11 +8637,14 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 1000
+              schema:
+                properties:
+                  stats:
+                    properties:
+                      count:
+                        type: number
+                        example: 1000
           description: OK
-          headers: {}
       tags:
         - Application Stats
       description: |-
@@ -8565,6 +8693,8 @@ paths:
       summary: Get Total Events By Type
   '/stats/event/{type}/{year}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The event type.
           example: re.notifica.event.application.Install
@@ -8584,12 +8714,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventStats'
           description: OK
       tags:
         - Application Stats
@@ -8639,6 +8769,8 @@ paths:
       summary: Get Yearly Events By Type
   '/stats/event/{type}/{year}/{month}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The event type.
           example: re.notifica.event.application.Install
@@ -8665,12 +8797,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                  - count: 2
-                    date: '2014-02-26T00:00:00.000Z'
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventStats'
           description: OK
       tags:
         - Application Stats
@@ -8720,6 +8852,8 @@ paths:
       summary: Get Monthly Events By Type
   '/stats/event/{type}/{year}/{month}/{day}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The event type.
           example: re.notifica.event.application.Install
@@ -8753,12 +8887,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
+              schema:
+                properties:
                   stats:
-                    - count: 2
-                      date: '2014-02-27T00:00:00.000Z'
-                    - count: 2
-                      date: '2014-02-26T00:00:00.000Z'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventStats'
           description: OK
       tags:
         - Application Stats
@@ -8808,24 +8942,18 @@ paths:
       summary: Get Daily Events By Type
   /stats/notification/account/lastmonth:
     get:
+      security:
+        - Token: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 0
-                    date: '2014-02-28T00:00:00.000Z'
-                    day: 28
-                    month: 2
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    day: 27
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Account Stats
@@ -8834,6 +8962,8 @@ paths:
       summary: Get Last Month Notifications For Account
   '/stats/notification/account/{year}':
     get:
+      security:
+        - Token: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -8846,18 +8976,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Account Stats
@@ -8866,6 +8990,8 @@ paths:
       summary: Get Yearly Notifications For Account
   '/stats/notification/account/{year}/{month}':
     get:
+      security:
+        - Token: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -8885,20 +9011,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    day: 2
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Account Stats
@@ -8907,6 +9025,8 @@ paths:
       summary: Get Monthly Notifications For Account
   '/stats/notification/account/{year}/{month}/{day}':
     get:
+      security:
+        - Token: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -8933,22 +9053,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    hour: 0
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-01-01T01:00:00.000Z'
-                    day: 1
-                    hour: 1
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Account Stats
@@ -8957,24 +9067,18 @@ paths:
       summary: Get Daily Notifications For Account
   /stats/notification/application/lastmonth:
     get:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 0
-                    date: '2014-02-28T00:00:00.000Z'
-                    day: 28
-                    month: 2
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    day: 27
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Application Stats
@@ -8983,6 +9087,8 @@ paths:
       summary: Get Last Month Notifications For Application
   '/stats/notification/application/{year}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -8995,18 +9101,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Application Stats
@@ -9015,6 +9115,8 @@ paths:
       summary: Get Yearly Notifications For Application
   '/stats/notification/application/{year}/{month}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9034,20 +9136,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    day: 2
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Application Stats
@@ -9056,6 +9150,8 @@ paths:
       summary: Get Monthly Notifications For Application
   '/stats/notification/application/{year}/{month}/{day}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9082,22 +9178,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    hour: 0
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-01-01T01:00:00.000Z'
-                    day: 1
-                    hour: 1
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationStats'
           description: OK
       tags:
         - Application Stats
@@ -9106,17 +9192,16 @@ paths:
       summary: Get Daily Notifications For Application
   /stats/user/account:
     get:
+      security:
+        - Token: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  count: 0
-                  date: '2014-02-28T00:00:00.000Z'
-                  day: 28
-                  month: 2
-                  year: 2014
+              schema:
+                properties:
+                  stats:
+                    $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Account Stats
@@ -9125,24 +9210,18 @@ paths:
       summary: Get Total Users For Account
   /stats/user/account/lastmonth:
     get:
+      security:
+        - Token: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 0
-                    date: '2014-02-28T00:00:00.000Z'
-                    day: 28
-                    month: 2
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    day: 27
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Account Stats
@@ -9151,6 +9230,8 @@ paths:
       summary: Get Last Month Users For Account
   '/stats/user/account/{year}':
     get:
+      security:
+        - Token: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9163,18 +9244,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Account Stats
@@ -9183,6 +9258,8 @@ paths:
       summary: Get Yearly Users For Account
   '/stats/user/account/{year}/{month}':
     get:
+      security:
+        - Token: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9202,20 +9279,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    day: 2
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Account Stats
@@ -9224,6 +9293,8 @@ paths:
       summary: Get Monthly Users For Account
   '/stats/user/account/{year}/{month}/{day}':
     get:
+      security:
+        - Token: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9250,22 +9321,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    hour: 0
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-01-01T01:00:00.000Z'
-                    day: 1
-                    hour: 1
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Account Stats
@@ -9274,18 +9335,16 @@ paths:
       summary: Get Daily Users For Account
   /stats/user/application:
     get:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  application: 50b62e6aebe6dd821d000003
-                  count: 0
-                  date: '2014-02-28T00:00:00.000Z'
-                  day: 28
-                  month: 2
-                  year: 2014
+              schema:
+                properties:
+                  stats:
+                    $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Application Stats
@@ -9294,24 +9353,18 @@ paths:
       summary: Get Total Users For Application
   /stats/user/application/lastmonth:
     get:
+      security:
+        - MasterSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 0
-                    date: '2014-02-28T00:00:00.000Z'
-                    day: 28
-                    month: 2
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 2
-                    date: '2014-02-27T00:00:00.000Z'
-                    day: 27
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Application Stats
@@ -9320,6 +9373,8 @@ paths:
       summary: Get Last Month Users For Application
   '/stats/user/application/{year}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9332,18 +9387,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    month: 2
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Application Stats
@@ -9352,6 +9401,8 @@ paths:
       summary: Get Yearly Users For Application
   '/stats/user/application/{year}/{month}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9371,20 +9422,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-02-01T00:00:00.000Z'
-                    day: 2
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Application Stats
@@ -9393,6 +9436,8 @@ paths:
       summary: Get Monthly Users For Application
   '/stats/user/application/{year}/{month}/{day}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -9419,22 +9464,12 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                stats:
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 33
-                    date: '2014-01-01T00:00:00.000Z'
-                    day: 1
-                    hour: 0
-                    month: 1
-                    year: 2014
-                  - application: 50b62e6aebe6dd821d000003
-                    count: 38
-                    date: '2014-01-01T01:00:00.000Z'
-                    day: 1
-                    hour: 1
-                    month: 1
-                    year: 2014
+              schema:
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserStats'
           description: OK
       tags:
         - Application Stats
@@ -9459,6 +9494,8 @@ paths:
       summary: Get API Status
   /trigger:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -9537,6 +9574,8 @@ paths:
       summary: Create Trigger
   '/trigger/forsource/{source}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: Show triggers for this source
           in: path
@@ -9585,6 +9624,8 @@ paths:
       summary: List Triggers For Source
   '/trigger/forregion/{region}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: Show triggers for this region
           in: path
@@ -9641,6 +9682,8 @@ paths:
       summary: List Triggers For Region
   '/trigger/{trigger}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The trigger id
           in: path
@@ -9927,6 +9970,8 @@ paths:
       summary: Delete Upload
   /user:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -9968,6 +10013,8 @@ paths:
       summary: List Users
   '/user/forsegment/{segment}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           in: path
@@ -10015,6 +10062,8 @@ paths:
       summary: List Users By User Segment
   '/user/foruserid/{userID}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The app-specific userID of the user
           example: '12345'
@@ -10139,6 +10188,8 @@ paths:
       summary: Create Provisional User
   '/user/search/{search}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The search string
           example: Mas
@@ -10187,6 +10238,8 @@ paths:
       summary: Search Users
   '/user/{user}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The Notificare ID of the user
           in: path
@@ -10336,6 +10389,8 @@ paths:
       summary: Remove User From User Segment
   /usersegment:
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -10438,6 +10493,8 @@ paths:
       summary: Create User Segment With Batch of Users
   '/usersegment/forname/{name}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The (start of the) name of the segment you are looking for
           example: fans
@@ -10482,6 +10539,8 @@ paths:
       summary: Get User Segments By Name
   '/usersegment/{segment}':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           in: path
@@ -10659,6 +10718,8 @@ paths:
       summary: Remove Batch of Users From User Segment
   '/usersegment/{segment}/users':
     get:
+      security:
+        - MasterSecret: []
       parameters:
         - description: The ID of the segment
           example: 5245bc5b3e66a3b01f0024d4
@@ -11519,6 +11580,20 @@ components:
             type: string
           example: [tag1, tag2]
       type: object
+    DeviceStats:
+      properties:
+        date:
+          type: string
+          format: 'date-time'
+          example: '2014-02-01T00:00:00.000Z'
+        value:
+          description: The value for the device property
+          type: string
+          example: '1.2.3'
+        count:
+          description: Total number of devices with this value for the property during this period
+          type: number
+          example: 1000
     DeviceTagList:
       properties:
         tags:
@@ -11746,6 +11821,16 @@ components:
         - startDate
         - endDate
       type: object
+    EventStats:
+      properties:
+        date:
+          type: string
+          format: 'date-time'
+          example: '2014-02-01T00:00:00.000Z'
+        count:
+          description: Total number of events during this period
+          type: number
+          example: 1000
     GeoModelList:
       properties:
         locations:
@@ -12960,6 +13045,31 @@ components:
             provided, we will not send more than x messages per second.
           type: number
           example: 100
+    NotificationStats:
+      properties:
+        date:
+          type: string
+          format: 'date-time'
+          example: '2014-02-01T00:00:00.000Z'
+        year:
+          type: number
+          example: 2014
+        month:
+          type: number
+          example: 2
+          default: 1
+        day:
+          type: number
+          example: 1
+          default: 1
+        hour:
+          type: number
+          example: 2
+          default: '0'
+        count:
+          description: Total number of notifications sent during this period
+          type: number
+          example: 1000
     NotificationTestPushDevice:
       allOf:
         - $ref: '#/components/schemas/NotificationTestPushBase'
@@ -13206,6 +13316,13 @@ components:
           type: boolean
         date:
           type: boolean
+        attributedValue:
+          type: string
+          example: '<a href="http://example.com/customers/123">Edit my profile</a>'
+        changeMessage:
+          description: The message to display in a notification when the value changes
+          type: string
+          example: 'Gate changed to %@'
         dataDetectorTypes:
           type: string
           enum: [PKDataDetectorTypePhoneNumber, PKDataDetectorTypeLink, PKDataDetectorTypeAddress, PKDataDetectorTypeCalendarEvent]
@@ -13239,6 +13356,73 @@ components:
         auxiliaryFields, backFields) should be updated
         with a value property.
       properties:
+        appLaunchURL:
+          type: string
+          description: A URL to be passed to the associated app when launching it.
+          format: uri
+        associatedStoreIdentifiers:
+          description: A list of iTunes Store item identifiers for the associated apps.
+          type: array
+          items:
+            type: number
+        userInfo:
+          description: Custom information for companion apps. This data is not displayed to the user.
+          additionalProperties: true
+        expirationDate:
+          type: string
+          format: 'date-time'
+        voided:
+          description: Indicates that the pass is void
+          type: boolean
+          default: false
+        beacons:
+          type: array
+          items:
+            properties:
+              proximityUUID:
+                type: string
+              major:
+                type: string
+              minor:
+                type: string
+              relevantText:
+                description: Text displayed on the lock screen when the pass is currently relevant.
+                type: string
+            required:
+              - proximityUUID
+        locations:
+          type: array
+          items:
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+              altitude:
+                type: number
+              relevantText:
+                description: Text displayed on the lock screen when the pass is currently relevant.
+                type: string
+            required:
+              - latitude
+              - longitude
+        maxDistance:
+          description: >-
+            Maximum distance in meters from a relevant latitude and longitude that the pass is relevant.
+            This number is compared to the pass’s default distance and the smaller value is used.
+          type: number
+          example: 100
+        relevantDate:
+          description: Date and time when the pass becomes relevant.
+          type: string
+          format: 'date-time'
+        nfc:
+          properties:
+            message:
+              type: string
+            encryptionPublicKey:
+              type: string
+              format: byte
         auxiliaryFields:
           type: array
           items:
@@ -13267,6 +13451,9 @@ components:
           type: string
           example: 'rgb(0,0,0)'
         barcode:
+          description: >-
+            The barcode to display. Value of the barcode is taken from the Pass object.
+            Here, the format and display of a human-readable text can be configured.
           properties:
             format:
               type: string
@@ -13274,6 +13461,12 @@ components:
             messageEncoding:
               type: string
               example: iso-8859-1
+            altText:
+              description: >-
+                The human-readable text to display next to the barcode.
+                Alternatively, if set to true, will display the barcode value,
+                if set to false, will not display a human-readable barcode
+              type: string
         description:
           type: string
           example: coupon example
@@ -13314,7 +13507,7 @@ components:
           enum: [PKTransitTypeAir, PKTransitTypeBoat, PKTransitTypeTrain, PKTransitTypeBus, PKTransitTypeGeneric]
     PassList:
       properties:
-        passbooks:
+        passes:
           type: array
           items:
             $ref: '#/components/schemas/PassModel'
@@ -13333,6 +13526,15 @@ components:
             barcode:
               type: string
               example: 18847737723
+            redeemHistory:
+              type: array
+              items:
+                properties:
+                  date:
+                    type: string
+                    format: 'date-time'
+                  comments:
+                    type: string
         - $ref: '#/components/schemas/PassBase'
     PassCreate:
       properties:
@@ -13749,6 +13951,51 @@ components:
         name:
           type: string
       type: object
+    UserStats:
+      properties:
+        date:
+          type: string
+          format: 'date-time'
+          example: '2014-02-01T00:00:00.000Z'
+        year:
+          type: number
+          example: 2014
+        month:
+          type: number
+          example: 2
+          default: 1
+        day:
+          type: number
+          example: 1
+          default: 1
+        hour:
+          type: number
+          example: 2
+          default: '0'
+        count:
+          description: Total number of active users at this time
+          type: number
+          example: 1000
+        count0:
+          description: Total number of users active during the last month
+          type: number
+          example: 200
+        count1:
+          description: Total number of users last active between 1 and 3 months ago
+          type: number
+          example: 100
+        count3:
+          description: Total number of users last active between 3 and 6 months ago
+          type: number
+          example: 100
+        count6:
+          description: Total number of users last active more than 6 months ago
+          type: number
+          example: 600
+        autoGenerated:
+          description: Total number of active users with an auto-generated / anonymous userID
+          type: number
+          example: 100
 tags:
   - description: >-
       Handles authentication with the REST API.

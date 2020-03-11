@@ -6,6 +6,7 @@ OpenAPI / Swagger documentation of Notificare REST API
 
 - Available commands:
   - `npm run build`: Build files to the `dist` folder.
+  - `npm run deploy`: Deploy to S3, needs valid AWS credentials and a CLOUDFRONT_DISTRIBUTION_ID environment variable to invalidate cache
   - `npm run start:dev`: Run `webpack-dev-server` at `localhost:9000`. Includes live reloading on any Javascript/SCSS/HTML changes.
   - `npm run start`: Builds files and runs a local production server on `localhost:8080` with `http-server`.
   - `npm run run lint:js`: Lints JS with ESLint.

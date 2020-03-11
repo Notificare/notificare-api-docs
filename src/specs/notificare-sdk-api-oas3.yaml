@@ -15,68 +15,31 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: ''
+  version: '1.87.0'
+  termsOfService: https://notificare.com/terms
+  contact:
+    name: Notificare Support
+    email: support@notifica.re
+    url: https://support.notifica.re
 servers:
   - url: 'https://push.notifica.re/'
 paths:
   /application/info:
     get:
+      security:
+        - ApplicationSecret: []
       responses:
         '200':
           content:
             application/json:
-              examples:
-                response:
-                  value:
-                    application:
-                      _id: xxx
-                      actionCategories: []
-                      androidPackageName: null
-                      appStoreId: null
-                      category: Business
-                      inboxConfig:
-                        autoBadge: true
-                        useInbox: true
-                      name: Notificare App
-                      regionConfig:
-                        proximityUUID: null
-                      services:
-                        apns: true
-                        appsOnDemand: true
-                        automation: true
-                        gcm: true
-                        inAppPurchase: true
-                        inbox: true
-                        liveApi: true
-                        locationServices: true
-                        oauth2: true
-                        passbook: true
-                        reports: true
-                        richPush: true
-                        screens: true
-                        storage: true
-                        triggers: true
-                        websitePush: true
-                        websockets: true
-                      userDataFields: []
-                      websitePushConfig:
-                        info:
-                          subject:
-                            C: US
-                            CN: 'Website Push ID: web.com.mydomain'
-                            O: Notificare B.V.
-                            OU: xxxx
-                            UID: web.com.mydomain
-                        allowedDomains:
-                          - 'http://mydomain.com'
-                        icon: /website-push/xxx/xxx
-                        urlFormatString: 'http://mydomain.com/?notification=%@'
+              schema:
+                properties:
+                  application:
+                    $ref: '#/components/schemas/ApplicationInfoModel'
           description: OK
-          headers: {}
       tags:
         - Application
-      description: ''
-      operationId: Retrieve information about the application
+      operationId: getApplicationInfo
       summary: Retrieve information about the application
   '/asset/file/{key}':
     get:
@@ -93,18 +56,19 @@ paths:
         '200':
           content:
             image/png:
-              examples:
-                response:
-                  value: ''
+              schema:
+                type: string
+                format: binary
           description: OK
-          headers: {}
       tags:
         - Asset
-      description: ''
-      operationId: Retrieve a specific asset file
+      description: Retrieve a specific asset file
+      operationId: getAssetFileByKey
       summary: Retrieve a specific asset file
   '/asset/forgroup/{name}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The name of the asset group.
           example: MY_GROUP_NAME
@@ -117,49 +81,41 @@ paths:
         '200':
           content:
             application/json:
-              examples:
-                response:
-                  value:
-                    assets:
-                      - _id: xxx
-                        button:
-                          action: null
-                          label: null
-                        description: ''
-                        key: xxx/xxx
-                        metaData:
-                          contentLength: 501
-                          contentType: application/json
-                          originalFileName: myjsonfile.json
-                        title: My Asset Group
+              schema:
+                $ref: '#/components/schemas/AssetGroupAssetList'
           description: OK
-          headers: {}
       tags:
         - Asset
-      description: ''
-      operationId: Retrieve a group of assets by name
+      description: Get all the assets in a group.
+      operationId: getAssetForGroup
       summary: Retrieve a group of assets by name
   '/beacon/forregion/{region}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The id of an active region.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: region
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/BeaconList'
           description: OK
-          headers: {}
       tags:
         - Beacon
-      description: ''
-      operationId: Get all beacons for a certain region
-      summary: Get all beacons for a certain region
+      description: Get all the beacons for a certain region
+      operationId: getBeaconForRegion
+      summary: List beacons for region
   '/beacon/forregion/{region}/{minor}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The id of an active region.
           example: 5245bc5b3e66a3b01f0024d4
@@ -179,57 +135,57 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    beacon:
-                      _id: xxx
-                      major: '654321'
-                      minor: '123456'
-                      name: My 1st Beacon
-                      notification: xxx
-                      proximity: immediate
+              schema:
+                properties:
+                  beacon:
+                    $ref: '#/components/schemas/BeaconModel'
           description: OK
-          headers: {}
       tags:
         - Beacon
-      description: ''
-      operationId: Get a beacon by its region and minor
+      description: Get a beacon by its region and minor
+      operationId: getBeaconRegionMinor
       summary: Get a beacon by its region and minor
   /device:
     post:
+      security:
+        - ApplicationSecret: []
       responses:
         '200':
           content:
             application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  device:
+                    $ref: '#/components/schemas/ResponseCreated'
               examples:
                 response:
                   value:
                     device:
                       message: device updated
-          description: OK
-          headers: {}
+          description: Created
       tags:
         - Device
-      description: |-
-        + Properties
-
-            + appVersion (required, string, `1.0`)...The version of your application.
-            + deviceID (required, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The unique identifier for your device.
-            + deviceString (required, string, `MacIntel`)...An identifier of the device's model.
-            + language (required, string, `en-GB`)...An ISO 639-1 language code that identifies the language in the device.
-            + oldDeviceID (optional, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The old device identifier in case a new one is assigned, this makes sure data in the old device transits to the new one.
-            + osVersion (required, string, `10.12.3`)...The operating system version of the device.
-            + platform (required, string, `Chrome`)...An object containing three previously created message Ids for each proximity level.
-            + sdkVersion (required, number, `1.9.0`)...The version of the SDK used. This allows the platform to understand what functionalities are available.
-            + timeZoneOffset (required, number, `1`)...The timezone offset of the device.
-            + transport (required, string, `GCM`)...The identifier of the push channel allowed in the device.
-            + userID (optional, string, `1234567890`)...The unique identifier that you can use to send private messages to this user.
-            + userName (optional, string, `John Doe`)...A name for the user of the device.
-      operationId: Register a device
+      description: >-
+        Register a device, either new or an existing one. If a deviceID changes, send along the old deviceID in oldDeviceID property
+      operationId: postDevice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCreate'
       summary: Register a device
   '/device/{deviceID}':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -242,20 +198,32 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
           description: OK
-          headers: {}
+        '404':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device not found
+          description: Not Found
       tags:
         - Device
-      description: ''
-      operationId: Update an existing device
+      description: Update an existing device language, location, timeZoneOffset, country or capabilities
+      operationId: putDevice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceUpdate'
       summary: Update an existing device
-  '/device/{deviceID}/addtag':
-    put:
+    delete:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -268,263 +236,30 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
-          description: OK
-          headers: {}
-      tags:
-        - Device
-      description: ''
-      operationId: Add a tag to a device
-      requestBody:
-        content:
-          application/json:
-            schema:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
-                tag: one_tag
-              properties:
-                tag:
-                  type: string
-              type: object
-      summary: Add a tag to a device
-  '/device/{deviceID}/addtags':
-    put:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
+                message: device deactivated
+          description: OK
+        '404':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
-          description: OK
-          headers: {}
-      tags:
-        - Device
-      description: ''
-      operationId: Add one or more tags to a device
-      requestBody:
-        content:
-          application/json:
-            schema:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
               example:
-                tags:
-                  - one_tag
-                  - two_tags
-              properties:
-                tags:
-                  items:
-                    type: string
-                  type: array
-              type: object
-      summary: Add one or more tags to a device
-  '/device/{deviceID}/cleardnd':
-    put:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
-          description: OK
-          headers: {}
+                message: device not found
+          description: Not Found
       tags:
         - Device
-      description: ''
-      operationId: Clear the device's Do Not Disturb period
-      summary: Clear the device's Do Not Disturb period
-  '/device/{deviceID}/cleartags':
-    put:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
-          description: OK
-          headers: {}
-      tags:
-        - Device
-      description: ''
-      operationId: Clear all tags from a device
-      summary: Clear all tags from a device
-  '/device/{deviceID}/dnd':
-    get:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    dnd:
-                      end: '07:00'
-                      start: '01:00'
-          description: OK
-          headers: {}
-      tags:
-        - Device
-      description: ''
-      operationId: Get the device's Do Not Disturb period
-      summary: Get the device's Do Not Disturb period
-    put:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
-          description: OK
-          headers: {}
-      tags:
-        - Device
-      description: ''
-      operationId: Update the device's User Data
-      requestBody:
-        content:
-          application/json:
-            schema:
-              example:
-                firstName: John
-                lastName: Doe
-              properties:
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-              type: object
-      summary: Update the device's User Data
-  '/device/{deviceID}/removetag':
-    put:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
-          description: OK
-          headers: {}
-      tags:
-        - Device
-      description: ''
-      operationId: Remove a tag from a device
-      requestBody:
-        content:
-          application/json:
-            schema:
-              example:
-                tag: one_tag
-              properties:
-                tag:
-                  type: string
-              type: object
-      summary: Remove a tag from a device
-  '/device/{deviceID}/removetags':
-    put:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    device:
-                      message: device updated
-          description: OK
-          headers: {}
-      tags:
-        - Device
-      description: ''
-      operationId: Remove one or more tags from a device
-      requestBody:
-        content:
-          application/json:
-            schema:
-              example:
-                tags:
-                  - one_tag
-                  - two_tags
-              properties:
-                tags:
-                  items:
-                    type: string
-                  type: array
-              type: object
-      summary: Remove one or more tags from a device
+      description: >-
+        Deactivate an existing device.
+        After this call, the device will not appear anymore in lists and will not receive any messages
+      operationId: deleteDevice
+      summary: Delete an existing device
   '/device/{deviceID}/tags':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -544,14 +279,15 @@ paths:
                       - one_tag
                       - two_tags
           description: OK
-          headers: {}
       tags:
         - Device
-      description: ''
-      operationId: Get all the tags for a device
+      description: Get all the tags for a device
+      operationId: getDeviceTags
       summary: Get all the tags for a device
-  '/device/{deviceID}/userdata':
-    get:
+  '/device/{deviceID}/addtag':
+    put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -564,30 +300,340 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    userData:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Add a tag to a device and update the tag count
+      operationId: putDeviceAddTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tag: one_tag
+              properties:
+                tag:
+                  type: string
+              type: object
+      summary: Add a tag to a device
+  '/device/{deviceID}/removetag':
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: Remove a tag from a device
+      operationId: putDeviceRemoveTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tag: one_tag
+              properties:
+                tag:
+                  type: string
+              type: object
+      summary: Remove a tag from a device
+  '/device/{deviceID}/addtags':
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Add one or more tags to a device and update the tag count
+      operationId: putDeviceAddTags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tags:
+                  - one_tag
+                  - two_tags
+              properties:
+                tags:
+                  items:
+                    type: string
+                  type: array
+      summary: Add one or more tags to a device
+  '/device/{deviceID}/removetags':
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: Remove one or more tags from a device
+      operationId: putDeviceRemoveTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                tags:
+                  - one_tag
+                  - two_tags
+              properties:
+                tags:
+                  items:
+                    type: string
+                  type: array
+              type: object
+      summary: Remove one or more tags from a device
+  '/device/{deviceID}/cleartags':
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: Clear all tags from a device
+      operationId: putDeviceClearTags
+      summary: Clear all tags from a device
+  '/device/{deviceID}/dnd':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  dnd:
+                    properties:
+                      start:
+                        type: string
+                        example: '01:00'
+                      end:
+                        type: string
+                        example: '07:00'
+          description: OK
+      tags:
+        - Device
+      description: Get the device's Do Not Disturb period
+      operationId: getDeviceDnd
+      summary: Get the device's Do Not Disturb period
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: Update the device's User Data
+      operationId: putDeviceDnd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                start:
+                  type: string
+                  example: '01:00'
+                end:
+                  type: string
+                  example: '07:00'
+      summary: Update the device's User Data
+  '/device/{deviceID}/cleardnd':
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: Clear the device's Do Not Disturb period
+      operationId: putDeviceClearDnd
+      summary: Clear the device's Do Not Disturb period
+  '/device/{deviceID}/userdata':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  userData:
+                    additionalProperties:
+                      type: string
+                    example:
                       firstName: John
                       lastName: Doe
           description: OK
-          headers: {}
       tags:
         - Device
-      description: ''
-      operationId: Get the device's User Data
+      description: Get the device's User Data
+      operationId: getDeviceUserData
       summary: Get the device's User Data
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device updated
+          description: OK
+      tags:
+        - Device
+      description: Update the device's User Data
+      operationId: putDeviceUserData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties:
+                type: string
+              example:
+                firstName: John
+                lastName: Doe
+      summary: Update the device's User Data
   /event:
     post:
+      security:
+        - ApplicationSecret: []
       responses:
         '202':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value: {}
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: 'event is being processed'
           description: Accepted
-          headers: {}
       tags:
         - Event
       description: >-
@@ -643,45 +689,17 @@ paths:
 
         | re.notifica.event.custom.{name} | Any other event stored by your
         application. |
-
-
-        + Properties
-
-            + sessionID (required, string, `1627576d6d6d66d676627`)...The session identifier that allows to cross reference events.
-            + deviceID (required, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The unique identifier for your device corresponding to the APNS, FCM or Webpush token.
-            + userID (optional, string, `1234567890`)...The unique identifier that you can use to send messages to this device.
-            + type (required, string, `re.notifica.event.application.Open`)...A reverse domain style namespace that identifies the type of event.
-            + notification (optional, string, `1627576d6d6d66d676627`)...The notification identifier when applicable.
-            + data (optional, object, `{"campaignID":"12526dd66d666d66772d"}`)...A free form object that allows you to store any type of data for an event.
-      operationId: Register an event
+      operationId: postEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreate'
       summary: Register an event
   '/notification/inbox/fordevice/{deviceID}':
-    delete:
-      parameters:
-        - description: The unique identifier for your device.
-          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    count: 0
-                    message: cleared inbox
-          description: OK
-          headers: {}
-      tags:
-        - Notification
-      description: ''
-      operationId: Clear all items in a specific device's inbox
-      summary: Clear all items in a specific device's inbox
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -693,14 +711,13 @@ paths:
         - description: >-
             A date that we will use to retrieve items. When provided we will
             only retrieve items since that date.
-          example: '2015-12-11T13:15:44.298Z'
           in: query
           name: since
           required: false
           schema:
-            type: string
+            $ref: '#/components/schemas/Date'
         - description: The maximum number of results to retrieve.
-          example: '10'
+          example: 10
           in: query
           name: limit
           required: false
@@ -708,7 +725,7 @@ paths:
             default: 100
             type: number
         - description: The number of results to skip.
-          example: '0'
+          example: 0
           in: query
           name: skip
           required: false
@@ -716,20 +733,24 @@ paths:
             type: number
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InboxItemList'
           description: OK
-          headers: {}
       tags:
         - Notification
-      description: ''
-      operationId: Get a specific device's inbox
+      description: Get a specific device's inbox
+      operationId: getInboxForDevice
       summary: Get a specific device's inbox
-  '/notification/inbox/{id}':
     delete:
+      security:
+        - ApplicationSecret: []
       parameters:
-        - description: The unique identifier for the inbox item.
-          example: 566acc80cbe343d7136ec9bf
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
           in: path
-          name: id
+          name: deviceID
           required: true
           schema:
             type: string
@@ -737,35 +758,66 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    message: inbox item removed
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCount'
+              example:
+                count: 0
+                message: cleared inbox
           description: OK
-          headers: {}
       tags:
         - Notification
-      description: ''
-      operationId: Delete inbox item in a specific device's inbox
-      summary: Delete inbox item in a specific device's inbox
-  '/notification/{id}':
-    get:
+      description: Clear all items in a specific device's inbox
+      operationId: deleteInboxForDevice
+      summary: Clear all items in a specific device's inbox
+  '/notification/inbox/{id}':
+    delete:
+      security:
+        - ApplicationSecret: []
       parameters:
-        - description: The notification's unique identifier.
-          example: 1627576d6d6d66d676627
+        - description: The unique identifier for the inbox item.
           in: path
           name: id
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: inbox item removed
           description: OK
-          headers: {}
       tags:
         - Notification
-      description: ''
-      operationId: Get a specific notification
+      description: Delete inbox item in a specific device's inbox
+      operationId: deleteNotificationInbox
+      summary: Delete inbox item in a specific device's inbox
+  '/notification/{id}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The notification's unique identifier.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/NotificationModel'
+          description: OK
+      tags:
+        - Notification
+      description: Get a specific notification
+      operationId: getNotificationById
       summary: Get a specific notification
   '/pass/forbarcode/{barcode}':
     get:
@@ -776,65 +828,25 @@ paths:
           name: barcode
           required: true
           schema:
-            default: '100'
             type: string
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    pass:
-                      _id: 5501894253058ca5269a9928
-                      application: 5354f0bb3fa544452ff4c7c0
-                      barcode: ABC-123456789
-                      data:
-                        auxiliaryFields: []
-                        backFields: []
-                        background: null
-                        backgroundColor: 'rgb(0,0,0)'
-                        barcode:
-                          format: PKBarcodeFormatQR
-                          messageEncoding: iso-8859-1
-                        description: coupon example
-                        footer: null
-                        foregroundColor: 'rgb(255,255,255)'
-                        headerFields: []
-                        icon: >-
-                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                        labelColor: 'rgb(255,255,255)'
-                        logo: >-
-                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                        logoText: My Company
-                        primaryFields:
-                          - key: discount
-                            label: discount
-                            string: true
-                            textAlignment: PKTextAlignmentLeft
-                            value: 20% off
-                        secondaryFields:
-                          - key: expires
-                            label: expires
-                            string: true
-                            textAlignment: PKTextAlignmentLeft
-                            value: 31-12-2015
-                        strip: >-
-                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                        suppressStripShine: false
-                        thumbnail: null
-                        transitType: null
-                      passbook: 54e135049c2cad772e7c0de0
-                      serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/PassModel'
           description: OK
-          headers: {}
       tags:
         - Pass
-      description: ''
-      operationId: Get a pass with a specific barcode
+      description: Get a pass with a specific barcode
+      operationId: getPassForBarcode
       summary: Get a pass with a specific barcode
   '/pass/forserial/{serial}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The pass serial number.
           example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
@@ -842,66 +854,41 @@ paths:
           name: serial
           required: true
           schema:
-            default: '100'
             type: string
+            format: uuid
       responses:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    pass:
-                      _id: 5501894253058ca5269a9928
-                      application: 5354f0bb3fa544452ff4c7c0
-                      barcode: 402ab90b-65b5-4b4f-91fa-9823b2972f85
-                      data:
-                        auxiliaryFields: []
-                        backFields: []
-                        background: null
-                        backgroundColor: 'rgb(0,0,0)'
-                        barcode:
-                          format: PKBarcodeFormatQR
-                          messageEncoding: iso-8859-1
-                        description: coupon example
-                        footer: null
-                        foregroundColor: 'rgb(255,255,255)'
-                        headerFields: []
-                        icon: >-
-                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
-                        labelColor: 'rgb(255,255,255)'
-                        logo: >-
-                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/7e6166684680598ff63894fbc837db244a1d98ea02793b414845a23f876f31ef
-                        logoText: My Company
-                        primaryFields:
-                          - key: discount
-                            label: discount
-                            string: true
-                            textAlignment: PKTextAlignmentLeft
-                            value: 20% off
-                        secondaryFields:
-                          - key: expires
-                            label: expires
-                            string: true
-                            textAlignment: PKTextAlignmentLeft
-                            value: 31-12-2015
-                        strip: >-
-                          https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/827a04cf2e5f8653f544432a72fc217409c57af0f0068fd0696f374e183e6b14
-                        suppressStripShine: false
-                        thumbnail: null
-                        transitType: null
-                      passbook: 54e135049c2cad772e7c0de0
-                      serial: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/PassModel'
           description: OK
-          headers: {}
       tags:
         - Pass
-      description: ''
-      operationId: Get a pass with a specific serial
+      description: Get a pass with a specific serial
+      operationId: getPassForSerial
       summary: Get a pass with a specific serial
-  /region:
+  /region/bylocation/{latitude}/{longitude}:
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
+        - description: The latitude
+          example: 52.18858
+          in: path
+          name: latitude
+          required: false
+          schema:
+            type: number
+        - description: The longitude
+          example: 4.16646
+          in: path
+          name: longitude
+          required: true
+          schema:
+            type: number
         - description: The maximum number of results to retrieve.
           example: '10'
           in: query
@@ -921,51 +908,44 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    regions:
-                      - _id: 5245bc5b3e66a3b01f0024d4
-                        geometry:
-                          coordinates:
-                            - 4.2345
-                            - 5.6789
-                          type: Point
-                        major: '123456'
-                        name: My Region
-                        timezone: Europe/Amsterdam
+              schema:
+                $ref: '#/components/schemas/RegionList'
           description: OK
-          headers: {}
       tags:
         - Region
-      description: ''
-      operationId: Get all regions for an application
-      summary: Get all regions for an application
+      description: >-
+        Get nearest regions for this device, sorted by distance.
+        Only regions of category `fence` will be listed.
+      operationId: getRegion
+      summary: List nearest regions for this device
   /reply:
     post:
+      security:
+        - ApplicationSecret: []
       responses:
         '202':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value: {}
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: 'reply is being processed'
           description: Accepted
           headers: {}
       tags:
         - Reply
-      description: |-
-        + Properties
-
-            + notification (required, string, `123eee456ddd789dddd0`)...The unique identifier of a notification.
-            + label (required, string, `Yes`)...The label of the action which executed the reply.
-            + deviceID (required, string, `APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf`)...The unique identifier for your device corresponding to the APNS, FCM or Webpush token.
-            + userID (optional, string, `1234567890`)...The unique identifier that you can use to send messages to this device.
-            + data (optional, object, `{"message": "some text provided by the user"}`)...Arbitrary data to be stored for this reply. Currently our platform can handle `message` (text provided by the user) and `media` (URL of a media file uploaded to Notificare)
-      operationId: Register a reply
+      description: Register a reply
+      operationId: postReply
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplyCreate'
       summary: Register a reply
   '/trigger/{type}':
     post:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The type of trigger being executed.
           example: re.notifica.trigger.region.Enter
@@ -975,88 +955,1494 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        '200':
           content:
             application/json; charset=utf-8:
-              examples:
-                response:
-                  value:
-                    triggers:
-                      id: 123eee456ddd789dddd0
-          description: Created
-          headers: {}
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: trigger action completed
+          description: OK
       tags:
         - Trigger
-      description: ''
-      operationId: Register a trigger
+      description: Register a trigger action
+      operationId: postTriggerForType
       requestBody:
         content:
           application/json:
             schema:
-              example:
-                deviceID: xxx
-                region: xxx
               properties:
                 deviceID:
                   type: string
+                  example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
                 region:
-                  type: string
+                  $ref: '#/components/schemas/ObjectId'
               type: object
-      summary: Register a trigger
+      summary: Register a trigger action
+  '/upload/reply':
+    post:
+      security:
+        - ApplicationSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  filename:
+                    type: string
+                    example: /replies/9f..
+          description: Created
+      tags:
+        - Upload
+      description: >-
+        Upload a file for a reply to Notificare. The resulting filename is a path inside the
+        notificare storage. This can be used as a reference to the file the POST /reply body.
+
+        The contents of the file should be in the body of the request and with
+        the correct MIME type. So, e.g. an image should go with a
+        content-type `image/png`, etc.
+      operationId: postUploadReply
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/gif:
+            schema:
+              type: string
+              format: binary
+      summary: Upload a file for reply
 components:
-  requestBodies:
-    Add_a_tag_to_a_deviceBody:
-      content:
-        application/json:
-          schema:
-            example:
-              tag: one_tag
-            properties:
-              tag:
-                type: string
-            type: object
-    Add_one_or_more_tags_to_a_deviceBody:
-      content:
-        application/json:
-          schema:
-            example:
-              tags:
-                - one_tag
-                - two_tags
-            properties:
-              tags:
-                items:
-                  type: string
-                type: array
-            type: object
+  securitySchemes:
+    ApplicationSecret:
+      description: >-
+        Only used for calls that originate from the device, e.g., registration, tags.
+        Username is applicationKey, password is applicationSecret
+      type: http
+      scheme: basic
   schemas:
-    Add_Device_Tag: {}
-    Add_Device_Tags: {}
-    Application: {}
-    Asset_File: {}
-    Asset_Groups: {}
-    Beacon: {}
-    Beacons_For_Region: {}
-    Clear_All_Device_Tags: {}
-    Clear_Device_DnD: {}
-    Delete_Inbox_Item: {}
-    Device_DnD: {}
-    Device_Tags: {}
-    Device_User_Data: {}
-    Inbox: {}
-    New_Device: {}
-    New_Event: {}
-    New_Reply: {}
-    New_Trigger: {}
-    Notification: {}
-    Pass_By_Barcode: {}
-    Pass_By_Serial: {}
-    Regions: {}
-    Remove_Device_Tag: {}
-    Remove_Device_Tags: {}
-    Update_Device: {}
-    Update_Device_DnD: {}
-    Update_Device_User_Data: {}
+    ApplicationInfoModel:
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        name:
+          description: Your application's name.
+          type: string
+          example: Your App
+        category:
+          description: Your application's category.
+          type: string
+          example: Other
+        appStoreId:
+          description: Your application's category.
+          type: string
+          example: Other
+        androidPackageName:
+          description: Your application's category.
+          type: string
+          example: Other
+        services:
+          properties:
+            richPush:
+              type: boolean
+              default: true
+            locationServices:
+              type: boolean
+              default: false
+            apns:
+              type: boolean
+              default: true
+            gcm:
+              type: boolean
+              default: true
+            websockets:
+              type: boolean
+              default: true
+            triggers:
+              type: boolean
+              default: false
+            passbook:
+              type: boolean
+              default: false
+            inAppPurchase:
+              type: boolean
+              default: false
+            oauth2:
+              type: boolean
+              default: false
+            screens:
+              type: boolean
+              default: false
+            reports:
+              type: boolean
+              default: false
+            appsOnDemand:
+              type: boolean
+              default: false
+            liveApi:
+              type: boolean
+              default: false
+            automation:
+              type: boolean
+              default: false
+            websitePush:
+              type: boolean
+              default: true
+            inbox:
+              type: boolean
+              default: true
+            storage:
+              type: boolean
+              default: true
+            email:
+              type: boolean
+              default: false
+            sms:
+              type: boolean
+              default: false
+        branding:
+          type: boolean
+          default: true
+        userDataFields:
+          type: array
+          items:
+            properties:
+              type:
+                type: string
+              key:
+                type: string
+              label:
+                type: string
+              defaultValue:
+                type: string
+          example:
+            - key: firstName
+              label: First Name
+              type: 'string'
+            - key: lastName
+              label: last Name
+              type: 'string'
+        actionCategories:
+          type: array
+          items:
+            properties:
+              type:
+                type: string
+                example: re.notifica.notification.Alert
+              name:
+                type: string
+              actions:
+                type: array
+                items:
+                  properties:
+                    type:
+                      type: string
+                      example: re.notifica.action.Callback
+                    label:
+                      type: string
+                      example: test1
+                    target:
+                      type: string
+                    camera:
+                      type: boolean
+                      default: false
+                    keyboard:
+                      type: boolean
+                      default: false
+                    destructive:
+                      type: boolean
+                      default: false
+        inboxConfig:
+          properties:
+            useInbox:
+              type: boolean
+              default: false
+            autoBadge:
+              type: boolean
+              default: false
+        emailConfig:
+          properties:
+            defaultSender:
+              $ref: '#/components/schemas/MessageSender'
+        passbookConfig:
+          properties:
+            info:
+              properties:
+                subject:
+                  properties:
+                    C:
+                      type: string
+                      example: NL
+                    CN:
+                      type: string
+                      example: 'Pass Type ID: pass.re.notifica.passbook'
+                    OU:
+                      type: string
+                      example: Y47BY73NFN
+                    O:
+                      type: string
+                      example: Notificare B.V.
+                    UID:
+                      type: string
+                      example: pass.re.notifica.passbook
+        websitePushConfig:
+          properties:
+            info:
+              properties:
+                subject:
+                  properties:
+                    C:
+                      type: string
+                      example: NL
+                    CN:
+                      type: string
+                      example: 'Apple Development IOS Push Services: web.re.notifica.webpushtest'
+                    OU:
+                      type: string
+                      example: Y47BY73NFN
+                    O:
+                      type: string
+                      example: Notificare B.V.
+                    UID:
+                      type: string
+                      example: web.re.notifica.webpushtest
+            vapid:
+              properties:
+                publicKey:
+                  type: string
+        regionConfig:
+          properties:
+            proximityUUID:
+              type: string
+              format: uuid
+              example: f7826da6-4fa2-4e98-8024-bc5b71e0893e
+    AssetGroupAssetList:
+      properties:
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetGroupAssetModel'
+    AssetGroupAssetModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            metaData:
+              properties:
+                contentLength:
+                  type: number
+                  example: 59609
+                contentType:
+                  type: string
+                  example: image/png
+                originalFileName:
+                  type: string
+                  example: Screenshot_2016-04-07-13-17-31.png
+        - $ref: '#/components/schemas/AssetGroupAsset'
+    AssetGroupAsset:
+      properties:
+        title:
+          type: string
+          example: "Screen Shot 2016-03-24 at 00.04.49.png"
+        key:
+          type: string
+          example: "3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/c76c6363a7e014fae1586fa9b83b1c61faa7b79036fd2670db2840de979cab03"
+        description:
+          type: string
+          example: A screen shot
+        button:
+          properties:
+            label:
+              type: string
+              example: Test button
+            action:
+              type: string
+              example: testAction
+        extra:
+          additionalProperties:
+            type: string
+          example:
+            key1: value1
+            key2: value2
+    BeaconList:
+      properties:
+        beacons:
+          description: The list of beacons, paginated
+          type: array
+          items:
+            $ref: '#/components/schemas/BeaconModel'
+        count:
+          description: Total number of beacons in the list
+          type: number
+          example: 1
+      type: object
+    BeaconModel:
+      allOf:
+        - properties:
+            _id:
+              description: Notificare ID of the beacon
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+        - $ref: '#/components/schemas/BeaconBase'
+    BeaconBase:
+      properties:
+        batteryLevel:
+          description: An object representing the battery level of this beacon.
+          type: number
+          example: 99
+        data:
+          description: A free form object that can be assigned to a beacon.
+          additionalProperties:
+            type: string
+          example:
+            key1: value1
+            key2: value2
+          type: object
+        latitude:
+          description: An integer representing the beacon's latitude.
+          type: number
+          example: 52.12772
+        longitude:
+          description: An integer representing the beacon's longitude.
+          type: number
+          example: 4.1662
+        minor:
+          description: Your beacon's minor identifier (must be unique per major)
+          type: number
+          example: 100
+        name:
+          description: Your beacon's name
+          type: string
+          example: Test beacon
+        notification:
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+          description: An Id of a previously created notification.
+        proximity:
+          description: >-
+            Your notification proximity. Accepts one of these:
+            'immediate', 'near' and 'far'. (deprecated)
+          type: string
+          enum:
+            - immediate
+            - near
+            - far
+        proximityNotifications:
+          description: >-
+            An object containing three previously created message Ids
+            for each proximity level.
+          properties:
+            far:
+              $ref: '#/components/schemas/ObjectId'
+            immediate:
+              $ref: '#/components/schemas/ObjectId'
+            near:
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+        purpose:
+          description: >-
+            An object representing the purpose of the beacon. Accepts
+            one of these: 'general', 'pay', 'info', 'staff', 'admin'.
+          type: string
+          example: Testing purposes
+        triggers:
+          description: >-
+            Set to true if this beacon can be used in triggers. Max.
+            number of beacons that can use triggers is limited to 10.
+          type: boolean
+          default: false
+      type: object
+    Circle:
+      allOf:
+        - $ref: '#/components/schemas/Point'
+        - properties:
+            distance:
+              type: number
+              example: 100
+          required:
+            - distance
+          type: object
+    Coordinates:
+      items:
+        type: number
+      type: array
+      minItems: 2
+      maxItems: 2
+      example: [4.23456, 52.184884]
+    CoordinatesRing:
+      items:
+        $ref: '#/components/schemas/Coordinates'
+      minItems: 3
+      example: [[4.23456, 52.184884], [5.23456, 50.184884],[4.23456, 52.184884]]
+      type: array
+    Criteria:
+      description: >-
+        Criteria to select an audience
+      properties:
+        locationsCriteria:
+          description: >-
+            Device locations criteria
+          items:
+            $ref: '#/components/schemas/LocationsCriteria'
+          type: array
+        propertiesCriteria:
+          description: >-
+            Device properties criteria
+          items:
+            $ref: '#/components/schemas/PropertiesCriteria'
+          type: array
+        segmentsCriteria:
+          description: >-
+            User segments criteria
+          items:
+            $ref: '#/components/schemas/SegmentsCriteria'
+          type: array
+        tagsCriteria:
+          description: >-
+            Device tags criteria
+          items:
+            $ref: '#/components/schemas/TagsCriteria'
+          type: array
+      type: object
+    Date:
+      type: string
+      format: date-time
+    DeviceCreate:
+      allOf:
+        - properties:
+            oldDeviceID:
+              description: >-
+                The old deviceID, whenever deviceID changes.
+                Inbox will move to the new deviceID.
+              type: string
+              example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
+        - $ref: '#/components/schemas/DeviceBase'
+    DeviceUpdate:
+      properties:
+        allowedUI:
+          description: Device has visible notifications enabled
+          type: boolean
+          default: false
+        backgroundAppRefresh:
+          description: Device has background refresh enabled (iOS only)
+          type: boolean
+          default: false
+        bluetoothEnabled:
+          description: Device has bluetooth enabled
+          type: boolean
+          default: false
+        locationServicesAuthStatus:
+          description: Device has location permissions granted
+          type: string
+          enum: [none, use, always]
+        language:
+          type: string
+          default: en
+          example: nl
+        location:
+          $ref: '#/components/schemas/Point'
+        altitude:
+          type: number
+          example: 100
+        course:
+          type: number
+          example: 90
+        speed:
+          type: number
+          example: 10
+        timeZoneOffset:
+          type: number
+          default: '0'
+          example: -5
+    DeviceBase:
+      properties:
+        appVersion:
+          type: string
+          example: '1.0'
+        deviceID:
+          type: string
+          example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
+        deviceString:
+          type: string
+          example: Chrome 80 | Mac OS X 10.14.6
+        browserName:
+          type: string
+          example: Chrome
+        browserVersion:
+          type: string
+          example: '80'
+        allowedUI:
+          description: Device has visible notifications enabled
+          type: boolean
+          default: false
+        backgroundAppRefresh:
+          description: Device has background refresh enabled (iOS only)
+          type: boolean
+          default: false
+        bluetoothEnabled:
+          description: Device has bluetooth enabled
+          type: boolean
+          default: false
+        locationServicesAuthStatus:
+          description: Device has location permissions granted
+          type: string
+          enum: [none, use, always]
+        language:
+          type: string
+          default: en
+          example: nl
+        location:
+          $ref: '#/components/schemas/Point'
+        altitude:
+          type: number
+          example: 100
+        course:
+          type: number
+          example: 90
+        speed:
+          type: number
+          example: 10
+        osString:
+          type: string
+          example: Mac OS X 10.9.2
+        osVersion:
+          type: string
+          example: 10.9.2
+        platform:
+          type: string
+          example: Web
+          enum: [iOS, tvOS, Android, Web, Email, SMS]
+        sdkVersion:
+          type: string
+          example: 2.1.1
+        timeZoneOffset:
+          type: number
+          default: '0'
+          example: -5
+        transport:
+          type: string
+          default: Notificare
+          enum: [APNS, GCM, WebPush, WebsitePush, Email, SMS, Notificare]
+        userID:
+          description: The app-defined user identifier
+          type: string
+          example: 188720716616
+      type: object
+    EventCreate:
+      properties:
+        type:
+          description: A reverse domain style namespace that identifies the type of event.
+          type: string
+          example: re.notifica.event.application.Open
+        deviceID:
+          description: The unique identifier for your device corresponding to the APNS, FCM or Webpush token.
+          type: string
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+        sessionID:
+          description: The session identifier that allows to cross reference events.
+          type: string
+          example: 1627576d6d6d66d676627
+        userID:
+          description: The app-defined user identifier that you can use to send messages to this user.
+          type: string
+          example: '1234567890'
+        notification:
+          $ref: '#/components/schemas/ObjectId'
+        data:
+          description: A free form object that allows you to store any type of data for an event.
+          additionalProperties: true
+          example:
+            campaignID: '12526dd66d666d66772d'
+    EventCriteria:
+      properties:
+        data:
+          properties:
+            region:
+              description: >-
+                The region's id of an event of type re.notifica.event.region.Session or re.notifica.event.beacon.Session
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+            fence:
+              description: >-
+                The beacon's fence region id of an event of type re.notifica.event.beacon.Session
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+            pass:
+              description: >-
+                The pass id of an event of type re.notifica.event.pass.Add, re.notifica.event.pass.Remove or re.notifica.event.pass.Redeem
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+            serial:
+              description: >-
+                The pass serial of an event of type re.notifica.event.pass.Add, re.notifica.event.pass.Remove or re.notifica.event.pass.Redeem
+              type: string
+              format: uuid
+            group:
+              description: >-
+                The asset group's id of an event of type re.notifica.event.asset.Load
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+            scannable:
+              description: >-
+                The scannable's id of an event of type re.notifica.event.scannable.Scan
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+            notification:
+              description: >-
+                The notification's id of an event of type re.notifica.event.notification.Sent,
+                re.notifica.event.notification.Receive, re.notifica.event.notification.Open
+                or re.notifica.event.notification.Influenced
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+          type: object
+        endDate:
+          type: string
+          format: 'date-time'
+          description: defaults to now
+        startDate:
+          type: string
+          format: 'date-time'
+          description: defaults to now
+        type:
+          type: string
+      required:
+        - type
+        - startDate
+        - endDate
+      type: object
+    InboxItemList:
+      properties:
+        inboxItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/InboxItemModel'
+        count:
+          type: number
+          example: 10
+        unread:
+          type: number
+          example: 1
+    InboxItemModel:
+      description: Item in a device inbox
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        notification:
+          $ref: '#/components/schemas/ObjectId'
+        message:
+          type: string
+          example: Ready for beers?
+        title:
+          type: string
+          example: message
+        subtitle:
+          type: string
+          example: message
+        subject:
+          type: string
+          example: message
+        attachment:
+          $ref: '#/components/schemas/MessageAttachment'
+        extra:
+          $ref: '#/components/schemas/MessageExtra'
+        opened:
+          type: boolean
+          default: false
+        time:
+          $ref: '#/components/schemas/Date'
+    LocationsCriteria:
+      properties:
+        locations:
+          description: >-
+            Filter or select devices based on their location.
+            Locations can be circular or polygon-shaped.
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Polygon'
+              - $ref: '#/components/schemas/Circle'
+          type: array
+        quantifier:
+          description: >-
+            `all` means devices that are in all of these locations,
+            `any` means devices that are in one or more of these locations,
+            `none` means devices that are in none of these locations
+          enum:
+            - all
+            - any
+            - none
+          type: string
+      type: object
+    MessageAction:
+      properties:
+        type:
+          type: string
+          example: 're.notifica.action.Callback'
+        label:
+          type: string
+          example: Yes
+        target:
+          type: string
+        keyboard:
+          default: false
+          type: boolean
+        camera:
+          default: false
+          type: boolean
+        rules:
+          items:
+            $ref: '#/components/schemas/MessageRule'
+          type: array
+      type: object
+    MessageAttachment:
+      properties:
+        mimeType:
+          description: the image mime type
+          type: string
+          example: 'image/jpeg'
+        name:
+          type: string
+          example: Test Attachment
+        uri:
+          description: >-
+            the URL to an image either uploaded into our platform or hosted in
+            any public web server
+          type: string
+          format: uri
+          example: 'https://domain.com/image'
+      required:
+        - uri
+        - mimeType
+      type: object
+    MessageContent:
+      properties:
+        type:
+          description: type according to the type of push message. Please refer to Content types for all available types
+          type: string
+          example: 're.notifica.content.HTML'
+        data:
+          description: data according to the type of push message. Please refer to Content types for all available types
+          type: string
+          example: '<h1>Hello</h1>'
+      required:
+        - type
+        - data
+      type: object
+    MessageExtra:
+      description: >-
+        A valid one-level JSON object. This is useful if you need to
+        send extra data that you will need to proccess soon the
+        notification arrives.
+      additionalProperties:
+        type: string
+      example:
+        key1: value1
+        key2: value2
+      type: object
+    MessageLights:
+      description: >-
+        An object containing a color string ("white", "red",
+        "#rrggbb", "#aarrggbb") and the on/off time in milliseconds.
+        Colors are only applicable to Android and will be displayed
+        by hardware as accurately as possible.
+      properties:
+        color:
+          description: Color string
+          type: string
+          example: red
+        'off':
+          description: OFF time in milliseconds
+          type: number
+          example: 500
+        'on':
+          description: ON time in milliseconds
+          type: number
+          example: 1000
+      type: object
+    MessageLocalizedContent:
+      properties:
+        actions:
+          items:
+            $ref: '#/components/schemas/MessageAction'
+          type: array
+        attachments:
+          items:
+            $ref: '#/components/schemas/MessageAttachment'
+          type: array
+        content:
+          items:
+            $ref: '#/components/schemas/MessageContent'
+          type: array
+        message:
+          type: string
+          example: Test Message
+        subject:
+          type: string
+          example: Test Subject
+        subtitle:
+          type: string
+          example: Test Subtitle
+        title:
+          type: string
+          example: Test Title
+      type: object
+    MessageLocation:
+      properties:
+        distance:
+          type: number
+          example: 100
+        latitude:
+          type: number
+          example: 52.17747
+        longitude:
+          type: number
+          example: 4.1235
+      required:
+        - latitude
+        - longitude
+        - distance
+      type: object
+    MessageRule:
+      properties:
+        params:
+          items:
+            $ref: '#/components/schemas/ObjectId'
+          type: array
+        type:
+          enum:
+            - re.notifica.rule.segment.Add
+            - re.notifica.rule.segment.Remove
+            - re.notifica.rule.tag.Add
+            - re.notifica.rule.tag.Remove
+          type: string
+      required:
+        - type
+        - params
+      type: object
+    MessageSender:
+      description: >-
+        An object containing the sender name and address for this
+        template. Applicable only for email templates.
+      properties:
+        address:
+          type: string
+          example: massimo@notifica.re
+        name:
+          type: string
+          example: Massimo Gondoliere
+      required:
+        - name
+        - address
+      type: object
+    NotificationModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            medium:
+              description: The medium of the message
+              type: string
+              enum: [push, email, sms]
+              default: push
+            scope:
+              description: The scope of the audience
+              type: string
+              enum: [application, criteria, event, segments, tags, user, device]
+            triggered:
+              description: Message was used for a trigger or automation
+              type: boolean
+              default: false
+            archived:
+              description: Message was archived
+              type: boolean
+              default: false
+            time:
+              $ref: '#/components/schemas/Date'
+            subject:
+              description: Subject of your email message
+              type: string
+              example: Hello world
+            sender:
+              $ref: '#/components/schemas/MessageSender'
+            criteria:
+              $ref: '#/components/schemas/Criteria'
+            eventCriteria:
+              $ref: '#/components/schemas/EventCriteria'
+            location:
+              $ref: '#/components/schemas/MessageLocation'
+            segments:
+              description: User segments this notification is sent to
+              type: array
+              items:
+                $ref: '#/components/schemas/ObjectId'
+            tags:
+              description: Device tags this notification is sent to
+              type: array
+              items:
+                type: string
+              example: [tag1]
+            userID:
+              description: The app-defined user identifier
+              type: string
+              example: 188720716616
+            deviceID:
+              description: The unique identifier for your device corresponding to the APNS, FCM or Webpush token.
+              type: string
+              example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+        - $ref: '#/components/schemas/NotificationPushBase'
+    NotificationPushBase:
+      allOf:
+        - $ref: '#/components/schemas/NotificationLocalizedBase'
+        - type: object
+          properties:
+            type:
+              description: >-
+                Defines the type of content to show. Types of messages are
+                represented by namespaces. Message types should match the
+                following namespace: re.notifica.notification.*. Please refer
+                to Message Types for all available types.
+              type: string
+              example: re.notifica.notification.Alert
+            title:
+              description: >-
+                Small text shown in the device's lock screen or notification
+                center. This field should be used as an helper text to the
+                message. Please note that this is only supported by iOS 10 or
+                higher or Android 5 or higher devices.
+              type: string
+              example: Hello world
+            subtitle:
+              description: >-
+                Small text shown in the device's lock screen or notification
+                center. This field should be used as an helper text to the
+                message. Please note that this is only supported by iOS 10 or
+                higher or Android 5 or higher devices.
+              type: string
+              example: Hello world
+            message:
+              description: >-
+                Short and concise message. This is the first thing your user
+                sees, make sure it is relevant and that somehow summarizes
+                what you intend to say.
+              type: string
+              example: Hello world
+            content:
+              description: >-
+                An array of Content objects according to the type of push
+                message. Please refer to Content types for all available
+                types.
+              items:
+                $ref: '#/components/schemas/MessageContent'
+              type: array
+            attachments:
+              description: >-
+                An object containing the URL to an image either uploaded into
+                our platform or hosted in any public web server.
+              items:
+                $ref: '#/components/schemas/MessageAttachment'
+              type: array
+            ttl:
+              description: >-
+                Number of seconds the message will be attempted to be
+                delivered by APNS or GCM.
+              type: number
+              example: 3600
+            rules:
+              description: >-
+                Adds one or more rules to a notification. An array of rules
+                objects. Please refer to Rules objects for all types
+                available.
+              items:
+                $ref: '#/components/schemas/MessageRule'
+              type: array
+            actionCategory:
+              description: >-
+                Use a previously created Rich Push template for your message.
+                Use the name of the template for this property and the actions
+                in that template as the actions for this notification. This
+                will enable actionable notifications from the notification
+                center in both iOS and Android.
+              type: string
+              example: My Template
+            actions:
+              description: >-
+                Adds one or more interactions to a notification. An array of
+                Action objects. Please refer to Action objects for all types
+                available.
+              items:
+                $ref: '#/components/schemas/MessageAction'
+              type: array
+            extra:
+              $ref: '#/components/schemas/MessageExtra'
+            sound:
+              description: >-
+                Name of sound to play. `default` means use the default sound
+                as set by the user, any other string will be looked up as
+                sound file on the device (`mp3` on Android, `aiff` on iOS).
+              type: string
+              example: default
+            lights:
+              $ref: '#/components/schemas/MessageLights'
+            channel:
+              description: >-
+                This is an Android only property. If the channel is defined in the app,
+                the message will be sent to that channel, otherwise to the
+                default channel.
+              type: string
+              example: important
+            badge:
+              description: >-
+                This is an iOS only property. A badge will be displayed over
+                your app icon whenever a notification arrives. Use a number
+                from 1 to 9999.
+              type: number
+              example: 1
+            presentation:
+              description: >-
+                In iOS (2.1 and higher), will set presentation mode for
+                foreground messages.
+                In Android (2.1 and higher), it will set the presentation
+                parameter to true in the foreground message handler.
+              type: boolean
+            requireInteraction:
+              description: >-
+                This is a Web only property. In WebPush, will set the requireInteraction
+                flag to true
+              type: boolean
+            push:
+              description: >-
+                This property is only available for SDKs 1.8.0 and up. When
+                false it will only create a message in the app's inbox and not
+                generate a remote notification. By default this property will
+                be true. Please note that this property will be ignored if
+                Inbox is not being used.
+              type: boolean
+          required:
+            - type
+            - message
+    NotificationLocalizedBase:
+      allOf:
+        - $ref: '#/components/schemas/NotificationBase'
+        - type: object
+          properties:
+            languages:
+              description: >-
+                The list of localized content language identifiers used in
+                localizedContent. When included, you must also provide a list
+                of localizedContent objects in the same order.
+              items:
+                type: string
+              example: [nl, pt]
+              type: array
+            localizedContent:
+              description: >-
+                Provides content for all the language identifiers provided in
+                languages.
+              items:
+                $ref: '#/components/schemas/MessageLocalizedContent'
+              type: array
+    NotificationBase:
+      properties:
+        scheduled:
+          description: >-
+            When true will prevent the message from being sent.
+            Additionally you will have to create a schedule task by
+            calling the /notification/schedule.
+          type: boolean
+          default: false
+        rate:
+          description: >-
+            The rate at which we will send notifications in seconds. If
+            provided, we will not send more than x messages per second.
+          type: number
+          example: 100
+    ObjectId:
+      type: string
+      example: 1d9e80ef851d212aca82cf23
+    PassField:
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        string:
+          type: boolean
+        number:
+          type: boolean
+        date:
+          type: boolean
+        dataDetectorTypes:
+          type: string
+          enum: [PKDataDetectorTypePhoneNumber, PKDataDetectorTypeLink, PKDataDetectorTypeAddress, PKDataDetectorTypeCalendarEvent]
+        textAlignment:
+          type: string
+          enum: [PKTextAlignmentLeft, PKTextAlignmentCenter, PKTextAlignmentRight, PKTextAlignmentNatural]
+        dateStyle:
+          type: string
+          enum: [PKDateStyleNone, PKDateStyleShort, PKDateStyleMedium, PKDateStyleLong, PKDateStyleFull]
+        timeStyle:
+          type: string
+          enum: [PKDateStyleNone, PKDateStyleShort, PKDateStyleMedium, PKDateStyleLong, PKDateStyleFull]
+        ignoresTimeZone:
+          type: boolean
+          default: false
+        isRelative:
+          type: boolean
+          default: false
+        currencyCode:
+          type: string
+          example: EUR
+        numberStyle:
+          type: string
+          enum: [PKNumberStyleDecimal, PKNumberStylePercent, PKNumberStyleScientific, PKNumberStyleSpellOut]
+    PassData:
+      description: >-
+        The data object containing all the information, colours and
+        fields for a pass.
+        If cloned from a passbook template, the fields
+        (headerFields, primaryFields, secondaryFields,
+        auxiliaryFields, backFields) should be updated
+        with a value property.
+      properties:
+        auxiliaryFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        backFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        headerFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        primaryFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        secondaryFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassField'
+        background:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        backgroundColor:
+          type: string
+          example: 'rgb(0,0,0)'
+        barcode:
+          properties:
+            format:
+              type: string
+              example: PKBarcodeFormatQR
+            messageEncoding:
+              type: string
+              example: iso-8859-1
+        description:
+          type: string
+          example: coupon example
+        footer:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        foregroundColor:
+          type: string
+          example: 'rgb(255,255,255)'
+        icon:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        labelColor:
+          type: string
+          example: 'rgb(255,255,255)'
+        logo:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        logoText:
+          type: string
+          example: Notificare
+        strip:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        suppressStripShine:
+          type: boolean
+          default: false
+        thumbnail:
+          type: string
+          format: uri
+          example: https://push.notifica.re/upload/passbook/3d99d18148e6f3dbcf4ff891c9a026463b0311feccc7b9d0c8c79fee9b4dde19/aa2a7d561c6ba9f99f169a38a92dc0ac98d5f5a6cec0b4bea447e62e70e0ea96
+        transitType:
+          type: string
+          enum: [PKTransitTypeAir, PKTransitTypeBoat, PKTransitTypeTrain, PKTransitTypeBus, PKTransitTypeGeneric]
+    PassModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+        - $ref: '#/components/schemas/PassCreate'
+    PassCreate:
+      properties:
+        passbook:
+          $ref: '#/components/schemas/ObjectId'
+        data:
+          $ref: '#/components/schemas/PassData'
+        barcode:
+          type: string
+          example: 18847737723
+      required:
+        - passbook
+        - data
+        - barcode
+    Point:
+      properties:
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        type:
+          type: string
+          enum: [Point]
+      required:
+        - coordinates
+        - type
+      type: object
+    Polygon:
+      properties:
+        coordinates:
+          items:
+            $ref: '#/components/schemas/CoordinatesRing'
+          type: array
+        type:
+          type: string
+          enum: [Polygon]
+      required:
+        - coordinates
+        - type
+      type: object
+    PropertiesCriteria:
+      description: >-
+        A list of filters for device properties. The results are intersected / AND'ed
+      items:
+        $ref: '#/components/schemas/PropertiesCriterion'
+      type: array
+    PropertiesCriterion:
+      properties:
+        description:
+          description: >-
+            Filter or select devices based on the value of their properties.
+            `eq` means equal
+            `ne` means not equal
+            `lt` means less than, string-compared
+            `lte` means less than or equal, string-compared
+            `gt` means greater than, string-compared
+            `gte` means greater than or equal, string-compared
+            `in` means in, needs an array of values
+            `nin` means not in, needs an array of values
+        operator:
+          enum:
+            - eq
+            - ne
+            - lt
+            - lte
+            - gt
+            - gte
+            - in
+            - nin
+          type: string
+        property:
+          description: >-
+            Filter or select devices based on the value of their properties.
+          type: string
+          example: platform
+        value:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          example: Android
+      type: object
+    RegionList:
+      properties:
+        regions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegionModel'
+    RegionModel:
+      properties:
+        tags:
+          description: The list of tags this region should be associated with.
+          items:
+            type: string
+          example: [store]
+          type: array
+        address:
+          description: >-
+            The address for this region. This field is merely
+            informative.
+          type: string
+          example: Marconistraat 16
+        country:
+          description: >-
+            The country for this region. This field is merely
+            informative.
+          type: string
+          example: NL
+        advancedGeometry:
+          $ref: '#/components/schemas/Polygon'
+        category:
+          description: >-
+            The category of this region. Regions should be categorised
+            as fence to be used as monitored geo-zones. There's also the
+            possibility to mark regions as poi, city and country. These
+            type of regions will not be monitored.
+          type: string
+          enum: [fence, poi, county, city, country]
+        description:
+          description: >-
+            The description for this region. This field is merely
+            informative.
+          type: string
+        distance:
+          description: >-
+            The radius of a circle for the region. This field is
+            required if geometry is being passed. If advancedGeometry is
+            used then this field will be automatically calculated for
+            you.
+          type: number
+        geometry:
+          $ref: '#/components/schemas/Point'
+        icon:
+          description: >-
+            The icon used for this region. Must be a publicly accessible
+            URL.
+          type: string
+        major:
+          description: >-
+            The major identifier for the region. If you intend to use
+            beacons this field must match the major identifier for your
+            beacons.
+          type: number
+        name:
+          description: The name for the region.
+          type: string
+        referenceKey:
+          description: >-
+            The foreign key for this region. This field is can be used
+            to match regions in other systems.
+          type: string
+        timezone:
+          description: >-
+            The timezone for this region
+          type: string
+          example: 'Europe/Amsterdam'
+        timeZoneOffset:
+          type: number
+          default: 0
+          example: 1
+      required:
+        - name
+        - category
+    ReplyCreate:
+      properties:
+        notification:
+          $ref: '#/components/schemas/ObjectId'
+        label:
+          type: string
+          example: Yes
+          description: The label of the action which executed the reply.
+        deviceID:
+          type: string
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          description: The unique identifier for your device corresponding to the APNS, FCM or Webpush token.
+        userID:
+          type: string
+          example: 1234567890
+          description: The app-defined user identifier that you can use to send messages to this user.
+        data:
+          description: >-
+            Arbitrary data to be stored for this reply. Currently our platform can handle `message`
+            (text provided by the user) and `media` (URL of a media file uploaded to Notificare)
+          properties:
+            message:
+              type: string
+              example: some text provided by the user
+            media:
+              type: string
+              format: uri
+    ResponseMessageCount:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - properties:
+            count:
+              type: number
+              example: 2
+          required: count
+          type: object
+    ResponseMessage:
+      properties:
+        message:
+          type: string
+      required: message
+      type: object
+    ResponseCreated:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+    SegmentsCriteria:
+      properties:
+        quantifier:
+          description: >-
+            `all` means users that are in all of these segments,
+            `any` means users that are in one or more of these segments,
+            `none` means users that are in none of these segments
+          enum:
+            - all
+            - any
+            - none
+          type: string
+        segments:
+          description: >-
+            Filter or select users based on these segments.
+          items:
+            $ref: '#/components/schemas/ObjectId'
+          type: array
+      type: object
+    TagsCriteria:
+      properties:
+        tags:
+          description: >-
+            Filter or select devices based on these tags.
+          items:
+            type: string
+            example: tag_test
+          type: array
+        quantifier:
+          description: >-
+            `all` means devices that have all these tags,
+            `any` means devices that have one or more of these tags,
+            `none` means devices that have none of these tags
+          enum:
+            - all
+            - any
+            - none
+          type: string
+      type: object
 tags:
   - description: All methods to handle application related operations.
     name: Application

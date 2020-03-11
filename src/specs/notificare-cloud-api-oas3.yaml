@@ -25,6 +25,8 @@ servers:
 paths:
   /application/info:
     get:
+      security:
+        - ApplicationSecret: []
       responses:
         '200':
           content:
@@ -40,6 +42,8 @@ paths:
       summary: Retrieve information about the application
   '/asset/forgroup/{name}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The name of the asset group.
           example: MY_GROUP_NAME
@@ -62,6 +66,8 @@ paths:
       summary: Retrieve a group of assets by name
   '/beacon/forregion/{region}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The id of an active region.
           in: path
@@ -83,16 +89,17 @@ paths:
       summary: List beacons for region
   '/beacon/forregion/{region}/{minor}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The id of an active region.
-          example: 5245bc5b3e66a3b01f0024d4
           in: path
           name: region
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/ObjectId'
         - description: The minor of a beacon.
-          example: '123456'
+          example: '12345'
           in: path
           name: minor
           required: true
@@ -114,6 +121,8 @@ paths:
       summary: Get a beacon by its region and minor
   /device:
     post:
+      security:
+        - ApplicationSecret: []
       responses:
         '200':
           content:
@@ -149,6 +158,8 @@ paths:
       summary: Register a device
   '/device/{deviceID}':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -185,6 +196,8 @@ paths:
               $ref: '#/components/schemas/DeviceUpdate'
       summary: Update an existing device
     delete:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -219,6 +232,8 @@ paths:
       summary: Delete an existing device
   '/device/{deviceID}/tags':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -245,6 +260,8 @@ paths:
       summary: Get all the tags for a device
   '/device/{deviceID}/addtag':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -280,6 +297,8 @@ paths:
       summary: Add a tag to a device
   '/device/{deviceID}/removetag':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -314,6 +333,8 @@ paths:
       summary: Remove a tag from a device
   '/device/{deviceID}/addtags':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -352,6 +373,8 @@ paths:
       summary: Add one or more tags to a device
   '/device/{deviceID}/removetags':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -390,6 +413,8 @@ paths:
       summary: Remove one or more tags from a device
   '/device/{deviceID}/cleartags':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -414,6 +439,8 @@ paths:
       summary: Clear all tags from a device
   '/device/{deviceID}/dnd':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -443,6 +470,8 @@ paths:
       operationId: getDeviceDnd
       summary: Get the device's Do Not Disturb period
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -478,6 +507,8 @@ paths:
       summary: Update the device's User Data
   '/device/{deviceID}/cleardnd':
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -502,6 +533,8 @@ paths:
       summary: Clear the device's Do Not Disturb period
   '/device/{deviceID}/userdata':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -529,6 +562,8 @@ paths:
       operationId: getDeviceUserData
       summary: Get the device's User Data
     put:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -562,6 +597,8 @@ paths:
       summary: Update the device's User Data
   /event:
     post:
+      security:
+        - ApplicationSecret: []
       responses:
         '202':
           content:
@@ -635,6 +672,8 @@ paths:
       summary: Register an event
   '/notification/inbox/fordevice/{deviceID}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -679,6 +718,8 @@ paths:
       operationId: getInboxForDevice
       summary: Get a specific device's inbox
     delete:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for your device.
           example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
@@ -704,6 +745,8 @@ paths:
       summary: Clear all items in a specific device's inbox
   '/notification/inbox/{id}':
     delete:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The unique identifier for the inbox item.
           in: path
@@ -727,6 +770,8 @@ paths:
       summary: Delete inbox item in a specific device's inbox
   '/notification/{id}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The notification's unique identifier.
           in: path
@@ -750,6 +795,8 @@ paths:
       summary: Get a specific notification
   /pass:
     post:
+      security:
+        - ApplicationSecret: []
       responses:
         '201':
           content:
@@ -771,6 +818,8 @@ paths:
       summary: Create a new pass
   '/pass/forserial/{serial}':
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The pass serial number.
           example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
@@ -778,8 +827,8 @@ paths:
           name: serial
           required: true
           schema:
-            default: '100'
             type: string
+            format: uuid
       responses:
         '200':
           content:
@@ -796,6 +845,8 @@ paths:
       summary: Get a pass with a specific serial
   /passbook:
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -826,6 +877,8 @@ paths:
       summary: List all pass templates for an application
   /region:
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -856,6 +909,8 @@ paths:
       summary: List all regions for this application
   /region/bylocation/{latitude}/{longitude}:
     get:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The latitude
           example: 52.18858
@@ -902,6 +957,8 @@ paths:
       summary: List nearest regions for this device
   /reply:
     post:
+      security:
+        - ApplicationSecret: []
       responses:
         '202':
           content:
@@ -924,6 +981,8 @@ paths:
       summary: Register a reply
   /status:
     get:
+      security:
+        - ApplicationSecret: []
       responses:
         '200':
           content:
@@ -940,6 +999,8 @@ paths:
       summary: Get the status of this API
   '/trigger/{type}':
     post:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The type of trigger being executed.
           example: re.notifica.trigger.region.Enter
@@ -975,6 +1036,8 @@ paths:
       summary: Register a trigger action
   '/upload/{type}':
     post:
+      security:
+        - ApplicationSecret: []
       parameters:
         - description: The type of the file to upload
           in: path
@@ -1039,6 +1102,13 @@ paths:
               format: binary
       summary: Upload a file
 components:
+  securitySchemes:
+    ApplicationSecret:
+      description: >-
+        Only used for calls that originate from the device, e.g., registration, tags.
+        Username is applicationKey, password is applicationSecret
+      type: http
+      scheme: basic
   schemas:
     ApplicationInfoModel:
       properties:
@@ -1637,6 +1707,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InboxItemModel'
+        count:
+          type: number
+          example: 10
+        unread:
+          type: number
+          example: 1
     InboxItemModel:
       description: Item in a device inbox
       properties:
@@ -1884,6 +1960,8 @@ components:
               $ref: '#/components/schemas/Criteria'
             eventCriteria:
               $ref: '#/components/schemas/EventCriteria'
+            location:
+              $ref: '#/components/schemas/MessageLocation'
             segments:
               description: User segments this notification is sent to
               type: array
@@ -2422,23 +2500,6 @@ components:
             media:
               type: string
               format: uri
-    ResponseKeyCreated:
-      allOf:
-        - $ref: '#/components/schemas/ResponseCreated'
-        - properties:
-            key:
-              type: string
-          type: object
-    ResponseMessageCreated:
-      allOf:
-        - $ref: '#/components/schemas/ResponseCreated'
-        - $ref: '#/components/schemas/ResponseMessage'
-    ResponseError:
-      properties:
-        error:
-          type: string
-      required: error
-      type: object
     ResponseMessageCount:
       allOf:
         - $ref: '#/components/schemas/ResponseMessage'
