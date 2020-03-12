@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.87'
+  version: '1.88.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -5538,6 +5538,10 @@ paths:
             type: string
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationTemplateList'
           description: OK
       tags:
         - Message Template
@@ -5568,135 +5572,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                actionCategory:
-                  description: >-
-                    Use a previously created Rich Push template for your
-                    message. Use the name of the template for this property and
-                    the actions in that template as the actions for this
-                    notification. This will enable actionable notifications from
-                    the notification center in both iOS and Android.
-                  type: string
-                actions:
-                  description: >-
-                    Adds one or more interactions to a notification. An array of
-                    Action objects. Please refer to Action objects for all types
-                    available.
-                  items: {}
-                  type: array
-                attachments:
-                  description: >-
-                    An object containing the URL to an image either uploaded
-                    into our platform or hosted in any public web server.
-                  items: {}
-                  type: array
-                badge:
-                  description: >-
-                    This is a iOS only property. A badge will be displayed over
-                    your app icon whenever a notification arrives. Use a number
-                    from 1 to 9999.
-                  type: number
-                content:
-                  description: >-
-                    An array of Content objects according to the type of
-                    Notification. Please refer to Content types for all
-                    available types.
-                  items: {}
-                  type: array
-                extra:
-                  $ref: '#/components/schemas/MessageExtra'
-                languages:
-                  description: >-
-                    The list of localized content language identifiers used in
-                    localizedContent. When included, you must also provide a
-                    list of localizedContent objects in the same order.
-                  items:
-                    type: string
-                  type: array
-                  example: [nl, pt]
-                lights:
-                  $ref: '#/components/schemas/MessageLights'
-                localizedContent:
-                  description: >-
-                    Provides content for all the language identifiers provided
-                    in languages.
-                  items: {}
-                  type: array
-                medium:
-                  description: >-
-                    The channel which the template was created for. Accepted
-                    mediums are: push, email and sms.
-                  type: string
-                message:
-                  description: >-
-                    Short and concise message. This is the first thing your user
-                    sees, make sure it is relevant and that somehow summarizes
-                    what you intend to say.
-                  type: string
-                name:
-                  description: The name for your template.
-                  type: string
-                push:
-                  description: >-
-                    Specify if this message should generate a remote
-                    notification. By default teh value of this property is true.
-                  type: boolean
-                rate:
-                  description: >-
-                    Number of messages per second that should be sent using this
-                    template.
-                  type: number
-                rules:
-                  description: >-
-                    Adds one or more rules to a notification. An array of rules
-                    objects. Please refer to Rules objects for all types
-                    available.
-                  items: {}
-                  type: array
-                sender:
-                  $ref: '#/components/schemas/MessageSender'
-                sound:
-                  description: >-
-                    Name of sound to play. `default` means use the default sound
-                    as set by the user, any other string will be looked up as
-                    sound file on the device (`mp3` on Android, `aiff` on iOS).
-                  type: string
-                subject:
-                  description: The subject for an email template.
-                  type: string
-                subtitle:
-                  description: >-
-                    With SDK 1.9 and up, iOS 10 and up and Android 5 and up
-                    messages support a title which will be shown in the
-                    lock-screen or notification center.
-                  type: string
-                title:
-                  description: >-
-                    With SDK 1.9 and up, iOS 10 and up and Android 5 and up
-                    messages support a title which will be shown in the
-                    lock-screen or notification center.
-                  type: string
-                ttl:
-                  description: >-
-                    Number of seconds the message will be attempted to be
-                    delivered by APNS or GCM.
-                  type: number
-                type:
-                  description: >-
-                    Defines the type of content to show. Types of messages are
-                    represented by namespaces. Message types should match the
-                    following namespace: re.notifica.notification.*. Please
-                    refer to Message Types for all available types.
-                  type: string
-              required:
-                - medium
-                - type
-                - name
-                - title
-                - subtitle
-                - subject
-                - message
-              type: object
+              $ref: '#/components/schemas/NotificationTemplateBase'
       summary: Create Template
   '/notification/template/{template}':
     get:
@@ -5711,6 +5587,12 @@ paths:
             $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  template:
+                    $ref: '#/components/schemas/NotificationTemplateModel'
           description: OK
       tags:
         - Message Template
@@ -5752,83 +5634,7 @@ paths:
         content:
           application/json:
             schema:
-              example:
-                actions:
-                  - label: Please come in
-                    rules:
-                      - params:
-                          - 3445bc5b4563b01f0f5
-                        type: re.notifica.rule.segment.Add
-                    type: re.notifica.action.Callback
-                  - label: Go away
-                    rules:
-                      - params:
-                          - 3445bc5b4563b01f0f5
-                        type: re.notifica.rule.segment.Remove
-                    type: re.notifica.action.Callback
-                content:
-                  - data: >-
-                      Because this long text will never fit inside a simple
-                      alert or toast, we send it along as content and it will be
-                      automatically displayed when the user opens the
-                      notification
-                    type: re.notifica.content.HTML
-                medium: push
-                message: Hello world!
-                name: My Push Template
-                sound: default
-                ttl: 3600
-                type: re.notifica.notification.Alert
-              properties:
-                actions:
-                  items:
-                    properties:
-                      label:
-                        type: string
-                      rules:
-                        items:
-                          properties:
-                            params:
-                              items:
-                                type: string
-                              type: array
-                            type:
-                              type: string
-                          required:
-                            - type
-                            - params
-                          type: object
-                        type: array
-                      type:
-                        type: string
-                    required:
-                      - type
-                      - label
-                      - rules
-                    type: object
-                  type: array
-                content:
-                  items:
-                    properties:
-                      data:
-                        type: string
-                      type:
-                        type: string
-                    type: object
-                  type: array
-                medium:
-                  type: string
-                message:
-                  type: string
-                name:
-                  type: string
-                sound:
-                  type: string
-                ttl:
-                  type: number
-                type:
-                  type: string
-              type: object
+              $ref: '#/components/schemas/NotificationTemplateBase'
       summary: Update Template
     delete:
       security:
@@ -12750,6 +12556,14 @@ components:
                 This is a Web only property. In WebPush, will set the requireInteraction
                 flag to true
               type: boolean
+            group:
+              description: >-
+                An identifier to be used by the operating systems in order to group specific notifications
+                in the lock screen and notification center.
+                Only supported in iOS 12 or higher and Android 6 or higher.
+                In Android you must use our Notificare's SDK 2.1 or higher.
+              type: string
+              example: personal
             push:
               description: >-
                 This property is only available for SDKs 1.8.0 and up. When
@@ -12758,6 +12572,14 @@ components:
                 be true. Please note that this property will be ignored if
                 Inbox is not being used.
               type: boolean
+            openTracking:
+              description: If set to false, will disable tracking of the message being opened
+              type: boolean
+              default: true
+            linkTracking:
+              description: If set to false, will disable tracking of clicks on links in the message
+              type: boolean
+              default: true
           required:
             - type
             - message
@@ -13070,6 +12892,189 @@ components:
           description: Total number of notifications sent during this period
           type: number
           example: 1000
+    NotificationTemplateList:
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationTemplateModel'
+        count:
+          type: number
+          example: 2
+    NotificationTemplateModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+        - $ref: '#/components/schemas/NotificationTemplateBase'
+    NotificationTemplateBase:
+      properties:
+        name:
+          description: The name for your template.
+          type: string
+        medium:
+          description: >-
+            The channel which the template was created for. Accepted
+            mediums are: push, email and sms.
+          type: string
+          default: push
+          enum: [push, email, sms]
+        type:
+          description: >-
+            Defines the type of content to show. Types of messages are
+            represented by namespaces. Message types should match the
+            following namespace: re.notifica.notification.*. Please
+            refer to Message Types for all available types.
+          type: string
+        sender:
+          $ref: '#/components/schemas/MessageSender'
+        title:
+          description: >-
+            With SDK 1.9 and up, iOS 10 and up and Android 5 and up
+            messages support a title which will be shown in the
+            lock-screen or notification center.
+          type: string
+        subtitle:
+          description: >-
+            With SDK 1.9 and up, iOS 10 and up and Android 5 and up
+            messages support a title which will be shown in the
+            lock-screen or notification center.
+          type: string
+        message:
+          description: >-
+            Short and concise message. This is the first thing your user
+            sees, make sure it is relevant and that somehow summarizes
+            what you intend to say.
+          type: string
+        subject:
+          description: The subject for an email template.
+          type: string
+        content:
+          description: >-
+            An array of Content objects according to the type of
+            Notification. Please refer to Content types for all
+            available types.
+          items:
+            $ref: '#/components/schemas/MessageContent'
+          type: array
+        attachments:
+          description: >-
+            An object containing the URL to an image either uploaded into
+            our platform or hosted in any public web server.
+          items:
+            $ref: '#/components/schemas/MessageAttachment'
+          type: array
+        languages:
+          description: >-
+            The list of localized content language identifiers used in
+            localizedContent. When included, you must also provide a
+            list of localizedContent objects in the same order.
+          items:
+            type: string
+          type: array
+          example: [nl, pt]
+        localizedContent:
+          description: >-
+            Provides content for all the language identifiers provided
+            in languages.
+          items:
+            $ref: '#/components/schemas/MessageLocalizedContent'
+          type: array
+        ttl:
+          description: >-
+            Number of seconds the message will be attempted to be
+            delivered by APNS or GCM.
+          type: number
+        rules:
+          description: >-
+            Adds one or more rules to a notification. An array of rules
+            objects. Please refer to Rules objects for all types
+            available.
+          items: {}
+          type: array
+        actionCategory:
+          description: >-
+            Use a previously created Rich Push template for your
+            message. Use the name of the template for this property and
+            the actions in that template as the actions for this
+            notification. This will enable actionable notifications from
+            the notification center in both iOS and Android.
+          type: string
+        actions:
+          description: >-
+            Adds one or more interactions to a notification. An array of
+            Action objects. Please refer to Action objects for all types
+            available.
+          items:
+            $ref: '#/components/schemas/MessageAction'
+          type: array
+        extra:
+          $ref: '#/components/schemas/MessageExtra'
+        sound:
+          description: >-
+            Name of sound to play. `default` means use the default sound
+            as set by the user, any other string will be looked up as
+            sound file on the device (`mp3` on Android, `aiff` on iOS).
+          type: string
+        lights:
+          $ref: '#/components/schemas/MessageLights'
+        channel:
+          description: >-
+            This is an Android only property. If the channel is defined in the app,
+            the message will be sent to that channel, otherwise to the
+            default channel.
+          type: string
+          example: important
+        badge:
+          description: >-
+            This is a iOS only property. A badge will be displayed over
+            your app icon whenever a notification arrives. Use a number
+            from 1 to 9999.
+          type: number
+        presentation:
+          description: >-
+            In iOS (2.1 and higher), will set presentation mode for
+            foreground messages.
+            In Android (2.1 and higher), it will set the presentation
+            parameter to true in the foreground message handler.
+          type: boolean
+        requireInteraction:
+          description: >-
+            This is a Web only property. In WebPush, will set the requireInteraction
+            flag to true
+          type: boolean
+        group:
+          description: >-
+            An identifier to be used by the operating systems in order to group specific notifications
+            in the lock screen and notification center.
+            Only supported in iOS 12 or higher and Android 6 or higher.
+            In Android you must use our Notificare's SDK 2.1 or higher.
+          type: string
+          example: personal
+        push:
+          description: >-
+            Specify if this message should generate a remote
+            notification. By default teh value of this property is true.
+          type: boolean
+        openTracking:
+          description: If set to false, will disable tracking of the message being opened
+          type: boolean
+          default: true
+        linkTracking:
+          description: If set to false, will disable tracking of clicks on links in the message
+          type: boolean
+          default: true
+        rate:
+          description: >-
+            Number of messages per second that should be sent using this
+            template.
+          type: number
+      required:
+        - name
+        - subject
+        - message
     NotificationTestPushDevice:
       allOf:
         - $ref: '#/components/schemas/NotificationTestPushBase'

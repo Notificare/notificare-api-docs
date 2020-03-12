@@ -19,7 +19,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.8'
+  version: '1.8.1'
 servers:
   - url: 'https://cloud.notifica.re/api'
 paths:
@@ -1956,6 +1956,14 @@ components:
               example: Hello world
             sender:
               $ref: '#/components/schemas/MessageSender'
+            openTracking:
+              description: If set to false, will disable tracking of the message being opened
+              type: boolean
+              default: true
+            linkTracking:
+              description: If set to false, will disable tracking of clicks on links in the message
+              type: boolean
+              default: true
             criteria:
               $ref: '#/components/schemas/Criteria'
             eventCriteria:
@@ -2101,6 +2109,14 @@ components:
                 This is a Web only property. In WebPush, will set the requireInteraction
                 flag to true
               type: boolean
+            group:
+              description: >-
+                An identifier to be used by the operating systems in order to group specific notifications
+                in the lock screen and notification center.
+                Only supported in iOS 12 or higher and Android 6 or higher.
+                In Android you must use our Notificare's SDK 2.1 or higher.
+              type: string
+              example: personal
             push:
               description: >-
                 This property is only available for SDKs 1.8.0 and up. When
