@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.88.0'
+  version: '1.88.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2909,111 +2909,6 @@ paths:
         `masterSecret`.
       operationId: deleteExportById
       summary: Delete Export Job
-  /geo/reverse:
-    get:
-      security:
-        - MasterSecret: []
-      parameters:
-        - description: The latitude
-          example: 52.1881
-          in: query
-          name: latitude
-          required: true
-          schema:
-            type: number
-        - description: The longitude
-          example: 4.5291
-          in: query
-          name: longitude
-          required: true
-          schema:
-            type: number
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              schema:
-                properties:
-                  location:
-                    $ref: '#/components/schemas/GeoModel'
-          description: OK
-      tags:
-        - Geo
-      description: >-
-        Get information about an address for a given latitude and longitude.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: getGeoReverse
-      summary: Get Reverse Geocoding
-  /geo/search:
-    get:
-      security:
-        - MasterSecret: []
-      parameters:
-        - description: The address to search for
-          example: Meerum
-          in: query
-          name: search
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              schema:
-                $ref: '#/components/schemas/GeoModelList'
-          description: OK
-      tags:
-        - Geo
-      description: >-
-        Get information about latitude and longitude of a given address, place,
-        city or country.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: getGeoSearch
-      summary: Get Forward Geocoding
-  /geo/timezone:
-    get:
-      security:
-        - MasterSecret: []
-      parameters:
-        - description: The latitude
-          example: 52.1881
-          in: query
-          name: latitude
-          required: true
-          schema:
-            type: number
-        - description: The longitude
-          example: 4.5291
-          in: query
-          name: longitude
-          required: true
-          schema:
-            type: number
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              schema:
-                properties:
-                  timezone:
-                    $ref: '#/components/schemas/GeoTimezoneModel'
-                type: object
-          description: OK
-      tags:
-        - Geo
-      description: >-
-        Get information about a timezone and country for a given latitude or
-        longitude.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: getGeoTimezone
-      summary: Get Timezone Information
   /import:
     get:
       security:
@@ -6313,10 +6208,10 @@ paths:
       description: >-
         Create a new pass. You should first create a pass template to help you
         bootstrap a new pass. Please read the [Pass
-        Template](http://docs.notificare.apiary.io/#reference/pass-templates)
+        Template](https://api-docs.notifica.re/#tag/Pass-Templates)
         endpoints to learn how to create pass templates. Passes will require
         images, see also the
-        [Uploads](http://docs.notificare.apiary.io/#reference/upload) endpoints
+        [Uploads](https://api-docs.notifica.re/#tag/Upload) endpoints
         to learn how to upload a file.
 
         This request is authenticated with the `applicationKey` and
@@ -7361,8 +7256,7 @@ paths:
       tags:
         - Region
       description: >-
-        Create a new region. To retrieve a timezone from the coordinates you can
-        use https://developers.google.com/maps/documentation/timezone/.
+        Create a new region.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -11637,62 +11531,6 @@ components:
           description: Total number of events during this period
           type: number
           example: 1000
-    GeoModelList:
-      properties:
-        locations:
-          type: array
-          items:
-            $ref: '#/components/schemas/GeoModel'
-      type: object
-    GeoTimezoneModel:
-      properties:
-        _id:
-          $ref: '#/components/schemas/ObjectId'
-        abbreviation:
-          type: string
-          example: CET
-        countryCode:
-          type: string
-          example: NL
-        countryName:
-          type: string
-          example: Netherlands
-        dst:
-          type: boolean
-          example: false
-        name:
-          type: string
-          example: Europe/Amsterdam
-        referenceKey:
-          type: string
-          example: '276'
-        start:
-          $ref: '#/components/schemas/Date'
-        timeZoneOffset:
-          type: number
-          example: 1
-      type: object
-    GeoModel:
-      properties:
-        address:
-          type: string
-          example: Marconistraat 16
-        boundingBox:
-          type: array
-          items:
-            type: number
-          example:
-            - 52.18818
-            - 52.5995
-            - 4.59959
-            - 4.49994
-        displayName:
-          type: string
-          example: '16, Marconistraat, Rotterdam, Netherlands'
-        license:
-          type: string
-          example: Data (c) OpenStreetMap...
-      type: object
     ImportJobBeacon:
       allOf:
         - $ref: '#/components/schemas/ImportJobBase'
@@ -14115,13 +13953,9 @@ tags:
   - description: Methods for exporting users and devices.
     name: Export
   - description: >-
-      Methods for retrieving information about timezone, country, forward and
-      reverse geocoding.
-    name: Geo
-  - description: >-
       Methods for importing collections of items. Files are assumed to be
       uploaded to Notificare Storage before they can be used in a new import.
-      Use this [endpoint](http://docs.notificare.apiary.io/#reference/upload) to
+      Use this [endpoint](https://api-docs.notifica.re/#tag/Upload) to
       upload a file.
     name: Import
   - description: >-
@@ -14384,7 +14218,7 @@ tags:
   - description: >-
       Methods to manage your passes. Before creating passes you must create
       passbook templates. To create, edit and delete templates see the
-      [Passbook](http://docs.notificare.apiary.io/#passbook) endpoints.
+      [Pass Templates](https://api-docs.notifica.re/#tag/Pass-Templates) endpoints.
     name: Pass
   - description: >-
       Methods to manage your passbook templates. These templates should be
@@ -14392,9 +14226,9 @@ tags:
 
       They will help you pre-define the template styles your application needs
       and accelerate pass creation. To create and redeem passes see also the
-      [Pass](http://docs.notificare.apiary.io/#reference/pass) endpoints. Pass
+      [Pass](https://api-docs.notifica.re/#tag/Pass) endpoints. Pass
       templates will require images, see also the
-      [Uploads](http://docs.notificare.apiary.io/#reference/upload) endpoints to
+      [Uploads](https://api-docs.notifica.re/#tag/Upload) endpoints to
       learn how to upload a file.
     name: Pass Templates
   - description: >-

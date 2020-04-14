@@ -1,4 +1,9 @@
 # Changelog
+## [1.88.1] - 2020-04-14
+Fixed links to apiary
+Removed link to Google's timezone API
+Removed Geo endpoints
+Added favicons
 ## [1.88.0] - 2020-03-12
 Updated notification and template schemas for linkTracking and openTracking in specs
 ## [1.87.0] - 2020-03-11
