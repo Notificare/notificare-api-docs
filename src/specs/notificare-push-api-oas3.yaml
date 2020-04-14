@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.88.1'
+  version: '1.89.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -12171,6 +12171,37 @@ components:
               items:
                 type: number
               example: [1, 0]
+        localized:
+          type: object
+          required: false
+          description: If notification has multiple languages, contains the info for each localized version of the notification, default language has key "default"
+          example:
+            default:
+              sent: 3
+              fails: 1
+              opened: 2
+              uniqueOpened: 1
+              replied: 1
+              replies:
+                total: 1
+                unique: 1
+                seconds: 10
+                uniqueSeconds: 10
+                labels: [yes, no]
+                perLabel: [1, 0]
+            en:
+              sent: 1
+              fails: 0
+              opened: 0
+              uniqueOpened: 0
+              replied: 0
+              replies:
+                total: 0
+                unique: 0
+                seconds: 0
+                uniqueSeconds: 0
+                labels: [yes, no]
+                perLabel: [0, 0]
     NotificationList:
       properties:
         notifications:

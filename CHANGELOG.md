@@ -1,4 +1,6 @@
 # Changelog
+## [1.89.0] - 2020-04-14
+Added localized notification info
 ## [1.88.1] - 2020-04-14
 Fixed links to apiary
 Removed link to Google's timezone API
