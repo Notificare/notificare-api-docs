@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.89.0'
+  version: '1.90.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -932,6 +932,165 @@ paths:
         `masterSecret`.
       operationId: deleteAssetGroupById
       summary: Delete Asset Group
+  /automation:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The name of the automation connector to search for.
+          example: fire
+          in: query
+          name: search
+          required: false
+          schema:
+            type: string
+        - description: The maximum number of results to retrieve.
+          example: 10
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/AutomationList'
+          description: OK
+      tags:
+        - Automation
+      description: >-
+        Get all the automation connectors for an application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getAutomation
+      summary: List Automation Connectors
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                automation:
+                  $ref: '#/components/schemas/ResponseCreated'
+          description: OK
+      tags:
+        - Automation
+      description: >-
+        Create an automation connector.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postAutomation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationCreate'
+      summary: Create Automation Connector
+  '/automation/{id}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The automation connector's id.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  automation:
+                    $ref: '#/components/schemas/AutomationModel'
+          description: OK
+      tags:
+        - Automation
+      description: >-
+        Get a specific automation connector.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getAutomationById
+      summary: Get Automation Connector
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The automation connector's id.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: automation updated
+          description: OK
+      tags:
+        - Automation
+      description: >-
+        Modify an automation connector.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putAutomationById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationUpdate'
+      summary: Update Automation Connector
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The automation connector's id.
+          example: 5245bc5b3e66a3b01f0024d4
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: automation deleted
+          description: OK
+      tags:
+        - Automation
+      description: >-
+        Delete an automation connector. This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteAutomationById
+      summary: Delete Automation Connector
   /beacon:
     post:
       security:
@@ -10809,6 +10968,118 @@ components:
           example:
             key1: value1
             key2: value2
+    AutomationCreate:
+      $ref: '#/components/schemas/AutomationBase'
+    AutomationUpdate:
+      $ref: '#/components/schemas/AutomationBase'
+    AutomationList:
+      properties:
+        automations:
+          description: The list of Automation Connectors, paginated
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationModel'
+        count:
+          description: Total number of Automation Connectors in the list
+          type: number
+          example: 1
+      type: object
+    AutomationModel:
+      allOf:
+        - properties:
+            _id:
+              description: Notificare ID of the Automation Connector
+              readOnly: true
+              type: string
+              example: 1d9e80ef851d212aca82cf23
+            archived:
+              description: This automation connector is archived
+              readOnly: true
+              type: boolean
+              default: false
+          type: object
+        - $ref: '#/components/schemas/AutomationBase'
+    AutomationBase:
+      properties:
+        active:
+          description: Automation connector is enabled
+          type: boolean
+          default: false
+        name:
+          description: The automation connector's name
+          example: Fire
+          type: string
+        type:
+          description: >-
+            The type of connector.
+          type: string
+          enum: [re.notifica.automation.internal.Notification,re.notifica.automation.internal.Email,re.notifica.automation.internal.SMS,re.notifica.automation.trigger.Trigger]
+          example: re.notifica.automation.internal.Notification
+          default: re.notifica.automation.trigger.Trigger
+        notBefore:
+          description: Automation should not be executed before this date
+          type: string
+          format: 'date-time'
+        notAfter:
+          description: Automation should not be executed after this date
+          type: string
+          format: 'date-time'
+        dayStart:
+          description: Automation should not be executed before this time of day
+          type: string
+          example: '09:00'
+        dayEnd:
+          description: Automation should not be executed after this time of day
+          type: string
+          example: '17:00'
+        frequency:
+          description: The frequency type of the automation connector
+          type: string
+          enum: [once,time,always]
+        occasion:
+          description: >-
+            Which occasion should the automation connector trigger.
+            In case of frequency 'always', this means every n times.
+            In case of frequency 'once', this means the nth time
+          type: number
+          default: 1
+        matchDataField:
+          description: >-
+            Data field whose value should be matched to determine automation triggering.
+            Frequency and occasion will be counted against distinct values of this property in the event data
+            Setting this property means the field needs to be present in event data, otherwise the automation will be skipped.
+          type: string
+          example: test
+        interval:
+          description: The interval in seconds between automation triggers, only applicable for frequency type 'time'
+          type: number
+          default: 86400
+        delayMinutes:
+          description: The delay in minutes before the automation triggers
+          type: number
+          default: '0'
+        eventType:
+          description: The event that triggers this automation
+          type: string
+          example: re.notifica.event.custom.fire
+        cancelEventType:
+          description: List of events that cancel this automation, only applicable if automation has a delay
+          type: array
+          items:
+            type: string
+          example: [re.notifica.event.custom.douse]
+        target:
+          description: >-
+            Previously created notification to be sent when automation is executed.
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        criteria:
+          $ref: '#/components/schemas/Criteria'
+        dataFilter:
+          $ref: '#/components/schemas/DataFilterCriteria'
+        rules:
+          $ref: '#/components/schemas/MessageRule'
+      type: object
     BeaconCreate:
       allOf:
         - $ref: '#/components/schemas/BeaconBase'

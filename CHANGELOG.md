@@ -1,4 +1,6 @@
 # Changelog
+## [1.90.0] - 2020-04-15
+Added automations
 ## [1.89.0] - 2020-04-14
 Added localized notification info
 ## [1.88.1] - 2020-04-14
