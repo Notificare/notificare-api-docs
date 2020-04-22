@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.90.0'
+  version: '1.91.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -3854,6 +3854,179 @@ paths:
         `masterSecret`.
       operationId: putImportAbort
       summary: Abort Import
+  /import/schedule:
+    get:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ImportScheduleModelList'
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Get all the import schedule objects.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getImportSchedule
+      summary: List Import Schedules
+  /import/schedule/{type}:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The type of the import job to be scheduled
+          in: path
+          name: type
+          required: true
+          example: re.notifica.import.UserSegment
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  importSchedule:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Scheduled Tasks
+      description: >-
+        A schedule to run an import job
+      operationId: postImportSchedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportScheduleBase'
+      summary: Create Import Schedule
+  '/import/schedule/{schedule}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  importSchedule:
+                    $ref: '#/components/schemas/ImportScheduleModel'
+                type: object
+          description: OK
+      tags:
+        - Import
+      description: >-
+        Get an import object.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getImportScheduleById
+      summary: Get Import
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: 'import schedule updated'
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Update an import schedule object.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putImportScheduleById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportScheduleModel'
+      summary: Update Import Schedule
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: No content
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Delete an import schedule object.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteImportScheduleById
+      summary: Delete Import Schedule
+  '/import/schedule/{schedule}/run':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: 'schedule updated'
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Retry an import schedule
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putImportScheduleRun
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                lastRun:
+                  type: string
+                  format: date-time
+                  description: check for import files newer than this date
+      summary: Retry Import Schedule
   /link:
     get:
       security:
@@ -5085,7 +5258,7 @@ paths:
         This request must be authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: getNotificationUser
-      summary: Listt User Messages
+      summary: List User Messages
   '/notification/device/{deviceID}':
     get:
       security:
@@ -12109,6 +12282,72 @@ components:
       type: object
       required:
         - path
+    ImportScheduleModelList:
+      properties:
+        importJobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportScheduleModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    ImportScheduleModel:
+      allOf:
+        - $ref: '#/components/schemas/ImportScheduleBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            data:
+              additionalProperties: true
+              example:
+                clear: false
+                userSegment: 53a0a047fff17d3215a94f6
+            lastRun:
+              $ref: '#/components/schemas/Date'
+            nextRun:
+              $ref: '#/components/schemas/Date'
+            lastResult:
+              type: string
+              example: 'Import job queueud'
+            status:
+              type: string
+              example: scheduled
+            type:
+              type: string
+              example: re.notifica.import.UserSegment
+          type: object
+    ImportScheduleBase:
+      properties:
+        active:
+          type: boolean
+          default: false
+        frequency:
+          type: string
+          enum: [daily,hourly]
+        hour:
+          type: number
+          example: 10
+        minute:
+          type: number
+          example: 15
+        source:
+          properties:
+            type:
+              type: string
+              enum: [re.notifica.storage.S3,re.notifica.storage.SFTP,re.notifica.storage.FTP,re.notifica.storage.AzureBlob,re.notifica.storage.GoogleCloud]
+            config:
+              oneOf:
+                - $ref: '#/components/schemas/ImportStorageConfigS3'
+                - $ref: '#/components/schemas/ImportStorageConfigSFTP'
+                - $ref: '#/components/schemas/ImportStorageConfigFTP'
+                - $ref: '#/components/schemas/ImportStorageConfigAzureBlob'
+                - $ref: '#/components/schemas/ImportStorageConfigGoogleCloud'
+      type: object
+      required:
+        - source
     LinkModelList:
       properties:
         links:
@@ -13950,6 +14189,219 @@ components:
             $ref: '#/components/schemas/ObjectId'
           type: array
       type: object
+    ExportStorageConfigS3:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigS3'
+        - properties:
+            prefix:
+              description: prefix of the file
+              type: string
+              example: /test
+            fileName:
+              description: file name of the export file, generated if omitted
+              type: string
+              example: test.csv
+    ImportStorageConfigS3:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigS3'
+        - properties:
+            path:
+              description: full path to the file
+              type: string
+              example: /test/test.csv
+          required: path
+    StorageConfigS3:
+      properties:
+        region:
+          type: string
+          example: eu-west-1
+        bucket:
+          type: string
+          example: notificare-test
+        key:
+          description: AWS Access Key Id
+          type: string
+          example: AKIAKADE7A77489A
+        secret:
+          descrioption: AWS Secret Access Key
+          type: string
+          example: =aJs9aa9jthayaJKIainjaioo9hash8d88sh+shha8
+      required:
+        - region
+        - bucket
+        - key
+        - secret
+    ExportStorageConfigSFTP:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigSFTP'
+        - properties:
+            prefix:
+              description: directory of the file
+              type: string
+              example: /test
+            fileName:
+              description: file name of the export file, generated if omitted
+              type: string
+              example: test.csv
+    ImportStorageConfigSFTP:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigSFTP'
+        - properties:
+            path:
+              description: full path to the file
+              type: string
+              example: /test/test.csv
+          required: path
+    StorageConfigSFTP:
+      properties:
+        host:
+          type: string
+          example: test.example.com
+        port:
+          type: number
+          default: 22
+        username:
+          type: string
+          example: testuser
+        password:
+          description: password for the user if using password authentication
+          type: string
+          example: s3cr3t
+        privateKey:
+          description: private key for the user if using public key authentication
+          type: string
+          example: '-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: DES-EDE3-CBC\n\n\n-----END RSA PRIVATE KEY-----'
+        passphrase:
+          description: optional passphrase for the key if using public key authentication
+          type: string
+      required:
+        - host
+        - username
+    ExportStorageConfigFTP:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigFTP'
+        - properties:
+            prefix:
+              description: directory of the file
+              type: string
+              example: /test
+            fileName:
+              description: file name of the export file, generated if omitted
+              type: string
+              example: test.csv
+    ImportStorageConfigFTP:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigFTP'
+        - properties:
+            path:
+              description: full path to the file
+              type: string
+              example: /test/test.csv
+          required: path
+    StorageConfigFTP:
+      properties:
+        host:
+          type: string
+          example: test.example.com
+        port:
+          type: number
+          default: 21
+        username:
+          type: string
+          example: testuser
+        password:
+          description: password for the user
+          type: string
+          example: s3cr3t
+        secret:
+          description: use TLS
+          type: boolean
+        allowSelfSignedCertificate:
+          description: allow self-signed certificate when using TLS
+          type: boolean
+      required:
+        - host
+        - username
+        - password
+    ExportStorageConfigAzureBlob:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigAzureBlob'
+        - properties:
+            prefix:
+              description: directory of the file
+              type: string
+              example: /test
+            fileName:
+              description: file name of the export file, generated if omitted
+              type: string
+              example: test.csv
+    ImportStorageConfigAzureBlob:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigAzureBlob'
+        - properties:
+            path:
+              description: full path to the file
+              type: string
+              example: /test/test.csv
+          required: path
+    StorageConfigAzureBlob:
+      properties:
+        container:
+          type: string
+          example: notificare-test
+        account:
+          type: string
+          example: notificare
+        key:
+          description: password for the user
+          type: string
+          example: DJIdjaurbbandfu7w7785jnabasnaiija+a9a9jc91md9
+      required:
+        - container
+        - account
+        - key
+    ExportStorageConfigGoogleCloud:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigGoogleCloud'
+        - properties:
+            prefix:
+              description: directory of the file
+              type: string
+              example: /test
+            fileName:
+              description: file name of the export file, generated if omitted
+              type: string
+              example: test.csv
+    ImportStorageConfigGoogleCloud:
+      allOf:
+        - $ref: '#/components/schemas/StorageConfigGoogleCloud'
+        - properties:
+            path:
+              description: full path to the file
+              type: string
+              example: /test/test.csv
+          required: path
+    StorageConfigGoogleCloud:
+      properties:
+        bucket:
+          type: string
+          example: test.notifica.re
+        projectId:
+          type: string
+          example: notificare-test
+        clientEmail:
+          description: email address of the service account
+          type: string
+          example: test@notificare-test.iam.gserviceaccount.com
+        privateKey:
+          description: key for the service account
+          type: string
+          example: -----BEGIN PRIVATE KEY-----\n\n-----END PRIVATE KEY-----\n
+      required:
+        - bucket
+        - projectId
+        - clientEmail
+        - privateKey
     TagsCriteria:
       properties:
         tags:
@@ -14261,7 +14713,7 @@ tags:
       upload a file.
     name: Import
   - description: >-
-      Methods to create short links in Notificare. Links can be used to redirec
+      Methods to create short links in Notificare. Links can be used to redirect
       users to existing web pages or to server HTML markup hosted in Notificare.
     name: Links
   - description: >-
@@ -14554,6 +15006,10 @@ tags:
 
       These objects hold every single interaction and data your users send you.
     name: Reply
+  - description: >-
+      Methods for scheduling imports or exports of data from and to
+      external storage on a daily or hourly basis
+    name: Scheduled Tasks
   - description: >-
       Methods to retrieve usage reports of application resources in the API.
 
