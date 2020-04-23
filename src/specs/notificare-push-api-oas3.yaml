@@ -3068,6 +3068,214 @@ paths:
         `masterSecret`.
       operationId: deleteExportById
       summary: Delete Export Job
+  /export/schedule:
+    get:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ExportScheduleModelList'
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Get all the export schedule objects.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getExportSchedule
+      summary: List Export Schedules
+  /export/schedule/{type}:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The type of the export job to be scheduled
+          in: path
+          name: type
+          required: true
+          example: re.notifica.export.User
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportSchedule:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Scheduled Tasks
+      description: >-
+        A schedule to run an import job
+      operationId: postExportSchedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportScheduleBase'
+      summary: Create Export Schedule
+  /export/schedule/test/{type}:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The type of the export job to be scheduled
+          in: path
+          name: type
+          required: true
+          example: re.notifica.export.User
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: connection successful, test file created and removed
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Test a schedule to run an export job before creating the schedule
+      operationId: postExportScheduleTest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportScheduleBase'
+      summary: Test Export Schedule
+  '/export/schedule/{schedule}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportSchedule:
+                    $ref: '#/components/schemas/ExportScheduleModel'
+                type: object
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Get an export schedule object.
+      operationId: getExportScheduleById
+      summary: Get Export Schedule
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: 'export schedule updated'
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Update an export schedule object.
+      operationId: putExportScheduleById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportScheduleModel'
+      summary: Update Export Schedule
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: No content
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Delete an export schedule object.
+      operationId: deleteExportScheduleById
+      summary: Delete Export Schedule
+  '/export/schedule/test/{schedule}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: connection successful, test file created and removed
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Test an export schedule.
+      operationId: getExportScheduleTestById
+      summary: Test Export Schedule
+  '/export/schedule/{schedule}/run':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: 'schedule updated'
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Retry an export schedule
+      operationId: putExportScheduleRun
+      summary: Retry Export Schedule
   /import:
     get:
       security:
@@ -3904,6 +4112,39 @@ paths:
             schema:
               $ref: '#/components/schemas/ImportScheduleBase'
       summary: Create Import Schedule
+  /import/schedule/test/{type}:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The type of the import job to be scheduled
+          in: path
+          name: type
+          required: true
+          example: re.notifica.import.UserSegment
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageFileInfo'
+              example:
+                - message: connection successful, import file found
+                  fileInfo:
+                    contentLength: 16384
+                    lastModified: 1525954318000
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Test a schedule to run an import job before creating the schedule
+      operationId: postImportScheduleTest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportScheduleBase'
+      summary: Test Import Schedule
   '/import/schedule/{schedule}':
     get:
       security:
@@ -3926,14 +4167,11 @@ paths:
                 type: object
           description: OK
       tags:
-        - Import
+        - Scheduled Tasks
       description: >-
-        Get an import object.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
+        Get an import schedule object.
       operationId: getImportScheduleById
-      summary: Get Import
+      summary: Get Import Schedule
     put:
       security:
         - MasterSecret: []
@@ -3957,9 +4195,6 @@ paths:
         - Scheduled Tasks
       description: >-
         Update an import schedule object.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
       operationId: putImportScheduleById
       requestBody:
         content:
@@ -3984,11 +4219,37 @@ paths:
         - Scheduled Tasks
       description: >-
         Delete an import schedule object.
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
       operationId: deleteImportScheduleById
       summary: Delete Import Schedule
+  '/import/schedule/test/{schedule}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The schedule id of a previously created schedule.
+          in: path
+          name: schedule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageFileInfo'
+              example:
+                - message: connection successful, import file found
+                  fileInfo:
+                    contentLength: 16384
+                    lastModified: 1525954318000
+          description: OK
+      tags:
+        - Scheduled Tasks
+      description: >-
+        Test an import schedule.
+      operationId: getImportScheduleTestById
+      summary: Test Import Schedule
   '/import/schedule/{schedule}/run':
     put:
       security:
@@ -4013,9 +4274,6 @@ paths:
         - Scheduled Tasks
       description: >-
         Retry an import schedule
-
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
       operationId: putImportScheduleRun
       requestBody:
         content:
@@ -11857,6 +12115,93 @@ components:
           type: string
           example: re.notifica.export.User
       type: object
+    ExportScheduleModelList:
+      properties:
+        exportSchedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExportScheduleModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    ExportScheduleModel:
+      allOf:
+        - $ref: '#/components/schemas/ExportScheduleBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            data:
+              additionalProperties: true
+              example:
+                clear: false
+                userSegment: 53a0a047fff17d3215a94f6
+            lastRun:
+              $ref: '#/components/schemas/Date'
+            nextRun:
+              $ref: '#/components/schemas/Date'
+            lastResult:
+              type: string
+              example: 'Export job queueud'
+            status:
+              type: string
+              example: scheduled
+            type:
+              type: string
+              example: re.notifica.export.User
+          type: object
+    ExportScheduleBase:
+      properties:
+        active:
+          type: boolean
+          default: false
+        frequency:
+          type: string
+          enum: [daily,hourly]
+        hour:
+          type: number
+          example: 10
+        minute:
+          type: number
+          example: 15
+        source:
+          properties:
+            type:
+              type: string
+              enum: [re.notifica.storage.S3,re.notifica.storage.SFTP,re.notifica.storage.FTP,re.notifica.storage.AzureBlob,re.notifica.storage.GoogleCloud]
+            config:
+              oneOf:
+                - $ref: '#/components/schemas/ExportStorageConfigS3'
+                - $ref: '#/components/schemas/ExportStorageConfigSFTP'
+                - $ref: '#/components/schemas/ExportStorageConfigFTP'
+                - $ref: '#/components/schemas/ExportStorageConfigAzureBlob'
+                - $ref: '#/components/schemas/ExportStorageConfigGoogleCloud'
+        data:
+          description: Data to be used for the export job created from this schedule, see export jobs for details
+          additionalProperties: true
+          example:
+            all: true
+            before: '2017-01-13'
+            campaign: 5354f08474adc4183214c143
+            fence: 5354f08474adc4183214c143
+            includeTags: true
+            notification: 5354f08474adc4183214c143
+            region: 5354f08474adc4183214c143
+            serial: 5354f08474adc4183214c143
+            showCombinedSegments: true
+            showPreferences: true
+            showSegments:
+              - 5354f08474adc4183214c143
+            since: '2017-01-12'
+            tagsSeparator: '|'
+            type: re.notifica.event.application.Open
+            useSegmentNames: true
+            userID: 5354f08474adc4183214c143
+      type: object
+      required:
+        - source
     EventCreate:
       properties:
         data:
@@ -14127,6 +14472,16 @@ components:
                 type: string
           example: Android
       type: object
+    ResponseMessageFileInfo:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - properties:
+            fileInfo:
+              properties:
+                contentLength:
+                  type: number
+                lastModified:
+                  type: number
     ResponseKeyCreated:
       allOf:
         - $ref: '#/components/schemas/ResponseCreated'
