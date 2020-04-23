@@ -5590,7 +5590,90 @@ paths:
         `masterSecret`.
       operationId: getNotificationById
       summary: Get Message
-  '/notification/{notification}/info':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The notification ID given whenever you create a message.
+          in: path
+          name: notification
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: notification updated
+          description: OK
+      tags:
+        - Messages
+      description: >-
+        Update a specific message object. Only for drafts, scheduled or triggered messages.
+      operationId: updateNotificationById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationModel'
+      summary: Update Message
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The notification ID given whenever you create a message.
+          in: path
+          name: notification
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: notification draft discarded
+          description: OK
+      tags:
+        - Messages
+      description: >-
+        Delete a specific message object. Only for drafts
+      operationId: deleteNotificationById
+      summary: Delete Message
+  /notification/{notification}/archive:
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification ID given whenever you create or retrieve a message
+            object.
+          in: path
+          name: notification
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: notification archived
+          description: OK
+      tags:
+        - Messages
+      description: >-
+        Archive a message, it will not show up in the list of messages anymore
+      operationId: puttNotificationArchiveById
+      summary: Archive Message
+  /notification/{notification}/info:
     get:
       security:
         - MasterSecret: []
@@ -13080,6 +13163,7 @@ components:
               type: string
               enum: [push, email, sms]
               default: push
+              readOnly: true
             subject:
               description: Subject of your email message
               type: string
