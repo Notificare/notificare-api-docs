@@ -1,4 +1,6 @@
 # Changelog
+## [1.92.0] - 2020-04-27
+Added relative date criteria
 ## [1.91.0] - 2020-04-22
 Added scheduled tasks
 Added message update, delete and archive
