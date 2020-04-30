@@ -2614,15 +2614,25 @@ paths:
                     before:
                       description: >-
                         Specify if export job should only include notifications
-                        created before a certain date
+                        created before a certain date. Can not be used together with beforeSeconds.
                       type: string
                       format: 'date-time'
+                    beforeSeconds:
+                      description: >-
+                        Specify if export job should only include notifications
+                        created before a number of seconds ago. Can not be used together with before.
+                      type: number
                     since:
                       description: >-
                         Specify if export job should only include notifications
-                        created after a certain date
+                        created after a certain date. Can not be used together with sinceSeconds.
                       type: string
                       format: 'date-time'
+                    sinceSeconds:
+                      description: >-
+                        Specify if export job should only include notifications
+                        created after a number of seconds ago. Can not be used together with since.
+                      type: number
                     useSegmentNames:
                       description: >-
                         Specify if export jobs should contain the name of the
@@ -2707,16 +2717,26 @@ paths:
                       type: string
                     before:
                       description: >-
-                        Specify if export job should only include events created
-                        before a certain date
+                        Specify if export job should only include events
+                        created before a certain date. Can not be used together with beforeSeconds.
                       type: string
                       format: 'date-time'
+                    beforeSeconds:
+                      description: >-
+                        Specify if export job should only include events
+                        created before a number of seconds ago. Can not be used together with before.
+                      type: number
                     since:
                       description: >-
-                        Specify if export job should only include events created
-                        after a certain date
+                        Specify if export job should only include events
+                        created after a certain date. Can not be used together with sinceSeconds.
                       type: string
                       format: 'date-time'
+                    sinceSeconds:
+                      description: >-
+                        Specify if export job should only include events
+                        created after a number of seconds ago. Can not be used together with since.
+                      type: number
                     criteria:
                       $ref: '#/components/schemas/Criteria'
                     dataFilter:
