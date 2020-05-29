@@ -1,4 +1,7 @@
 # Changelog
+## [1.93.0] - 2020-05-29
+Added subscriptionId to events
+Added link tracker export
 ## [1.92.0] - 2020-04-30
 Added relative date criteria
 Added relative dates for events and messages export types

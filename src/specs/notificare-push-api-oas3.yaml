@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.92.0'
+  version: '1.93.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2968,6 +2968,71 @@ paths:
                 - data
               type: object
       summary: Export Automation Connectors Summary
+  /export/re.notifica.export.LinkTracker:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Export
+      description: >-
+        Export the links tracked in emails. This job
+        might take some time to finish, check the export result endpoint to
+        obtain information about the status of this export job.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postExportLinkTracker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - properties:
+                    data:
+                      properties:
+                        campaign:
+                          description: >-
+                            The id of the campaign for which you wish to export links tracked
+                          type: string
+                          example: 1d9e80ef851d212aca82cf23
+                      type: object
+                  required:
+                    - data
+                  type: object
+                - properties:
+                    data:
+                      properties:
+                        automation:
+                          description: >-
+                            The id of the automation connector for which you wish to export links tracked
+                          type: string
+                          example: 1d9e80ef851d212aca82cf23
+                      type: object
+                  required:
+                    - data
+                  type: object
+                - properties:
+                    data:
+                      properties:
+                        notification:
+                          description: >-
+                            The id of the notification for which you wish to export links tracked
+                          type: string
+                          example: 1d9e80ef851d212aca82cf23
+                      type: object
+                  required:
+                    - data
+                  type: object
+      summary: Export Link Trackers
   '/export/result/{export}':
     get:
       security:
@@ -12372,6 +12437,10 @@ components:
           example: 5SX4tAsd534MjuHL
         deviceID:
           type: string
+          example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
+        subscriptionId:
+          type: string
+          description: The subscriptionId, i.e., push token for push, email address for email, phone number for SMS
           example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
         userID:
           type: string
