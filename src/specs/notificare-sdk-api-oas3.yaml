@@ -15,7 +15,7 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.88.0'
+  version: '1.94.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -1658,6 +1658,11 @@ components:
           default: false
         time:
           $ref: '#/components/schemas/Date'
+        visible:
+          type: boolean
+          default: true
+        expires:
+          $ref: '#/components/schemas/Date'
     LocationsCriteria:
       properties:
         locations:
@@ -2042,6 +2047,18 @@ components:
                 be true. Please note that this property will be ignored if
                 Inbox is not being used.
               type: boolean
+            inbox:
+              description: >-
+                This property is only available for SDKs 2.3.0 and up. When
+                false it will not create a message in the app's inbox.
+                By default this property will be true. Please note that this
+                property will be ignored if Inbox is not being used.
+            inboxTtl:
+              description: >-
+                This property is only available for SDKs 2.3.0 and up. When
+                set it will expire the message in the device inbox after
+                this amount of seconds. Please note that this
+                property will be ignored if Inbox is not being used.
           required:
             - type
             - message

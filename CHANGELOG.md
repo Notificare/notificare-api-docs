@@ -1,4 +1,7 @@
 # Changelog
+## [1.94.0] - 2020-06-15
+Added inbox and inboxTtl to notification
+Added visible and expires to inbox item
 ## [1.93.0] - 2020-05-29
 Added subscriptionId to events
 Added link tracker export

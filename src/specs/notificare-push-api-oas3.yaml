@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.93.0'
+  version: '1.94.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -13498,6 +13498,18 @@ components:
               description: If set to false, will disable tracking of clicks on links in the message
               type: boolean
               default: true
+            inbox:
+              description: >-
+                This property is only available for SDKs 2.3.0 and up. When
+                false it will not create a message in the app's inbox.
+                By default this property will be true. Please note that this
+                property will be ignored if Inbox is not being used.
+            inboxTtl:
+              description: >-
+                This property is only available for SDKs 2.3.0 and up. When
+                set it will expire the message in the device inbox after
+                this amount of seconds. Please note that this
+                property will be ignored if Inbox is not being used.
           required:
             - type
             - message
@@ -13974,8 +13986,20 @@ components:
         push:
           description: >-
             Specify if this message should generate a remote
-            notification. By default teh value of this property is true.
+            notification. By default the value of this property is true.
           type: boolean
+        inbox:
+          description: >-
+            This property is only available for SDKs 2.3.0 and up. When
+            false it will not create a message in the app's inbox.
+            By default this property will be true. Please note that this
+            property will be ignored if Inbox is not being used.
+        inboxTtl:
+          description: >-
+            This property is only available for SDKs 2.3.0 and up. When
+            set it will expire the message in the device inbox after
+            this amount of seconds. Please note that this
+            property will be ignored if Inbox is not being used.
         openTracking:
           description: If set to false, will disable tracking of the message being opened
           type: boolean
