@@ -15,7 +15,7 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.94.0'
+  version: '1.95.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -254,6 +254,7 @@ paths:
       description: >-
         Deactivate an existing device.
         After this call, the device will not appear anymore in lists and will not receive any messages
+        In SDK 2.3 and higher, it will remove any data related to the device as well as the device itself.
       operationId: deleteDevice
       summary: Delete an existing device
   '/device/{deviceID}/tags':

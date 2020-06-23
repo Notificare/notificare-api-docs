@@ -19,7 +19,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.8.1'
+  version: '1.8.2'
 servers:
   - url: 'https://cloud.notifica.re/api'
 paths:
@@ -228,6 +228,7 @@ paths:
       description: >-
         Deactivate an existing device.
         After this call, the device will not appear anymore in lists and will not receive any messages
+        In SDK 2.3 and higher, it will remove any data related to the device as well as the device itself.
       operationId: deleteDevice
       summary: Delete an existing device
   '/device/{deviceID}/tags':
