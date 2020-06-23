@@ -1944,7 +1944,7 @@ paths:
       security:
         - MasterSecret: []
       parameters:
-        - description: The deviceID is the unique identifier provided by APNS or GCM.
+        - description: The deviceID is the unique identifier provided by APNS, GCM, HMS or WebPush.
           example: 00a9b9bf-xxx9278-64d6a3f22476
           in: path
           name: deviceID
@@ -1981,7 +1981,7 @@ paths:
       security:
         - MasterSecret: []
       parameters:
-        - description: The deviceID is the unique identifier provided by APNS or GCM.
+        - description: The deviceID is the unique identifier provided by APNS, GCM, HMS or WebPush.
           example: 00a9b9bf-xxx9278-64d6a3f22476
           in: path
           name: deviceID
@@ -2029,7 +2029,7 @@ paths:
       security:
         - MasterSecret: []
       parameters:
-        - description: The deviceID is the unique identifier provided by APNS or GCM.
+        - description: The deviceID is the unique identifier provided by APNS, GCM, HMS or WebPush.
           example: 00a9b9bf-xxx9278-64d6a3f22476
           in: path
           name: deviceID
@@ -5867,7 +5867,7 @@ paths:
       tags:
         - Messages
       description: >-
-        Clear the list of errors related to APNS and GCM feedback service.
+        Clear the list of errors related to APNS, GCM and HMS feedback service.
 
         This request must be authenticated with the `applicationKey` and
         `masterSecret`.
@@ -12161,7 +12161,7 @@ components:
         transport:
           type: string
           default: Notificare
-          enum: [APNS, GCM, WebPush, WebsitePush, Email, SMS, Notificare]
+          enum: [APNS, GCM, HMS, WebPush, WebsitePush, Email, SMS, Notificare]
         userID:
           type: string
           example: 188720716616
@@ -12575,7 +12575,7 @@ components:
                 transport:
                   description: Default transport
                   type: string
-                  enum: [APNS, GCM, WebPush, WebsitePush, Email, SMS, Notificare]
+                  enum: [APNS, GCM, HMS, WebPush, WebsitePush, Email, SMS, Notificare]
                   default: Notificare
                 osVersion:
                   description: Default osVersion
@@ -13409,7 +13409,7 @@ components:
             ttl:
               description: >-
                 Number of seconds the message will be attempted to be
-                delivered by APNS or GCM.
+                delivered by APNS, GCM or HMS.
               type: number
               example: 3600
             rules:
@@ -13915,7 +13915,7 @@ components:
         ttl:
           description: >-
             Number of seconds the message will be attempted to be
-            delivered by APNS or GCM.
+            delivered by APNS, GCM or HMS.
           type: number
         rules:
           description: >-
@@ -15229,7 +15229,7 @@ tags:
       installs the app. |
 
       | re.notifica.event.application.Uninstall | Stored whenever an app was
-      removed from the device, as reported by APNS or GCM feedback. |
+      removed from the device, as reported by APNS, GCM or HMS feedback. |
 
       | re.notifica.event.application.Open | Stored whenever the application
       becomes active. |

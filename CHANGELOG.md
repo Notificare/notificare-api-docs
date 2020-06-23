@@ -1,4 +1,6 @@
 # Changelog
+## [1.96.0] - 2020-06-23
+Added HMS transport
 ## [1.95.0] - 2020-06-23
 Added notice with DELETE device for SDK > 2.3
 ## [1.94.0] - 2020-06-15

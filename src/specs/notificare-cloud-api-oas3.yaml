@@ -623,7 +623,7 @@ paths:
         installs the app. |
 
         | re.notifica.event.application.Uninstall | Stored whenever an app was
-        removed from the device, as reported by APNS or GCM feedback. |
+        removed from the device, as reported by APNS, GCM or HMS feedback. |
 
         | re.notifica.event.application.Open | Stored whenever the application
         becomes active. |
@@ -1145,6 +1145,9 @@ components:
             gcm:
               type: boolean
               default: true
+            hms:
+              type: boolean
+              default: true
             websockets:
               type: boolean
               default: true
@@ -1614,7 +1617,7 @@ components:
         transport:
           type: string
           default: Notificare
-          enum: [APNS, GCM, WebPush, WebsitePush, Email, SMS, Notificare]
+          enum: [APNS, GCM, HMS, WebPush, WebsitePush, Email, SMS, Notificare]
         userID:
           description: The app-defined user identifier
           type: string
@@ -2050,7 +2053,7 @@ components:
             ttl:
               description: >-
                 Number of seconds the message will be attempted to be
-                delivered by APNS or GCM.
+                delivered by APNS, GCM or HMS.
               type: number
               example: 3600
             rules:
