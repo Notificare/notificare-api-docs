@@ -19,7 +19,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.8.2'
+  version: '1.96.0'
 servers:
   - url: 'https://cloud.notifica.re/api'
 paths:
