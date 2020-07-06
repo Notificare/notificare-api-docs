@@ -19,7 +19,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.96.0'
+  version: '1.97.0'
 servers:
   - url: 'https://cloud.notifica.re/api'
 paths:
@@ -1530,12 +1530,19 @@ components:
           description: Device has location permissions granted
           type: string
           enum: [none, use, always]
+        locationServicesAccuracyAuth:
+          description: Device has location accuracy granted
+          type: string
+          enum: [full, reduced]
         language:
           type: string
           default: en
           example: nl
         location:
           $ref: '#/components/schemas/Point'
+        locationAccuracy:
+          type: number
+          example: 15.731
         altitude:
           type: number
           example: 100
@@ -1582,12 +1589,19 @@ components:
           description: Device has location permissions granted
           type: string
           enum: [none, use, always]
+        locationServicesAccuracyAuth:
+          description: Device has location accuracy granted
+          type: string
+          enum: [full, reduced]
         language:
           type: string
           default: en
           example: nl
         location:
           $ref: '#/components/schemas/Point'
+        locationAccuracy:
+          type: number
+          example: 15.731
         altitude:
           type: number
           example: 100

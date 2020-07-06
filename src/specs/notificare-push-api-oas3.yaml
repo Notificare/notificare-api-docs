@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.96.0'
+  version: '1.97.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -3508,6 +3508,9 @@ paths:
         + locationServicesAuthStatus
 
 
+        + locationServicesAccuracyAuth
+
+
         + bluetoothEnabled
 
 
@@ -3522,6 +3525,9 @@ paths:
 
 
         + latitude
+
+
+        + locationAccuracy
 
 
         + course

@@ -15,7 +15,7 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.96.0'
+  version: '1.97.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -1447,12 +1447,19 @@ components:
           description: Device has location permissions granted
           type: string
           enum: [none, use, always]
+        locationServicesAccuracyAuth:
+          description: Device has location accuracy granted
+          type: string
+          enum: [full, reduced]
         language:
           type: string
           default: en
           example: nl
         location:
           $ref: '#/components/schemas/Point'
+        locationAccuracy:
+          type: number
+          example: 15.731
         altitude:
           type: number
           example: 100
@@ -1499,12 +1506,19 @@ components:
           description: Device has location permissions granted
           type: string
           enum: [none, use, always]
+        locationServicesAccuracyAuth:
+          description: Device has location accuracy granted
+          type: string
+          enum: [full, reduced]
         language:
           type: string
           default: en
           example: nl
         location:
           $ref: '#/components/schemas/Point'
+        locationAccuracy:
+          type: number
+          example: 15.731
         altitude:
           type: number
           example: 100
