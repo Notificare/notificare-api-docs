@@ -11412,6 +11412,13 @@ components:
             key:
               type: string
               format: byte
+        hmsConfig:
+          properties:
+            appId:
+              type: string
+            appSecret:
+              type: string
+              format: hex
         category:
           description: Your application's category.
           type: string
