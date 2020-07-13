@@ -1,4 +1,7 @@
 # Changelog
+## [1.97.0] - 2020-07-06
+Added location accuracy
+Added mark all as read
 ## [1.96.0] - 2020-06-23
 Added HMS transport
 ## [1.95.0] - 2020-06-23

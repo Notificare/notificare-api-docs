@@ -744,6 +744,31 @@ paths:
       description: Get a specific device's inbox
       operationId: getInboxForDevice
       summary: Get a specific device's inbox
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: inbox items are being processed
+          description: Accepted
+      tags:
+        - Notification
+      description: Mark all items in a specific device's inbox as read
+      operationId: putInboxForDevice
+      summary: Mark all items in a specific device's inbox as read
     delete:
       security:
         - ApplicationSecret: []
