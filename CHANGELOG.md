@@ -1,4 +1,6 @@
 # Changelog
+## [1.98.0] - 2020-07-22
+Added link prefix
 ## [1.97.0] - 2020-07-06
 Added location accuracy
 Added mark all as read

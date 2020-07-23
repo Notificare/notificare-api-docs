@@ -15,7 +15,7 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.97.0'
+  version: '1.98.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -697,6 +697,33 @@ paths:
             schema:
               $ref: '#/components/schemas/EventCreate'
       summary: Register an event
+  '/link/dynamic/{link}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The url of the dynamic link (uri encoded)
+          in: path
+          name: link
+          required: true
+          type: string
+          example: https://myamazingapp.ntc.re/50fUr-56
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  link:
+                    $ref: '#/components/schemas/DynamicLinkModel'
+                type: object
+          description: OK
+      tags:
+        - Links
+      description: >-
+        Get a dynamic link object.
+      operationId: getDynamicLinkById
+      summary: Get Dynamic Link
   '/notification/inbox/fordevice/{deviceID}':
     get:
       security:
@@ -1889,6 +1916,14 @@ components:
         - name
         - address
       type: object
+    DynamicLinkModel:
+      properties:
+        target:
+          type: string
+          example: "https://notifica.re/example"
+          format: uri
+      required:
+        - target
     NotificationModel:
       allOf:
         - properties:

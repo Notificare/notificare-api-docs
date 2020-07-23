@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.97.0'
+  version: '1.98.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -4435,6 +4435,32 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/ObjectId'
+        - description: The maximum number of results to retrieve.
+          example: '100'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The sorting property
+          example: 'name'
+          in: query
+          name: sort
+          required: false
+          schema:
+            default: id
+            type: string
+            enum:
+              - id
+              - name
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
       responses:
         '200':
           content:
@@ -4511,6 +4537,99 @@ paths:
         and  `masterSecret`.
       operationId: deleteLinkById
       summary: Delete Link
+  /link/prefix:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+        - description: The sorting property
+          example: 'prefix'
+          in: query
+          name: sort
+          required: false
+          schema:
+            default: id
+            type: string
+            enum:
+              - id
+              - prefix
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/LinkPrefixModelList'
+          description: OK
+      tags:
+        - Links
+      description: >-
+        Get all the link prefix objects.
+      operationId: getLinkPrefix
+      summary: List Link Prefixes
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  linkPrefix:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Links
+      description: >-
+        Create a new link prefix.
+      operationId: postLinkPrefix
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkPrefixBase'
+      summary: Create Link Prefix
+  '/link/prefix/{prefix}':
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The ID of the link prefix
+          in: path
+          name: prefix
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: link prefix removed
+          description: OK
+      tags:
+        - Links
+      description: >-
+        Delete a link prefix. Link prefixes can only be re-registered after 30 days.
+      operationId: deleteLinkPrefixById
+      summary: Delete Link Prefix
   /notification:
     get:
       security:
@@ -12935,6 +13054,16 @@ components:
         type:
           example: "re.notifica.link.Redirect"
           type: string
+          enum:
+            - 're.notifica.link.Page'
+            - 're.notifica.link.Redirect'
+            - 're.notifica.link.Dynamic'
+        prefix:
+          example: myamazingapp
+          type: string
+          description: >-
+            For type re.notifica.link.Dynamic, this is the prefix subdomain of the link.
+            It can not be changed afterwards.
         target:
           type: object
           properties:
@@ -12950,6 +13079,11 @@ components:
               example: "https://notifica.re/example-android"
               type: string
               format: uri
+        showAppStore:
+          type: boolean
+          default: false
+          description: >-
+            For type re.notifica.link.Dynamic, this will redirect users to their respective app store if the app is not installed.
         rules:
           type: array
           items:
@@ -12964,6 +13098,32 @@ components:
         - name
         - type
         - target
+    LinkPrefixModelList:
+      properties:
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkPrefixModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    LinkPrefixModel:
+      allOf:
+        - $ref: '#/components/schemas/LinkPrefixBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            active:
+              type: boolean
+              default: false
+    LinkPrefixBase:
+      properties:
+        prefix:
+          type: string
+          example: myamazingapp
     LocationsCriteria:
       properties:
         locations:
