@@ -64,20 +64,18 @@ module.exports = {
     ],
   },
   plugins: [
-    new CopyWebpackPlugin([
-      {
-        from: './src/static/',
-        to: './static/',
-      },
-      {
-        from: './src/images/',
-        to: './images/',
-      },
-      {
-        from: './src/specs/',
-        to: './specs/',
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: './src/images/',
+          to: './images/',
+        },
+        {
+          from: './src/specs/',
+          to: './specs/',
+        },
+      ]
+    }),
     ...generateHTMLPlugins(),
   ],
   stats: {
