@@ -1,4 +1,6 @@
 # Changelog
+## [1.98.1] - 2020-08-24
+Fixed some syntax errors
 ## [1.98.0] - 2020-07-22
 Added link prefix
 ## [1.97.0] - 2020-07-06

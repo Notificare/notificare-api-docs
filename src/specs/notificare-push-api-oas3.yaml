@@ -3187,6 +3187,8 @@ paths:
           name: type
           required: true
           example: re.notifica.export.User
+          schema:
+            type: string
       responses:
         '201':
           content:
@@ -3217,6 +3219,8 @@ paths:
           name: type
           required: true
           example: re.notifica.export.User
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -4187,6 +4191,8 @@ paths:
           name: type
           required: true
           example: re.notifica.import.UserSegment
+          schema:
+            type: string
       responses:
         '201':
           content:
@@ -4217,6 +4223,8 @@ paths:
           name: type
           required: true
           example: re.notifica.import.UserSegment
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -11827,7 +11835,7 @@ components:
               description: >-
                 Your beacon's region (must match a previously
                 created identifier of a region). Also determines the major of the beacon
-              type: '#/components/schemas/ObjectId'
+              $ref: '#/components/schemas/ObjectId'
             minor:
               description: Your beacon's minor identifier (must be unique per major)
               type: number
@@ -13394,7 +13402,6 @@ components:
               example: [1, 0]
         localized:
           type: object
-          required: false
           description: If notification has multiple languages, contains the info for each localized version of the notification, default language has key "default"
           example:
             default:
@@ -14888,7 +14895,8 @@ components:
       properties:
         error:
           type: string
-      required: error
+      required:
+        - error
       type: object
     ResponseMessageCount:
       allOf:
@@ -14897,19 +14905,22 @@ components:
             count:
               type: number
               example: 2
-          required: count
+          required:
+            - count
           type: object
     ResponseStatus:
       properties:
         status:
           type: string
-      required: status
+      required:
+        - status
       type: object
     ResponseMessage:
       properties:
         message:
           type: string
-      required: message
+      required:
+        - message
       type: object
     ResponseCreated:
       type: object
@@ -14955,7 +14966,8 @@ components:
               description: full path to the file
               type: string
               example: /test/test.csv
-          required: path
+          required:
+            - path
     StorageConfigS3:
       properties:
         region:
@@ -14969,7 +14981,7 @@ components:
           type: string
           example: AKIAKADE7A77489A
         secret:
-          descrioption: AWS Secret Access Key
+          description: AWS Secret Access Key
           type: string
           example: =aJs9aa9jthayaJKIainjaioo9hash8d88sh+shha8
       required:
@@ -14997,7 +15009,8 @@ components:
               description: full path to the file
               type: string
               example: /test/test.csv
-          required: path
+          required:
+            - path
     StorageConfigSFTP:
       properties:
         host:
@@ -15043,7 +15056,8 @@ components:
               description: full path to the file
               type: string
               example: /test/test.csv
-          required: path
+          required:
+            - path
     StorageConfigFTP:
       properties:
         host:
@@ -15089,7 +15103,8 @@ components:
               description: full path to the file
               type: string
               example: /test/test.csv
-          required: path
+          required:
+            - path
     StorageConfigAzureBlob:
       properties:
         container:
@@ -15126,7 +15141,8 @@ components:
               description: full path to the file
               type: string
               example: /test/test.csv
-          required: path
+          required:
+            - path
     StorageConfigGoogleCloud:
       properties:
         bucket:
