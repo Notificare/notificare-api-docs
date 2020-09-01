@@ -1,4 +1,6 @@
 # Changelog
+## [1.98.2] - 2020-09-01
+Added targetContentIdentifier
 ## [1.98.1] - 2020-08-24
 Fixed some syntax errors
 ## [1.98.0] - 2020-07-22

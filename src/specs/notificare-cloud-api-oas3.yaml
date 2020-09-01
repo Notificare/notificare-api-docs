@@ -19,7 +19,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.97.0'
+  version: '1.98.2'
 servers:
   - url: 'https://cloud.notifica.re/api'
 paths:
@@ -2152,11 +2152,25 @@ components:
                 In Android (2.1 and higher), it will set the presentation
                 parameter to true in the foreground message handler.
               type: boolean
+            targetContentIdentifier:
+              description: >-
+                This is a iOS only property. It will be used to set a notification's targetContentIdentifier
+              type: string
             requireInteraction:
               description: >-
                 This is a Web only property. In WebPush, will set the requireInteraction
                 flag to true
               type: boolean
+            critical:
+              description: >-
+                This is a iOS only property. It will be used to indicate this is a critical notification
+              type: boolean
+              default: false
+            criticalSoundVolume:
+              description: >-
+                This is a iOS only property. It will be used to set a critical notification's sound volume
+              type: number
+              default: 0
             group:
               description: >-
                 An identifier to be used by the operating systems in order to group specific notifications
@@ -2173,6 +2187,14 @@ components:
                 be true. Please note that this property will be ignored if
                 Inbox is not being used.
               type: boolean
+            openTracking:
+              description: If set to false, will disable tracking of the message being opened
+              type: boolean
+              default: true
+            linkTracking:
+              description: If set to false, will disable tracking of clicks on links in the message
+              type: boolean
+              default: true
             inbox:
               description: >-
                 This property is only available for SDKs 2.3.0 and up. When
