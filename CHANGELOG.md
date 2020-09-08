@@ -1,4 +1,6 @@
 # Changelog
+## [1.98.3] - 2020-09-01
+Added subscriptionId to notification import file
 ## [1.98.2] - 2020-09-01
 Added targetContentIdentifier
 ## [1.98.1] - 2020-08-24

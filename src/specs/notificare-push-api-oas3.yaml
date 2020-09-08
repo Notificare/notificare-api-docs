@@ -44,7 +44,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.98.2'
+  version: '1.98.3'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -3947,7 +3947,7 @@ paths:
         Recognized columns in your .csv file are:
 
 
-        + userID / deviceID (if both are provided, userID is used)
+        + userID / deviceID / subscriptionId (if more than one is provided, userID is used over deviceID or subscriptionId)
 
 
         + title
@@ -3956,7 +3956,10 @@ paths:
         + subtitle
 
 
-        + message (if no template is set, this is mandatory)
+        + message (if no template is set, and medium is not given or set to `push`, this is mandatory)
+
+
+        + subject (if no template is set, and medium is set to `email`, this is mandatory)
 
 
         + attachmentUri (lock screen image, publicly accessible image URL)
@@ -4024,7 +4027,7 @@ paths:
         Recognized columns in your .csv file are:
 
 
-        + userID / deviceID (if both are provided, userID is used)
+        + userID / deviceID / subscriptionId (if more than one is provided, userID is used over deviceID or subscriptionId)
 
 
         + notification_xxx (referring to a placeholder `{{notification_xxx}}` in
