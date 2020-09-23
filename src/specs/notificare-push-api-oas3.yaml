@@ -16,6 +16,9 @@ info:
     Sign up for free [here](https://dashboard.notifica.re/#/sign-up).
 
 
+    API calls need to be made with TLSv1.2
+
+
     The API calls below are all authenticated. There are 4 types of
     authentication credentials:
 
@@ -44,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.98.3'
+  version: '1.99.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -52,6 +55,7 @@ info:
     url: https://support.notifica.re
 servers:
   - url: 'https://push.notifica.re'
+    description: The Notificare Push API - securely connect with TLSv1.2
 paths:
   /account/login:
     post:
@@ -202,7 +206,7 @@ paths:
                     type: string
                     example: 'otpauth://totp/xxx?secret=xxx&period=30&issuer=xxx'
                 type: object
-          description: Registered TOTP
+          description: OK
         '403':
           content:
             application/json; charset=utf-8:
@@ -259,7 +263,7 @@ paths:
                 already enabled:
                   value:
                     message: "second factor already enabled"
-          description: Enabled 2FA
+          description: OK
         '403':
           content:
             application/json; charset=utf-8:
@@ -298,7 +302,7 @@ paths:
                 already disabled:
                   value:
                     message: "second factor already disabled"
-          description: Disabled 2FA
+          description: OK
       tags:
         - Account
       description: >-
@@ -333,7 +337,7 @@ paths:
             application/json; charset=utf-8:
               schema:
                 $ref: '#/components/schemas/ApplicationList'
-          description: Created
+          description: OK
       tags:
         - Application
       description: >-
@@ -391,7 +395,7 @@ paths:
             application/json; charset=utf-8:
               schema:
                 $ref: '#/components/schemas/ApplicationList'
-          description: Created
+          description: OK
       tags:
         - Application
       description: >-
@@ -420,7 +424,7 @@ paths:
                   application:
                     $ref: '#/components/schemas/ApplicationModel'
                 type: object
-          description: Application
+          description: OK
       tags:
         - Application
       description: >-
@@ -479,7 +483,7 @@ paths:
                 $ref: '#/components/schemas/ResponseMessage'
               example:
                 message: application deactivated
-          description: Deactivated
+          description: OK
       tags:
         - Application
       description: >-
@@ -11464,6 +11468,18 @@ components:
               description: The master secret to use as password for authentication
               type: string
               example: xxxxxxxxxxxx
+            canChangeWhiteList:
+              description: This account can change its own IP whitelist
+              type: boolean
+              example: true
+            accessRole:
+              description: The access role the authenticated account has
+              type: string
+              enum: [NONE, REPORTER, EXPORTER, EDITOR, SENDER, DEFAULT, ADMIN, OWNER]
+              example: OWNER
+              default: DEFAULT
+            permissions:
+              $ref: '#/components/schemas/Permissions'
           type: object
         - $ref: '#/components/schemas/ApplicationBase'
     ApplicationUpdate:
@@ -14775,6 +14791,81 @@ components:
         - data
         - name
       type: object
+    Permissions:
+      description: The permisssions an account has, matching the access role
+      properties:
+        AUDIENCE_READ:
+          type: boolean
+          example: true
+        AUDIENCE_WRITE:
+          type: boolean
+          example: true
+        CAMPAIGNS:
+          type: boolean
+          example: true
+        LOCATIONS:
+          type: boolean
+          example: true
+        AUTOMATIONS:
+          type: boolean
+          example: true
+        TRIGGERS:
+          type: boolean
+          example: true
+        SCANNABLES:
+          type: boolean
+          example: true
+        LINKS:
+          type: boolean
+          example: true
+        LOYALTY:
+          type: boolean
+          example: true
+        IN_APP_PURCHASE:
+          type: boolean
+          example: true
+        MESSAGES_READ:
+          type: boolean
+          example: true
+        MESSAGES_WRITE:
+          type: boolean
+          example: true
+        MESSAGES_SEND:
+          type: boolean
+          example: true
+        EVENTS:
+          type: boolean
+          example: true
+        STATS:
+          type: boolean
+          example: true
+        REPORTS:
+          type: boolean
+          example: true
+        EXPORTS:
+          type: boolean
+          example: true
+        IMPORTS:
+          type: boolean
+          example: true
+        STORAGE:
+          type: boolean
+          example: true
+        SETTINGS:
+          type: boolean
+          example: true
+        RETENTION:
+          type: boolean
+          example: true
+        SHARE:
+          type: boolean
+          example: true
+        DISTRIBUTE:
+          type: boolean
+          example: true
+        DELETE:
+          type: boolean
+          example: true
     ProductCreate:
       allOf:
         - $ref: '#/components/schemas/ProductBase'
