@@ -1,4 +1,7 @@
 # Changelog
+## [1.99.0] - 2020-09-23
+Added mention of TLSv1.2
+Added accessRole, canChangeWhiteList and permissions to ApplicationModel
 ## [1.98.3] - 2020-09-01
 Added subscriptionId to notification import file
 ## [1.98.2] - 2020-09-01

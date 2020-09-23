@@ -5,17 +5,22 @@ info:
     of our platform specially designed to be used in native mobile SDKs. Its
     sole purpose is to provide access to strategic endpoints via a mobile app.
 
+
     The API endpoints below are all authenticated with `applicationKey` and
     `applicationSecret`, if you do not have these yet, you should grab them from
     your app in Notificare Dashboard under the section Settings > App Keys.
+
 
     Use Basic HTTP Authentication where `applicationKey` should be your username
     and `applicationSecret` your password.
 
 
+    API calls need to be made with TLSv1.2
+
+
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.98.2'
+  version: '1.99.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -23,6 +28,7 @@ info:
     url: https://support.notifica.re
 servers:
   - url: 'https://push.notifica.re/'
+    description: The Notificare Push API - securely connect with TLSv1.2
 paths:
   /application/info:
     get:
