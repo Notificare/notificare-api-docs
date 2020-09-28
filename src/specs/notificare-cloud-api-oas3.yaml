@@ -24,7 +24,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.99.0'
+  version: '1.99.1'
 servers:
   - url: 'https://cloud.notifica.re/api'
     description: The Notificare Cloud API - securely connect with TLSv1.2
@@ -1138,7 +1138,9 @@ components:
     ApplicationSecret:
       description: >-
         Only used for calls that originate from the device, e.g., registration, tags.
-        Username is applicationKey, password is applicationSecret
+        Username is applicationKey, password is applicationSecret.
+        If you do not have these yet, you should grab them from
+        your app in Notificare Dashboard under the section Settings > App Keys.
       type: http
       scheme: basic
   schemas:

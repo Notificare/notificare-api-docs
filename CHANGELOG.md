@@ -1,4 +1,6 @@
 # Changelog
+## [1.99.1] - 2020-09-28
+Added explanation where to get authentication keys
 ## [1.99.0] - 2020-09-23
 Added mention of TLSv1.2
 Added accessRole, canChangeWhiteList and permissions to ApplicationModel

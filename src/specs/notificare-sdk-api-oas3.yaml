@@ -20,7 +20,7 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.99.0'
+  version: '1.99.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -1084,6 +1084,8 @@ components:
       description: >-
         Only used for calls that originate from the device, e.g., registration, tags.
         Username is applicationKey, password is applicationSecret
+        If you do not have these yet, you should grab them from
+        your app in Notificare Dashboard under the section Settings > App Keys.
       type: http
       scheme: basic
   schemas:
