@@ -1,4 +1,7 @@
 # Changelog
+## [1.100.5] - 2020-11-17
+Added create pass from passbook
+Added allowedUI and origin to propertiescriteria
 ## [1.99.1] - 2020-09-28
 Added explanation where to get authentication keys
 ## [1.99.0] - 2020-09-23

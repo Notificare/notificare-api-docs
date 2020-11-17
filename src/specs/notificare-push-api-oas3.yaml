@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.99.1'
+  version: '1.100.5'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -7125,6 +7125,46 @@ paths:
             schema:
               $ref: '#/components/schemas/PassCreate'
       summary: Create Pass
+  '/pass/passbook/{passbook}':
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active passbook template.
+          in: path
+          name: passbook
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Pass
+      description: >-
+        Create a new pass from a passbook template. You should first create a pass template to help you
+        bootstrap a new pass. Please read the [Pass
+        Template](https://api-docs.notifica.re/#tag/Pass-Templates)
+        endpoints to learn how to create pass templates. Passes will require
+        images, see also the
+        [Uploads](https://api-docs.notifica.re/#tag/Upload) endpoints
+        to learn how to upload a file.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postPassPassbook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassPassbookCreate'
+      summary: Create Pass From Passbook
   '/pass/barcode/forserial/{serial}':
     get:
       parameters:
@@ -14526,7 +14566,45 @@ components:
         numberStyle:
           type: string
           enum: [PKNumberStyleDecimal, PKNumberStylePercent, PKNumberStyleScientific, PKNumberStyleSpellOut]
+    PassPassbookData:
+      allOf:
+        - $ref: '#/components/schemas/PassRootData'
+        - properties:
+            fields:
+              type: object
+              description: The values for each field in the pass
+              additionalProperties:
+                type: string
+              example:
+                origin: AMS
+                destination: OPO
+                gate: D3
+                seat: 42A
     PassData:
+      allOf:
+        - $ref: '#/components/schemas/PassRootData'
+        - properties:
+            auxiliaryFields:
+              type: array
+              items:
+                $ref: '#/components/schemas/PassField'
+            backFields:
+              type: array
+              items:
+                $ref: '#/components/schemas/PassField'
+            headerFields:
+              type: array
+              items:
+                $ref: '#/components/schemas/PassField'
+            primaryFields:
+              type: array
+              items:
+                $ref: '#/components/schemas/PassField'
+            secondaryFields:
+              type: array
+              items:
+                $ref: '#/components/schemas/PassField'
+    PassRootData:
       description: >-
         The data object containing all the information, colours and
         fields for a pass.
@@ -14602,26 +14680,6 @@ components:
             encryptionPublicKey:
               type: string
               format: byte
-        auxiliaryFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/PassField'
-        backFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/PassField'
-        headerFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/PassField'
-        primaryFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/PassField'
-        secondaryFields:
-          type: array
-          items:
-            $ref: '#/components/schemas/PassField'
         background:
           type: string
           format: uri
@@ -14741,6 +14799,31 @@ components:
       required:
         - passbook
         - redeem
+        - data
+    PassPassbookCreate:
+      properties:
+        passbook:
+          $ref: '#/components/schemas/ObjectId'
+        barcode:
+          type: string
+          example: 18847737723
+        data:
+          $ref: '#/components/schemas/PassPassbookData'
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
+      required:
         - data
     PassBase:
       properties:
@@ -14987,7 +15070,7 @@ components:
           description: >-
             Filter or select devices based on the value of their properties.
           type: string
-          enum: [osVersion,sdkVersion,appVersion,transport,platform,timeZoneOffset,language,region,country,autoGenerated,lastActive,lastActiveSeconds,registrationDate,registrationDateSeconds]
+          enum: [osVersion,sdkVersion,appVersion,transport,platform,origin,timeZoneOffset,language,region,country,autoGenerated,allowedUI,lastActive,lastActiveSeconds,registrationDate,registrationDateSeconds]
           example: platform
         value:
           oneOf:
