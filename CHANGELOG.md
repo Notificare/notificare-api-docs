@@ -1,5 +1,8 @@
 # Changelog
 ## [1.100.5] - 2020-11-17
+Added import pass with locations
+Added import pass update with locations
+Added update pass fields
 Added create pass from passbook
 Added allowedUI and origin to propertiescriteria
 ## [1.99.1] - 2020-09-28

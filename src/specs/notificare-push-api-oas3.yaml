@@ -3813,7 +3813,11 @@ paths:
 
         Data property `passData` can be used to set default values that will be
         set if not present in the CSV. Recognized properties in `passData` are
-         `description`, `barcode.message`, `barcode.altText`, `location.latitude`, `location.longitude`, `location.altitude`, `location.regionMajor`, `location.regionId`, `location.relevantText`, `beacon.proximityUUID`, `beacon.major`, `beacon.minor`, `beacon.relevantText`.
+         `description`, `barcode.message`, `barcode.altText`, `location.latitude`,
+        `location.longitude`, `location.altitude`, `location.regionMajor`,
+        `location.regionId`, `location.relevantText`, `beacon.proximityUUID`,
+        `beacon.major`, `beacon.minor`, `beacon.relevantText`,
+        `locations` and `beacons`
         The property `passFields` inside `passData` can be used to include
         default values for fields from the Passbook Template.
 
@@ -3864,6 +3868,12 @@ paths:
         + pass_location_region_id
 
 
+        + pass_beacons (list of max 10 beacons, separated by '|' and formatted as 'proximityUUID;major;minor;relevantText')
+
+
+        + pass_locations (list of max 10 locations, separated by '|' and formatted as 'latitude;longitude;altitude;relevantText')
+
+
         + pass_xxx (where xxx is any field defined in the Passbook Template)
 
 
@@ -3895,6 +3905,16 @@ paths:
         Used to update one or more fields in one or more passes for a specific pass template.
         Set `passbook` in `data` to the passbook template Id to use.
 
+        Data property `passData` can be used to set default values that will be
+        set if not present in the CSV. Recognized properties in `passData` are
+        `description`, `barcode.message`, `barcode.altText`, `location.latitude`,
+        `location.longitude`, `location.altitude`, `location.regionMajor`,
+        `location.regionId`, `location.relevantText`, `beacon.proximityUUID`,
+        `beacon.major`, `beacon.minor`, `beacon.relevantText`,
+        `locations` and `beacons`
+        The property `passFields` inside `passData` can be used to include
+        default values for fields from the Passbook Template.
+
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
 
@@ -3903,6 +3923,46 @@ paths:
 
 
         + pass_barcode (if barcode is unique, can be used for redeem)
+
+
+        + pass_barcode_message (not unique, cannot be together with
+        pass_barcode)
+
+
+        + pass_barcode_alt_text
+
+
+        + pass_barcode_show_alt_text
+
+
+        + pass_relevant_date
+
+
+        + pass_expiration_date
+
+
+        + pass_location_latitude
+
+
+        + pass_location_longitude
+
+
+        + pass_location_altitude
+
+
+        + pass_location_relevant_text
+
+
+        + pass_location_region_major
+
+
+        + pass_location_region_id
+
+
+        + pass_beacons (list of max 10 beacons, separated by '|' and formatted as 'proximityUUID;major;minor;relevantText')
+
+
+        + pass_locations (list of max 10 locations, separated by '|' and formatted as 'latitude;longitude;altitude;relevantText')
 
 
         + pass_xxx (where xxx is any field defined in the Passbook Template)
@@ -7451,6 +7511,40 @@ paths:
         `masterSecret`.
       operationId: deletePassById
       summary: Delete Pass
+  '/pass/{pass}/fields':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active pass.
+          in: path
+          name: pass
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: pass updated
+          description: OK
+      tags:
+        - Pass
+      description: >-
+        Modify a pass by providing only the changed properties and fields
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putPassFieldsById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassFieldsUpdate'
+      summary: Update Pass Fields
   /passbook:
     get:
       security:
@@ -12898,14 +12992,79 @@ components:
                   properties:
                     passFields:
                       description: The fields in the pass that need to be updated if not given in import data
-                      additionalProperties: true
+                      additionalProperties:
+                        type: string
                       example:
                         from: AMS
                         to: OPO
                       type: object
+                    description:
+                      type: string
                     relevantDate:
                       type: string
                       format: 'date-time'
+                    expirationDate:
+                      type: string
+                      format: 'date-time'
+                    beacon:
+                      description: A single beacon to use for relevance
+                      properties:
+                        proximityUUID:
+                          type: string
+                          format: 'uuid'
+                        major:
+                          type: number
+                        minor:
+                          type: number
+                        relevantText:
+                          type: string
+                    beacons:
+                      type: array
+                      description: List of maximum 10 beacons, if no beacon is provided otherwise
+                      items:
+                        properties:
+                          proximityUUID:
+                            type: string
+                            format: 'uuid'
+                          major:
+                            type: number
+                          minor:
+                            type: number
+                          relevantText:
+                            type: string
+                    location:
+                      description: >-
+                        A single location to use for relevance.
+                        Locations can be provided by lat/lon, by Notificare regionId or by Notificare region major
+                        and are processed in that order
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        altitude:
+                          type: number
+                        relevantText:
+                          type: string
+                        regionId:
+                          $ref: '#/components/schemas/ObjectId'
+                        regionMajor:
+                          type: number
+                    locations:
+                      type: array
+                      description: >-
+                        List of maximum 10 locations, if no location is provided otherwise
+                        Locations can only be provided by lat/lon
+                      items:
+                        properties:
+                          latitude:
+                            type: number
+                          longitude:
+                            type: number
+                          altitude:
+                            type: number
+                          relevantText:
+                            type: string
                   type: object
                 passbook:
                   description: The pass template to use
@@ -12941,13 +13100,79 @@ components:
                   properties:
                     passFields:
                       description: The fields in the pass that need to be updated if not given in import data
-                      additionalProperties: true
+                      additionalProperties:
+                        type: string
                       example:
                         from: AMS
                         to: OPO
                       type: object
+                    description:
+                      type: string
                     relevantDate:
-                      $ref: '#/components/schemas/Date'
+                      type: string
+                      format: 'date-time'
+                    expirationDate:
+                      type: string
+                      format: 'date-time'
+                    beacon:
+                      description: A single beacon to use for relevance
+                      properties:
+                        proximityUUID:
+                          type: string
+                          format: 'uuid'
+                        major:
+                          type: number
+                        minor:
+                          type: number
+                        relevantText:
+                          type: string
+                    beacons:
+                      type: array
+                      description: List of maximum 10 beacons, if no beacon is provided otherwise
+                      items:
+                        properties:
+                          proximityUUID:
+                            type: string
+                            format: 'uuid'
+                          major:
+                            type: number
+                          minor:
+                            type: number
+                          relevantText:
+                            type: string
+                    location:
+                      description: >-
+                        A single location to use for relevance.
+                        Locations can be provided by lat/lon, by Notificare regionId or by Notificare region major
+                        and are processed in that order
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        altitude:
+                          type: number
+                        relevantText:
+                          type: string
+                        regionId:
+                          $ref: '#/components/schemas/ObjectId'
+                        regionMajor:
+                          type: number
+                    locations:
+                      type: array
+                      description: >-
+                        List of maximum 10 locations, if no location is provided otherwise
+                        Locations can only be provided by lat/lon
+                      items:
+                        properties:
+                          latitude:
+                            type: number
+                          longitude:
+                            type: number
+                          altitude:
+                            type: number
+                          relevantText:
+                            type: string
                   type: object
                 passbook:
                   description: The pass template to use
@@ -14566,7 +14791,7 @@ components:
         numberStyle:
           type: string
           enum: [PKNumberStyleDecimal, PKNumberStylePercent, PKNumberStyleScientific, PKNumberStyleSpellOut]
-    PassPassbookData:
+    PassFieldsData:
       allOf:
         - $ref: '#/components/schemas/PassRootData'
         - properties:
@@ -14808,7 +15033,7 @@ components:
           type: string
           example: 18847737723
         data:
-          $ref: '#/components/schemas/PassPassbookData'
+          $ref: '#/components/schemas/PassFieldsData'
         limit:
           description: >-
             When using `limit` as a redeem option, you should provide
@@ -14825,6 +15050,24 @@ components:
           type: string
       required:
         - data
+    PassFieldsUpdate:
+      properties:
+        data:
+          $ref: '#/components/schemas/PassFieldsData'
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
     PassBase:
       properties:
         data:
