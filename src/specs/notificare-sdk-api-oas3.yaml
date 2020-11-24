@@ -524,7 +524,7 @@ paths:
           description: OK
       tags:
         - Device
-      description: Update the device's User Data
+      description: Update the device's Do Not Disturb period
       operationId: putDeviceDnd
       requestBody:
         content:
@@ -537,7 +537,7 @@ paths:
                 end:
                   type: string
                   example: '07:00'
-      summary: Update the device's User Data
+      summary: Update the device's Do Not Disturb period
   '/device/{deviceID}/cleardnd':
     put:
       security:
