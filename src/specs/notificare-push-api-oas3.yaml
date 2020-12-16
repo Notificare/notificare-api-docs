@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.100.5'
+  version: '1.101.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -4155,7 +4155,7 @@ paths:
       tags:
         - Import
       description: >-
-        Get an import object.
+        Update an import object.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -4166,11 +4166,13 @@ paths:
             schema:
               properties:
                 data:
-                  additionalProperties: true
-                  type: object
-                  example:
-                    overwrite: true
-                    push: true
+                  oneOf:
+                    - $ref: '#/components/schemas/ImportDataUserSegment'
+                    - $ref: '#/components/schemas/ImportDataBeacon'
+                    - $ref: '#/components/schemas/ImportDataPass'
+                    - $ref: '#/components/schemas/ImportDataPassUpdate'
+                    - $ref: '#/components/schemas/ImportDataNotification'
+                    - $ref: '#/components/schemas/ImportDataGroupedNotification'
                 path:
                   type: string
                   example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
@@ -12816,31 +12818,7 @@ components:
         - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
-              properties:
-                overwrite:
-                  description: Overwrite existing beacon
-                  type: boolean
-                  default: false
-                createRegion:
-                  description: Create region for beacon
-                  type: boolean
-                  default: false
-                category:
-                  description: Category for region to create
-                  type: string
-                  example: poi
-                  default: fence
-                distance:
-                  description: The distance for the region to create
-                  type: number
-                  example: 200
-                  default: 100
-                timezone:
-                  description: The timezone to create the region for
-                  type: string
-                  example: Europe/Amsterdam
-                  default: UTC
-              type: object
+              $ref: '#/components/schemas/ImportDataBeacon'
           type: object
     ImportJobDevice:
       allOf:
@@ -12919,27 +12897,7 @@ components:
         - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
-              properties:
-                notificationTemplate:
-                  description: Use previously created template for messages
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-                notificationSchedule:
-                  description: Schedule message
-                  properties:
-                    time:
-                      type: string
-                      format: 'date-time'
-                    timezone:
-                      type: string
-                      example: Europe/Amsterdam
-                    local:
-                      type: boolean
-                      default: false
-                  type: object
-                notificationCriteria:
-                  $ref: '#/components/schemas/Criteria'
-              type: object
+              $ref: '#/components/schemas/ImportDataGroupedNotification'
             path:
               type: string
               example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
@@ -12949,28 +12907,7 @@ components:
         - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
-              properties:
-                notificationTemplate:
-                  description: Use previously created template for messages
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-                notificationSchedule:
-                  description: Schedule message
-                  properties:
-                    time:
-                      $ref: '#/components/schemas/Date'
-                    timezone:
-                      type: string
-                      example: Europe/Amsterdam
-                  type: object
-                notificationCriteria:
-                  $ref: '#/components/schemas/Criteria'
-                medium:
-                  description: Medium to send to if no template given
-                  type: string
-                  enum: [push, email, sms]
-                  default: push
-              type: object
+              $ref: '#/components/schemas/ImportDataNotification'
             path:
               type: string
               example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
@@ -12980,231 +12917,21 @@ components:
         - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
-              properties:
-                notificationTemplate:
-                  description: Use previously created template for messages
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-                notificationCriteria:
-                  $ref: '#/components/schemas/Criteria'
-                passData:
-                  description: Pass data values if not given in import data
-                  properties:
-                    passFields:
-                      description: The fields in the pass that need to be updated if not given in import data
-                      additionalProperties:
-                        type: string
-                      example:
-                        from: AMS
-                        to: OPO
-                      type: object
-                    description:
-                      type: string
-                    relevantDate:
-                      type: string
-                      format: 'date-time'
-                    expirationDate:
-                      type: string
-                      format: 'date-time'
-                    beacon:
-                      description: A single beacon to use for relevance
-                      properties:
-                        proximityUUID:
-                          type: string
-                          format: 'uuid'
-                        major:
-                          type: number
-                        minor:
-                          type: number
-                        relevantText:
-                          type: string
-                    beacons:
-                      type: array
-                      description: List of maximum 10 beacons, if no beacon is provided otherwise
-                      items:
-                        properties:
-                          proximityUUID:
-                            type: string
-                            format: 'uuid'
-                          major:
-                            type: number
-                          minor:
-                            type: number
-                          relevantText:
-                            type: string
-                    location:
-                      description: >-
-                        A single location to use for relevance.
-                        Locations can be provided by lat/lon, by Notificare regionId or by Notificare region major
-                        and are processed in that order
-                      properties:
-                        latitude:
-                          type: number
-                        longitude:
-                          type: number
-                        altitude:
-                          type: number
-                        relevantText:
-                          type: string
-                        regionId:
-                          $ref: '#/components/schemas/ObjectId'
-                        regionMajor:
-                          type: number
-                    locations:
-                      type: array
-                      description: >-
-                        List of maximum 10 locations, if no location is provided otherwise
-                        Locations can only be provided by lat/lon
-                      items:
-                        properties:
-                          latitude:
-                            type: number
-                          longitude:
-                            type: number
-                          altitude:
-                            type: number
-                          relevantText:
-                            type: string
-                  type: object
-                passbook:
-                  description: The pass template to use
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-                redeem:
-                  description: Set redeem type for new pass
-                  type: string
-                  enum: [always, once, limit]
-                  default: always
-                limit:
-                  description: Set redeem limit for new pass
-                  type: number
-                  default: 0
-                sendNotification:
-                  description: Send a notification after importing a new pass
-                  type: boolean
-                  default: false
-                sendUpdateNotification:
-                  description: Send a notification if existing pass was updated
-                  type: boolean
-                  default: false
-              type: object
+              $ref: '#/components/schemas/ImportDataPass'
           type: object
     ImportJobPassUpdate:
       allOf:
         - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
-              properties:
-                passData:
-                  description: Pass data values if not given in import data
-                  properties:
-                    passFields:
-                      description: The fields in the pass that need to be updated if not given in import data
-                      additionalProperties:
-                        type: string
-                      example:
-                        from: AMS
-                        to: OPO
-                      type: object
-                    description:
-                      type: string
-                    relevantDate:
-                      type: string
-                      format: 'date-time'
-                    expirationDate:
-                      type: string
-                      format: 'date-time'
-                    beacon:
-                      description: A single beacon to use for relevance
-                      properties:
-                        proximityUUID:
-                          type: string
-                          format: 'uuid'
-                        major:
-                          type: number
-                        minor:
-                          type: number
-                        relevantText:
-                          type: string
-                    beacons:
-                      type: array
-                      description: List of maximum 10 beacons, if no beacon is provided otherwise
-                      items:
-                        properties:
-                          proximityUUID:
-                            type: string
-                            format: 'uuid'
-                          major:
-                            type: number
-                          minor:
-                            type: number
-                          relevantText:
-                            type: string
-                    location:
-                      description: >-
-                        A single location to use for relevance.
-                        Locations can be provided by lat/lon, by Notificare regionId or by Notificare region major
-                        and are processed in that order
-                      properties:
-                        latitude:
-                          type: number
-                        longitude:
-                          type: number
-                        altitude:
-                          type: number
-                        relevantText:
-                          type: string
-                        regionId:
-                          $ref: '#/components/schemas/ObjectId'
-                        regionMajor:
-                          type: number
-                    locations:
-                      type: array
-                      description: >-
-                        List of maximum 10 locations, if no location is provided otherwise
-                        Locations can only be provided by lat/lon
-                      items:
-                        properties:
-                          latitude:
-                            type: number
-                          longitude:
-                            type: number
-                          altitude:
-                            type: number
-                          relevantText:
-                            type: string
-                  type: object
-                passbook:
-                  description: The pass template to use
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-              type: object
+              $ref: '#/components/schemas/ImportDataPassUpdate'
           type: object
     ImportJobUserSegment:
       allOf:
         - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
-              properties:
-                userSegment:
-                  description: The segment to import into
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-                clear:
-                  description: Clear the segment before importing users
-                  type: boolean
-                  default: false
-                push:
-                  description: Send a notification after importing users
-                  type: boolean
-                  default: false
-                notificationTemplate:
-                  description: The template to use for the notification
-                  type: string
-                  example: 1d9e80ef851d212aca82cf23
-              type: object
-              required:
-                - userSegment
+              $ref: '#/components/schemas/ImportDataUserSegment'
           type: object
     ImportJobModelList:
       properties:
@@ -13225,10 +12952,13 @@ components:
             application:
               $ref: '#/components/schemas/ObjectId'
             data:
-              additionalProperties: true
-              example:
-                clear: false
-                userSegment: 53a0a047fff17d3215a94f6
+              oneOf:
+                - $ref: '#/components/schemas/ImportDataUserSegment'
+                - $ref: '#/components/schemas/ImportDataBeacon'
+                - $ref: '#/components/schemas/ImportDataPass'
+                - $ref: '#/components/schemas/ImportDataPassUpdate'
+                - $ref: '#/components/schemas/ImportDataNotification'
+                - $ref: '#/components/schemas/ImportDataGroupedNotification'
             date:
               $ref: '#/components/schemas/Date'
             result:
@@ -13267,11 +12997,6 @@ components:
               $ref: '#/components/schemas/ObjectId'
             application:
               $ref: '#/components/schemas/ObjectId'
-            data:
-              additionalProperties: true
-              example:
-                clear: false
-                userSegment: 53a0a047fff17d3215a94f6
             lastRun:
               $ref: '#/components/schemas/Date'
             nextRun:
@@ -13312,9 +13037,308 @@ components:
                 - $ref: '#/components/schemas/ImportStorageConfigFTP'
                 - $ref: '#/components/schemas/ImportStorageConfigAzureBlob'
                 - $ref: '#/components/schemas/ImportStorageConfigGoogleCloud'
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/ImportDataUserSegment'
+            - $ref: '#/components/schemas/ImportDataBeacon'
+            - $ref: '#/components/schemas/ImportDataPass'
+            - $ref: '#/components/schemas/ImportDataPassUpdate'
+            - $ref: '#/components/schemas/ImportDataNotification'
+            - $ref: '#/components/schemas/ImportDataGroupedNotification'
       type: object
       required:
         - source
+    ImportDataUserSegment:
+      properties:
+        userSegment:
+          description: The segment to import into
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        clear:
+          description: Clear the segment before importing users
+          type: boolean
+          default: false
+        push:
+          description: Send a notification after importing users
+          type: boolean
+          default: false
+        notificationTemplate:
+          description: The template to use for the notification
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+      type: object
+      required:
+        - userSegment
+    ImportDataBeacon:
+      properties:
+        overwrite:
+          description: Overwrite existing beacon
+          type: boolean
+          default: false
+        createRegion:
+          description: Create region for beacon
+          type: boolean
+          default: false
+        category:
+          description: Category for region to create
+          type: string
+          example: poi
+          default: fence
+        distance:
+          description: The distance for the region to create
+          type: number
+          example: 200
+          default: 100
+        timezone:
+          description: The timezone to create the region for
+          type: string
+          example: Europe/Amsterdam
+          default: UTC
+      type: object
+    ImportDataPass:
+      properties:
+        notificationTemplate:
+          description: Use previously created template for messages
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        notificationCriteria:
+          $ref: '#/components/schemas/Criteria'
+        passData:
+          description: Pass data values if not given in import data
+          properties:
+            passFields:
+              description: The fields in the pass that need to be updated if not given in import data
+              additionalProperties:
+                type: string
+              example:
+                from: AMS
+                to: OPO
+              type: object
+            description:
+              type: string
+            relevantDate:
+              type: string
+              format: 'date-time'
+            expirationDate:
+              type: string
+              format: 'date-time'
+            beacon:
+              description: A single beacon to use for relevance
+              properties:
+                proximityUUID:
+                  type: string
+                  format: 'uuid'
+                major:
+                  type: number
+                minor:
+                  type: number
+                relevantText:
+                  type: string
+            beacons:
+              type: array
+              description: List of maximum 10 beacons, if no beacon is provided otherwise
+              items:
+                properties:
+                  proximityUUID:
+                    type: string
+                    format: 'uuid'
+                  major:
+                    type: number
+                  minor:
+                    type: number
+                  relevantText:
+                    type: string
+            location:
+              description: >-
+                A single location to use for relevance.
+                Locations can be provided by lat/lon, by Notificare regionId or by Notificare region major
+                and are processed in that order
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                altitude:
+                  type: number
+                relevantText:
+                  type: string
+                regionId:
+                  $ref: '#/components/schemas/ObjectId'
+                regionMajor:
+                  type: number
+            locations:
+              type: array
+              description: >-
+                List of maximum 10 locations, if no location is provided otherwise
+                Locations can only be provided by lat/lon
+              items:
+                properties:
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  altitude:
+                    type: number
+                  relevantText:
+                    type: string
+          type: object
+        passbook:
+          description: The pass template to use
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        redeem:
+          description: Set redeem type for new pass
+          type: string
+          enum: [ always, once, limit ]
+          default: always
+        limit:
+          description: Set redeem limit for new pass
+          type: number
+          default: 0
+        sendNotification:
+          description: Send a notification after importing a new pass
+          type: boolean
+          default: false
+        sendUpdateNotification:
+          description: Send a notification if existing pass was updated
+          type: boolean
+          default: false
+      type: object
+      required:
+        - passbook
+    ImportDataPassUpdate:
+      properties:
+        passData:
+          description: Pass data values if not given in import data
+          properties:
+            passFields:
+              description: The fields in the pass that need to be updated if not given in import data
+              additionalProperties:
+                type: string
+              example:
+                from: AMS
+                to: OPO
+              type: object
+            description:
+              type: string
+            relevantDate:
+              type: string
+              format: 'date-time'
+            expirationDate:
+              type: string
+              format: 'date-time'
+            beacon:
+              description: A single beacon to use for relevance
+              properties:
+                proximityUUID:
+                  type: string
+                  format: 'uuid'
+                major:
+                  type: number
+                minor:
+                  type: number
+                relevantText:
+                  type: string
+            beacons:
+              type: array
+              description: List of maximum 10 beacons, if no beacon is provided otherwise
+              items:
+                properties:
+                  proximityUUID:
+                    type: string
+                    format: 'uuid'
+                  major:
+                    type: number
+                  minor:
+                    type: number
+                  relevantText:
+                    type: string
+            location:
+              description: >-
+                A single location to use for relevance.
+                Locations can be provided by lat/lon, by Notificare regionId or by Notificare region major
+                and are processed in that order
+              properties:
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                altitude:
+                  type: number
+                relevantText:
+                  type: string
+                regionId:
+                  $ref: '#/components/schemas/ObjectId'
+                regionMajor:
+                  type: number
+            locations:
+              type: array
+              description: >-
+                List of maximum 10 locations, if no location is provided otherwise
+                Locations can only be provided by lat/lon
+              items:
+                properties:
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  altitude:
+                    type: number
+                  relevantText:
+                    type: string
+          type: object
+        passbook:
+          description: The pass template to use
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+      type: object
+      required:
+        - passbook
+    ImportDataNotification:
+      properties:
+        notificationTemplate:
+          description: Use previously created template for messages
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        notificationSchedule:
+          description: Schedule message
+          properties:
+            time:
+              $ref: '#/components/schemas/Date'
+            timezone:
+              type: string
+              example: Europe/Amsterdam
+          type: object
+        notificationCriteria:
+          $ref: '#/components/schemas/Criteria'
+        medium:
+          description: Medium to send to if no template given
+          type: string
+          enum: [ push, email, sms ]
+          default: push
+      type: object
+    ImportDataGroupedNotification:
+      properties:
+        notificationTemplate:
+          description: Use previously created template for messages
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        notificationSchedule:
+          description: Schedule message
+          properties:
+            time:
+              type: string
+              format: 'date-time'
+            timezone:
+              type: string
+              example: Europe/Amsterdam
+            local:
+              type: boolean
+              default: false
+          type: object
+        notificationCriteria:
+          $ref: '#/components/schemas/Criteria'
+      type: object
     LinkModelList:
       properties:
         links:

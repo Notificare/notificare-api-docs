@@ -1,4 +1,6 @@
 # Changelog
+## [1.101.0] - 2020-12-16
+Added import data models
 ## [1.100.5] - 2020-11-17
 Added import pass with locations
 Added import pass update with locations
