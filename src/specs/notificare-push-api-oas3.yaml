@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.101.0'
+  version: '1.102.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2066,6 +2066,48 @@ paths:
         `masterSecret`.
       operationId: deleteDeviceUser
       summary: Unregister User From Device
+  '/device/{deviceID}/userdata/override':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The deviceID is the unique identifier provided by APNS, GCM, HMS or WebPush.
+          example: 00a9b9bf-xxx9278-64d6a3f22476
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: device user data updated
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Set the user data fields for a device.
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putDeviceUserdataOverride
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userData:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    firstName: John
+                    lastName: Doe
+              type: object
+      summary: Update User Data For Device
   /email:
     post:
       security:
@@ -11125,6 +11167,89 @@ paths:
         `applicationKey` and  `masterSecret`.
       operationId: putUserByIdRemoveSegment
       summary: Remove User From User Segment
+  '/user/{user}/userdata/override':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The Notificare ID of the user
+          in: path
+          name: user
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: devices user data updated
+          description: OK
+      tags:
+        - User
+      description: >-
+        Set the user data fields for all the user's devices.
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putUserUserdataOverride
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userData:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    firstName: John
+                    lastName: Doe
+              type: object
+      summary: Update User Data For User Devices
+  '/user/foruserid/{userID}/userdata/override':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The userID of the user
+          example: '12345'
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: 'string'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: devices user data updated
+          description: OK
+      tags:
+        - User
+      description: >-
+        Set the user data fields for all the user's devices.
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putUserForUserIDUserdataOverride
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userData:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    firstName: John
+                    lastName: Doe
+              type: object
+      summary: Update User Data For User Devices By userID
   /usersegment:
     get:
       security:
