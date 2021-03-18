@@ -22,9 +22,6 @@ const generateHTMLPlugins = () => glob.sync('./src/**/*.html').map(
 );
 
 module.exports = {
-  node: {
-    fs: 'empty',
-  },
   entry: ['./src/js/app.js'],
   output: {
     path: path.resolve(__dirname, 'dist'),
