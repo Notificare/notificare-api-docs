@@ -1,4 +1,6 @@
 # Changelog
+## [1.104.0] - 2021-04-01
+Added import verifyOnly flag
 ## [1.102.0] - 2020-03-15
 Added userdata override methods
 ## [1.101.0] - 2020-12-16

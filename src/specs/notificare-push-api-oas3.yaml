@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.102.0'
+  version: '1.104.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -13191,6 +13191,9 @@ components:
           description: The template to use for the notification
           type: string
           example: 1d9e80ef851d212aca82cf23
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
       type: object
       required:
         - userSegment
@@ -13219,6 +13222,9 @@ components:
           type: string
           example: Europe/Amsterdam
           default: UTC
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
       type: object
     ImportDataPass:
       properties:
@@ -13328,6 +13334,9 @@ components:
           description: Send a notification if existing pass was updated
           type: boolean
           default: false
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
       type: object
       required:
         - passbook
@@ -13416,6 +13425,9 @@ components:
           description: The pass template to use
           type: string
           example: 1d9e80ef851d212aca82cf23
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
       type: object
       required:
         - passbook
@@ -13441,6 +13453,9 @@ components:
           type: string
           enum: [ push, email, sms ]
           default: push
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
       type: object
     ImportDataGroupedNotification:
       properties:
@@ -13463,6 +13478,9 @@ components:
           type: object
         notificationCriteria:
           $ref: '#/components/schemas/Criteria'
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
       type: object
     LinkModelList:
       properties:
