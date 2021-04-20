@@ -1,4 +1,8 @@
 # Changelog
+## [1.106.0] - 2021-04-20
+Added user data criteria
+Added data filter to eventCriteria
+Added sw operator
 ## [1.104.0] - 2021-04-01
 Added import verifyOnly flag
 ## [1.102.0] - 2020-03-15

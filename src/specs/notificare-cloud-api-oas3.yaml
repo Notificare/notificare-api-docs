@@ -24,7 +24,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.102.0'
+  version: '1.106.0'
 servers:
   - url: 'https://cloud.notifica.re/api'
     description: The Notificare Cloud API - securely connect with TLSv1.2

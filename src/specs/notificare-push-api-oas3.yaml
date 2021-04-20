@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.104.0'
+  version: '1.106.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2090,7 +2090,8 @@ paths:
       tags:
         - Device
       description: >-
-        Set the user data fields for a device.
+        Set the user data fields for a device. The fields need to be defined as User Data Fields in
+        the Settings > Configure App > User Data Fields menu before they can be set through this endpoint.
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: putDeviceUserdataOverride
@@ -11190,7 +11191,9 @@ paths:
       tags:
         - User
       description: >-
-        Set the user data fields for all the user's devices.
+        Set the user data fields for all the user's devices. The fields
+        need to be defined as User Data Fields in the Settings > Configure App > User Data Fields
+        menu before they can be set through this endpoint.
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: putUserUserdataOverride
@@ -12276,6 +12279,12 @@ components:
           items:
             $ref: '#/components/schemas/TagsCriteria'
           type: array
+        userDataCriteria:
+          description: >-
+            User Data criteria
+          items:
+            $ref: '#/components/schemas/UserDataCriteria'
+          type: array
       type: object
     DataFilterCriteria:
       items:
@@ -12295,10 +12304,16 @@ components:
             - gte
             - in
             - nin
+            - sw
           type: string
         property:
           type: string
+          example: customDataField
         type:
+          description: >-
+            Type of custom event data property to filter.
+            Both the value of the criterion and the actual event data
+            value will be parsed against this type before comparing.
           enum:
             - String
             - Number
@@ -12306,13 +12321,19 @@ components:
             - Date
           type: string
         value:
-          items:
-            oneOf:
-              - type: string
-              - type: number
-              - type: boolean
-              - $ref: '#/components/schemas/Date'
-          type: array
+          example: customDataValue
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - $ref: '#/components/schemas/Date'
+            - type: array
+              items:
+                oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - $ref: '#/components/schemas/Date'
       type: object
     DatasourceCreate:
       allOf:
@@ -12913,6 +12934,12 @@ components:
               type: string
               example: 1d9e80ef851d212aca82cf23
           type: object
+        dataFilter:
+          description: >-
+            Event data filter, to filter events based on custom event data values
+          items:
+            $ref: '#/components/schemas/DataFilterCriteria'
+          type: array
         endDate:
           type: string
           format: 'date-time'
@@ -15466,6 +15493,7 @@ components:
             `gte` means greater than or equal, string-compared
             `in` means in, needs an array of values
             `nin` means not in, needs an array of values
+            `sw` means starts with, only for string values
           enum:
             - eq
             - ne
@@ -15475,6 +15503,7 @@ components:
             - gte
             - in
             - nin
+            - sw
           type: string
         property:
           description: >-
@@ -15925,6 +15954,57 @@ components:
             Trigger Types for all available types.
           type: string
           example: re.notifica.trigger.region.Enter
+    UserDataCriteria:
+      description: >-
+        A list of filters for user data fields. The results are intersected / AND'ed
+      items:
+        $ref: '#/components/schemas/UserDataCriterion'
+      type: array
+    UserDataCriterion:
+      properties:
+        operator:
+          description: >-
+            Filter or select devices based on the value of user data fields.
+            `eq` means equal
+            `ne` means not equal
+            `lt` means less than, string-compared
+            `lte` means less than or equal, string-compared
+            `gt` means greater than, string-compared
+            `gte` means greater than or equal, string-compared
+            `in` means in, needs an array of values
+            `nin` means not in, needs an array of values
+            `sw` means starts with, only for string values
+          enum:
+            - eq
+            - ne
+            - lt
+            - lte
+            - gt
+            - gte
+            - in
+            - nin
+            - sw
+          type: string
+        key:
+          description: >-
+            The key of the user data field to filter. The key need to be defined in
+            the Settings > Configure App > User Data Fields menu before they can be
+            used in criteria.
+          type: string
+          example: firstName
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - type: array
+              items:
+                oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+          example: John
+      type: object
     UserSegmentCreate:
       properties:
         name:
