@@ -1,4 +1,7 @@
 # Changelog
+## [1.109.0] - 2021-05-25
+Added email sender address note
+Added renotify property to notification
 ## [1.106.0] - 2021-04-20
 Added user data criteria
 Added data filter to eventCriteria

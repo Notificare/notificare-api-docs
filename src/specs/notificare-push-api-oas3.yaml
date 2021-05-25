@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.106.0'
+  version: '1.109.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -13790,7 +13790,8 @@ components:
       properties:
         address:
           type: string
-          example: massimo@notifica.re
+          example: massimo
+          description: the local part of the email address
         name:
           type: string
           example: Massimo Gondoliere
@@ -14141,6 +14142,13 @@ components:
                 This is a Web only property. In WebPush, will set the requireInteraction
                 flag to true
               type: boolean
+              default: false
+            renotify:
+              description: >-
+                This is a Web only property. In WebPush, will set the renotify
+                flag to true
+              type: boolean
+              default: true
             critical:
               description: >-
                 This is a iOS only property. It will be used to indicate this is a critical notification
@@ -14656,6 +14664,12 @@ components:
             This is a Web only property. In WebPush, will set the requireInteraction
             flag to true
           type: boolean
+        renotify:
+          description: >-
+            This is a Web only property. In WebPush, will set the renotify
+            flag to true
+          type: boolean
+          default: true
         critical:
           description: >-
             This is a iOS only property. It will be used to indicate this is a critical notification
