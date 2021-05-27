@@ -1,4 +1,7 @@
 # Changelog
+## [1.110.0] - 2021-05-27
+Added user data import job
+Added query parameter medium to all device queries
 ## [1.109.0] - 2021-05-25
 Added email sender address note
 Added renotify property to notification

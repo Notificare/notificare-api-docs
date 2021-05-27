@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.109.0'
+  version: '1.110.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -1497,7 +1497,9 @@ paths:
           required: false
           schema:
             type: number
-        - description: The channel you wish to filter results for.
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
           example: push
           in: query
           name: medium
@@ -1545,6 +1547,16 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
       responses:
         '200':
           content:
@@ -1621,6 +1633,16 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
       responses:
         '200':
           content:
@@ -1683,6 +1705,16 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
       responses:
         '200':
           content:
@@ -1728,6 +1760,16 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
       responses:
         '200':
           content:
@@ -1764,8 +1806,9 @@ paths:
           example: push
           in: query
           name: medium
-          required: true
+          required: false
           schema:
+            default: push
             type: string
       responses:
         '200':
@@ -1812,6 +1855,16 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
       responses:
         '200':
           content:
@@ -1859,6 +1912,16 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
       responses:
         '200':
           content:
@@ -4146,6 +4209,57 @@ paths:
             schema:
               $ref: '#/components/schemas/ImportJobGroupedNotification'
       summary: Import Grouped Messages
+  /import/re.notifica.import.UserData:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  importJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Import
+      description: >-
+        Used to import user data for a list of users. The user data in the import
+        will be applied to all the users' current devices.
+        Every row in the referenced CSV should contain at least a `userID`.
+
+        Other column headers are interpreted as keys of User Data Fields as
+        defined for the application. Unrecognized field keys are ignored.
+
+        By default, empty values will count as `null` and will effectively clear
+        the value that is stored with the device.
+
+        By setting the import job data property `ignoreEmptyValues`, this behaviour is
+        changed to ignoring these values and will effectively leave existing values
+        as they are.
+
+        Also, existing values for any User Data Field that is not included in the import
+        will be left unchanged
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+
+
+        Recognized columns in your .csv file are:
+
+
+        + userID
+
+
+        + xxx (the key of a application-defined User Data Field)
+      operationId: postImportUserData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobUserData'
+      summary: Import User Data
   '/import/{import}':
     get:
       security:
@@ -6424,6 +6538,17 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium of the templates (it can be one of the following: push,
+            email, sms)
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+            enum: [push, email, sms]
         - description: 'The string to search for in name, title, subtitle and message'
           example: My great template
           in: query
@@ -13078,6 +13203,16 @@ components:
             data:
               $ref: '#/components/schemas/ImportDataPassUpdate'
           type: object
+    ImportJobUserData:
+      allOf:
+        - $ref: '#/components/schemas/ImportJobBase'
+        - properties:
+            data:
+              $ref: '#/components/schemas/ImportDataUserData'
+            path:
+              type: string
+              example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
+          type: object
     ImportJobUserSegment:
       allOf:
         - $ref: '#/components/schemas/ImportJobBase'
@@ -13200,6 +13335,16 @@ components:
       type: object
       required:
         - source
+    ImportDataUserData:
+      properties:
+        ignoreEmptyValues:
+          description: Ignore empty values, leave existing data as-is
+          type: boolean
+          default: false
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
+      type: object
     ImportDataUserSegment:
       properties:
         userSegment:
