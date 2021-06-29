@@ -1,4 +1,6 @@
 # Changelog
+## [1.110.1] - 2021-06-29
+Added 201 response code when creating new email contact
 ## [1.110.0] - 2021-05-27
 Added user data import job
 Added query parameter medium to all device queries

@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.110.0'
+  version: '1.110.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -983,13 +983,14 @@ paths:
       security:
         - MasterSecret: []
       responses:
-        '200':
+        '201':
           content:
             application/json; charset=utf-8:
-              example:
-                automation:
-                  $ref: '#/components/schemas/ResponseCreated'
-          description: OK
+              schema:
+                properties:
+                  automation:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
       tags:
         - Automation
       description: >-
@@ -1309,9 +1310,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                datasource:
-                  $ref: '#/components/schemas/ResponseCreated'
+              schema:
+                properties:
+                  datasource:
+                    $ref: '#/components/schemas/ResponseCreated'
           description: OK
       tags:
         - Automation
@@ -2185,6 +2187,14 @@ paths:
               example:
                 message: subscription updated
           description: OK
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  device:
+                    $ref: '#/components/schemas/ResponseDeviceCreated'
+          description: Created
         '202':
           content:
             application/json; charset=utf-8:
@@ -11064,9 +11074,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                user:
-                  $ref: '#/components/schemas/ResponseCreated'
+              schema:
+                properties:
+                  user:
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - User
@@ -11426,9 +11437,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                userSegment:
-                  $ref: '#/components/schemas/ResponseCreated'
+              schema:
+                properties:
+                  userSegment:
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - User Segment
@@ -11450,9 +11462,10 @@ paths:
         '201':
           content:
             application/json; charset=utf-8:
-              example:
-                userSegment:
-                  $ref: '#/components/schemas/ResponseCreated'
+              schema:
+                properties:
+                  userSegment:
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - User Segment
@@ -15735,6 +15748,14 @@ components:
       properties:
         _id:
           $ref: '#/components/schemas/ObjectId'
+    ResponseDeviceCreated:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        deviceID:
+          type: string
+          format: 'uuid'
     SegmentsCriteria:
       properties:
         quantifier:
