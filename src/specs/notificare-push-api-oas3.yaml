@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.110.1'
+  version: '1.119.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2403,6 +2403,46 @@ paths:
         `masterSecret`.
       operationId: getEventForType
       summary: List Events For Type
+  '/event/types':
+    get:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/EventTypeList'
+          description: OK
+      tags:
+        - Event
+      description: >-
+        Get all the event types that were logged for a specific application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getEventTypes
+      summary: List Event Types
+  '/event/types/custom':
+    get:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/EventTypeList'
+          description: OK
+      tags:
+        - Event
+      description: >-
+        Get all the custom event types that were logged for a specific application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getEventTypesCustom
+      summary: List Custom Event Types
   '/event/{id}':
     get:
       security:
@@ -3044,6 +3084,106 @@ paths:
                 - data
               type: object
       summary: Export Campaigns Summary
+  /export/re.notifica.export.CampaignReplies:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Export
+      description: >-
+        Export the notification replies for one or more campaigns. This job might take
+        some time to finish, check the export result endpoint to obtain
+        information about the status of this export job.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postExportCampaignReplies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    campaign:
+                      $ref: '#/components/schemas/ObjectId'
+                  required:
+                    - campaign
+                  type: object
+              required:
+                - data
+              type: object
+      summary: Export Campaign Replies
+  /export/re.notifica.export.CampaignEvents:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Export
+      description: >-
+        Export the events for one or more campaigns. This job might take
+        some time to finish, check the export result endpoint to obtain
+        information about the status of this export job.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postExportCampaignEvents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    campaign:
+                      $ref: '#/components/schemas/ObjectId'
+                    before:
+                      description: >-
+                        Specify if export job should only include events
+                        created before a certain date. Can not be used together with beforeSeconds.
+                      type: string
+                      format: 'date-time'
+                    beforeSeconds:
+                      description: >-
+                        Specify if export job should only include events
+                        created before a number of seconds ago. Can not be used together with before.
+                      type: number
+                    since:
+                      description: >-
+                        Specify if export job should only include events
+                        created after a certain date. Can not be used together with sinceSeconds.
+                      type: string
+                      format: 'date-time'
+                    sinceSeconds:
+                      description: >-
+                        Specify if export job should only include events
+                        created after a number of seconds ago. Can not be used together with since.
+                      type: number
+                  required:
+                    - campaign
+                  type: object
+              required:
+                - data
+              type: object
+      summary: Export Campaign Events
   /export/re.notifica.export.AutomationSummary:
     post:
       security:
@@ -3088,6 +3228,138 @@ paths:
                 - data
               type: object
       summary: Export Automation Connectors Summary
+  /export/re.notifica.export.AutomationEvents:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Export
+      description: >-
+        Export the events for one or more automation connectors. This job
+        might take some time to finish, check the export result endpoint to
+        obtain information about the status of this export job.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postExportAutomationEvents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    automations:
+                      description: >-
+                        The ids of the automation connectors you wish to export
+                        events from
+                      items:
+                        $ref: '#/components/schemas/ObjectId'
+                      type: array
+                    before:
+                      description: >-
+                        Specify if export job should only include events
+                        created before a certain date. Can not be used together with beforeSeconds.
+                      type: string
+                      format: 'date-time'
+                    beforeSeconds:
+                      description: >-
+                        Specify if export job should only include events
+                        created before a number of seconds ago. Can not be used together with before.
+                      type: number
+                    since:
+                      description: >-
+                        Specify if export job should only include events
+                        created after a certain date. Can not be used together with sinceSeconds.
+                      type: string
+                      format: 'date-time'
+                    sinceSeconds:
+                      description: >-
+                        Specify if export job should only include events
+                        created after a number of seconds ago. Can not be used together with since.
+                      type: number
+                  required:
+                    - automations
+                  type: object
+              required:
+                - data
+              type: object
+      summary: Export Automation Connectors Events
+  /export/re.notifica.export.AutomationReplies:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Export
+      description: >-
+        Export the notification replies for one or more automation connectors. This job
+        might take some time to finish, check the export result endpoint to
+        obtain information about the status of this export job.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postExportAutomationReplies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    automations:
+                      description: >-
+                        The ids of the automation connectors you wish to export
+                        replies from
+                      items:
+                        $ref: '#/components/schemas/ObjectId'
+                      type: array
+                    before:
+                      description: >-
+                        Specify if export job should only include replies
+                        created before a certain date. Can not be used together with beforeSeconds.
+                      type: string
+                      format: 'date-time'
+                    beforeSeconds:
+                      description: >-
+                        Specify if export job should only include replies
+                        created before a number of seconds ago. Can not be used together with before.
+                      type: number
+                    since:
+                      description: >-
+                        Specify if export job should only include replies
+                        created after a certain date. Can not be used together with sinceSeconds.
+                      type: string
+                      format: 'date-time'
+                    sinceSeconds:
+                      description: >-
+                        Specify if export job should only include replies
+                        created after a number of seconds ago. Can not be used together with since.
+                      type: number
+                  required:
+                    - automations
+                  type: object
+              required:
+                - data
+              type: object
+      summary: Export Automation Connectors Replies
   /export/re.notifica.export.LinkTracker:
     post:
       security:
@@ -3562,8 +3834,8 @@ paths:
         The device properties can also be defaulted to whatever you put in the
         `data` field in the request.
 
-        There is one option in this import type, which is `overwrite`, defaults
-        to `false`.
+        There are two options in this import type that specify overwriting of existing devices
+        `overwrite`, defaults to `false` and `forceOverwrite`, also defaults to false
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -6209,7 +6481,9 @@ paths:
               schema:
                 properties:
                   log:
-                    $ref: '#/components/schemas/NotificationLogModel'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationLogModel'
           description: OK
       tags:
         - Messages
@@ -6242,6 +6516,257 @@ paths:
         `masterSecret`.
       operationId: deleteNotificationLog
       summary: Delete Message Log
+  /notification/partial:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+        - description: The key to search for
+          example: 'test_'
+          in: query
+          name: search
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/NotificationPartialList'
+          description: OK
+      tags:
+        - Message Partial
+      description: >-
+        Returns a list of all partials for your app
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getNotificationPartial
+      summary: List Partials
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  partial:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Message Partial
+      description: >-
+        Create a partial to be used in messages.
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postNotificationPartial
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPartialBase'
+      summary: Create Message Partial
+  /notification/partial/keys:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  partialKeys:
+                    type: array
+                    items:
+                      properties:
+                        name:
+                          type: string
+                          example: test_footer
+                        count:
+                          type: number
+                          example: 1
+                  count:
+                    type: number
+                    example: 1
+          description: OK
+      tags:
+        - Message Partial
+      description: >-
+        Returns a list of all partial keys for your app
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getNotificationPartialKeys
+      summary: List Partial Keys
+  /notification/partial/forkey/{key}:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+        - description: The key
+          example: 'test_footer'
+          in: path
+          name: key
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/NotificationPartialList'
+          description: OK
+      tags:
+        - Message Partial
+      description: >-
+        Returns a list of all partials for your app
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getNotificationPartialForKey
+      summary: Get Partials For Key
+  /notification/partial/{partial}:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The partial Id
+          in: path
+          name: partial
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  partial:
+                    $ref: '#/components/schemas/NotificationPartialModel'
+          description: OK
+      tags:
+        - Message Partial
+      description: >-
+        Returns a partial
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getNotificationPartialById
+      summary: Get Partial
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The partial Id
+          in: path
+          name: partial
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: partial updated
+          description: OK
+      tags:
+        - Message Partial
+      description: >-
+        Updates a partial
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putNotificationPartialById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPartialBase'
+      summary: Update Partial
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The partial Id
+          in: path
+          name: partial
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: partial deleted
+          description: OK
+      tags:
+        - Message Partial
+      description: >-
+        Deletes a partial
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteNotificationPartialById
+      summary: Delete Partial
   /notification/schedule:
     get:
       security:
@@ -6407,21 +6932,6 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/ObjectId'
-        - description: The maximum number of results to retrieve.
-          example: '10'
-          in: query
-          name: limit
-          required: false
-          schema:
-            default: 100
-            type: number
-        - description: The number of results to skip
-          example: '0'
-          in: query
-          name: skip
-          required: false
-          schema:
-            type: number
       responses:
         '200':
           content:
@@ -13103,6 +13613,14 @@ components:
           description: Total number of events during this period
           type: number
           example: 1000
+    EventTypeList:
+      properties:
+        types:
+          type: array
+          items:
+            type: string
+          example: [re.notifica.event.custom.Test]
+      type: object
     ImportJobBeacon:
       allOf:
         - $ref: '#/components/schemas/ImportJobBase'
@@ -13118,6 +13636,10 @@ components:
               properties:
                 overwrite:
                   description: Overwrite previously imported devices that are not active
+                  type: boolean
+                  default: false
+                forceOverwrite:
+                  description: Overwrite any existing device, only applicable together with `overwrite`
                   type: boolean
                   default: false
                 includeTags:
@@ -13626,8 +14148,15 @@ components:
           description: Schedule message
           properties:
             time:
-              $ref: '#/components/schemas/Date'
+              description: >-
+                The date and time (YYYY-MM-DD hh:mm) in which the message
+                should be sent.
+              type: string
+              example: 2016-08-26 23:01
             timezone:
+              description: >-
+                The timezone of the time in which the message
+                should be sent.
               type: string
               example: Europe/Amsterdam
           type: object
@@ -13652,12 +14181,20 @@ components:
           description: Schedule message
           properties:
             time:
+              description: >-
+                The date and time (YYYY-MM-DD hh:mm) in which the message
+                should be sent.
               type: string
-              format: 'date-time'
+              example: 2016-08-26 23:01
             timezone:
+              description: >-
+                The timezone of the time in which the message
+                should be sent.
               type: string
               example: Europe/Amsterdam
             local:
+              description: >-
+                If true, messages are sent at the local time of the recipient
               type: boolean
               default: false
           type: object
@@ -13976,6 +14513,18 @@ components:
         transport:
           type: string
           example: APNS
+        dsn:
+          type: object
+          properties:
+            action:
+              type: string
+              example: 'failed'
+            status:
+              type: string
+              example: '4.4.7'
+            diagnosticCode:
+              type: string
+              example: 'smtp; 554 4.4.7 Message expired: unable to deliver in 840 minutes.'
     NotificationInfoModel:
       properties:
         _id:
@@ -14072,6 +14621,62 @@ components:
                 uniqueSeconds: 0
                 labels: [yes, no]
                 perLabel: [0, 0]
+    NotificationPartialList:
+      properties:
+        partials:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationPartialModel'
+        count:
+          type: number
+          example: 1
+      type: object
+    NotificationPartialModel:
+      allOf:
+        - $ref: '#/components/schemas/NotificationPartialBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+    NotificationPartialBase:
+      properties:
+        medium:
+          description: The medium of the message
+          type: string
+          enum: [ push, email, sms ]
+          default: push
+        key:
+          description: The key for this partial
+          type: string
+          example: footer_partial
+        criteria:
+          $ref: '#/components/schemas/Criteria'
+        priority:
+          description: Priority if multiple partials match criteria
+          type: number
+          example: 0
+        description:
+          description: The key for this partial
+          type: string
+          example: footer_partial
+        content:
+          description: The content for this partial
+          type: string
+          example: 'This is the footer'
+        languages:
+          description: The localized languages for this partial
+          type: array
+          items:
+            type: string
+          example: [nl]
+        localizedContent:
+          description: The localized content for this partial
+          type: array
+          items:
+            type: string
+          example: ['Dit is de footer']
     NotificationList:
       properties:
         notifications:

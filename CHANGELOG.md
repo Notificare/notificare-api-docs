@@ -1,4 +1,13 @@
 # Changelog
+## [1.119.0] - 2021-12-23
+Fixed time type in import notification schedules
+Added forceOverwrite
+Added campaign notifications export type
+Added replies export type
+Added error log DSN
+Added partials
+Added MJML
+Added event types list
 ## [1.110.1] - 2021-06-29
 Added 201 response code when creating new email contact
 ## [1.110.0] - 2021-05-27
