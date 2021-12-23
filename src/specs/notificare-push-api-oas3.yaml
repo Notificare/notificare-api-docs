@@ -6486,7 +6486,7 @@ paths:
                       $ref: '#/components/schemas/NotificationLogModel'
           description: OK
       tags:
-        - Messages
+        - Message Log
       description: >-
         Retrieve information about errors related to APNS, FCM, Web Push, Email
         and SMS feedback service.
@@ -6508,7 +6508,7 @@ paths:
                 message: log cleared
           description: OK
       tags:
-        - Messages
+        - Message Log
       description: >-
         Clear the list of errors related to APNS, GCM and HMS feedback service.
 
@@ -6516,6 +6516,38 @@ paths:
         `masterSecret`.
       operationId: deleteNotificationLog
       summary: Delete Message Log
+  /notification/mjml/transform:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  html:
+                    description: The generated HTML
+                    type: string
+                    example: '<!doctype html><html><body><p>Test</p></body></html>'
+          description: OK
+      tags:
+        - Messages
+      description: >-
+        Transform MJML to HTML
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postNotificationMjmlTransform
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                mjml:
+                  type: string
+                  example: '<mjml><mj-body><mj-section><mj-column><mj-text">Test</mj-text></mj-column></mj-section></mj-body></mjml>'
+      summary: Transform MJML Content
   /notification/partial:
     get:
       security:
@@ -6543,6 +6575,15 @@ paths:
           required: false
           schema:
             type: string
+        - description: The medium to search for
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+            enum: [push, email, all]
       responses:
         '200':
           content:
@@ -6605,6 +6646,15 @@ paths:
           required: false
           schema:
             type: number
+        - description: The medium to search for
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+            enum: [push, email, all]
       responses:
         '200':
           content:
@@ -6661,6 +6711,15 @@ paths:
           required: true
           schema:
             type: string
+        - description: The medium to search for
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+            enum: [push, email, all]
       responses:
         '200':
           content:
@@ -17187,6 +17246,14 @@ tags:
       | re.notifica.rule tag.Remove | array of tags (eg.:
       ["tag_news","tag_press"]) |
     name: Messages
+  - description: >-
+      Methods for retrieving and deleting message error logs.
+    name: Message Log
+  - description: >-
+      Methods for retrieving, creating and edit message partials. Partials can
+      be created for different types of channels. 
+      Supported channels are: push and email.
+    name: Message Partial
   - description: >-
       Methods to create, list, modify or cancel scheduled messages. Schedule
       tasks can be set according to a specific time (in UTC) or according to the
