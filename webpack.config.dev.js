@@ -5,12 +5,14 @@ const common = require('./webpack.config.common.js');
 module.exports = merge(common, {
   mode: 'development',
   devServer: {
-    contentBase: 'src',
-    watchContentBase: true,
     hot: true,
     open: true,
     port: process.env.PORT || 9000,
     host: process.env.HOST || 'localhost',
+    static: {
+      directory: 'src',
+      watch: true,
+    }
   },
   module: {
     rules: [
