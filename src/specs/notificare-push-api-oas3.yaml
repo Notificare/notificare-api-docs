@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.119.0'
+  version: '1.121.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2561,15 +2561,26 @@ paths:
                     medium:
                       description: >-
                         Specify if export job results should include a specific type
-                        fo medium (available values are: all, push, email, sms)
+                        for medium (available values are: all, push, email, sms)
                       type: string
                       enum: [all, push, email, sms]
+                      default: push
                     tagsSeparator:
                       description: >-
                         Specify if export jobs should use a different separator for
                         the tags. By default we will use |
                       type: string
                       default: '|'
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   type: object
               required:
                 - data
@@ -2646,6 +2657,16 @@ paths:
                         you can specify if export jobs should contain the name of
                         the segments instead of their IDs
                       type: boolean
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
               required:
                 - data
       summary: Export Users
@@ -2683,6 +2704,18 @@ paths:
                       description: Specify which user you want to export data from
                       type: string
                       example: '1288477272'
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
+                  required:
+                    - userID
                   type: object
               required:
                 - data
@@ -2711,6 +2744,25 @@ paths:
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: postExportRegion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
+                  type: object
+              type: object
       summary: Export Regions
   /export/re.notifica.export.Beacon:
     post:
@@ -2735,6 +2787,25 @@ paths:
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: postExportBeacon
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
+                  type: object
+              type: object
       summary: Export Beacons
   /export/re.notifica.export.Notification:
     post:
@@ -2798,6 +2869,16 @@ paths:
                         Specify if export jobs should contain the name of the
                         segments instead of their IDs
                       type: boolean
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   type: object
               required:
                 - data
@@ -2835,6 +2916,16 @@ paths:
                   properties:
                     notification:
                       $ref: '#/components/schemas/ObjectId'
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - notification
                   type: object
@@ -2950,6 +3041,16 @@ paths:
                         that pass
                       type: string
                       format: uuid
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - type
                   type: object
@@ -2992,6 +3093,16 @@ paths:
                       description: The id of the existing pass template
                       type: string
                       example: 1d9e80ef851d212aca82cf23
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - passbook
                   type: object
@@ -3035,6 +3146,16 @@ paths:
                       description: The id of the campaign you wish to export results from
                       type: string
                       example: 1d9e80ef851d212aca82cf23
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - campaign
                   type: object
@@ -3077,6 +3198,16 @@ paths:
                       items:
                         $ref: '#/components/schemas/ObjectId'
                       type: array
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - campaigns
                   type: object
@@ -3116,6 +3247,16 @@ paths:
                   properties:
                     campaign:
                       $ref: '#/components/schemas/ObjectId'
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - campaign
                   type: object
@@ -3177,6 +3318,16 @@ paths:
                         Specify if export job should only include events
                         created after a number of seconds ago. Can not be used together with since.
                       type: number
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - campaign
                   type: object
@@ -3221,6 +3372,16 @@ paths:
                       items:
                         $ref: '#/components/schemas/ObjectId'
                       type: array
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - automations
                   type: object
@@ -3287,6 +3448,16 @@ paths:
                         Specify if export job should only include events
                         created after a number of seconds ago. Can not be used together with since.
                       type: number
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - automations
                   type: object
@@ -3353,6 +3524,16 @@ paths:
                         Specify if export job should only include replies
                         created after a number of seconds ago. Can not be used together with since.
                       type: number
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
                   required:
                     - automations
                   type: object
@@ -3396,6 +3577,16 @@ paths:
                             The id of the campaign for which you wish to export links tracked
                           type: string
                           example: 1d9e80ef851d212aca82cf23
+                        skipErrorEmails:
+                          description: >-
+                            Do not send emails when export fails
+                          type: boolean
+                          default: false
+                        skipSuccessEmails:
+                          description: >-
+                            Do not send emails when export succeeds
+                          type: boolean
+                          default: false
                       type: object
                   required:
                     - data
@@ -3408,6 +3599,16 @@ paths:
                             The id of the automation connector for which you wish to export links tracked
                           type: string
                           example: 1d9e80ef851d212aca82cf23
+                        skipErrorEmails:
+                          description: >-
+                            Do not send emails when export fails
+                          type: boolean
+                          default: false
+                        skipSuccessEmails:
+                          description: >-
+                            Do not send emails when export succeeds
+                          type: boolean
+                          default: false
                       type: object
                   required:
                     - data
@@ -3420,6 +3621,16 @@ paths:
                             The id of the notification for which you wish to export links tracked
                           type: string
                           example: 1d9e80ef851d212aca82cf23
+                        skipErrorEmails:
+                          description: >-
+                            Do not send emails when export fails
+                          type: boolean
+                          default: false
+                        skipSuccessEmails:
+                          description: >-
+                            Do not send emails when export succeeds
+                          type: boolean
+                          default: false
                       type: object
                   required:
                     - data
@@ -3599,7 +3810,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ImportScheduleBase'
+              $ref: '#/components/schemas/ExportScheduleBase'
       summary: Create Export Schedule
   /export/schedule/test/{type}:
     post:
@@ -3986,7 +4197,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ImportJobBase'
+              $ref: '#/components/schemas/ImportJobUser'
       summary: Import Users
   /import/re.notifica.import.UserSegment:
     post:
@@ -4265,8 +4476,7 @@ paths:
         + pass_xxx (where xxx is any field defined in the Passbook Template)
 
 
-        + notification_xxx (where xxx is any placeholder defined in your Message
-        Template)
+        + notification_xxx (where `{{notification_xxx}}`, or `{{xxx}}` if `ignorePlaceholderPrefix` is true, is any placeholder defined in your Message Template)
       operationId: postImportPass
       requestBody:
         content:
@@ -4433,8 +4643,8 @@ paths:
 
 
         `title`, `subtitle`, and `message` can contain placeholders in the form
-        of `{{notification_xxxx}}` or any of the default placeholders, e.g.
-        `{{userID}}` or `{{userName}}`.
+        of `{{notification_xxx}}` (or `{{xxx}}` if ignorePlaceholderPrefix is true)
+        or any of the default placeholders, e.g. `{{userID}}` or `{{userName}}`, or `{{xxx}}` if ignorePlaceholderPrefix is true
       operationId: postImportNotification
       requestBody:
         content:
@@ -4482,8 +4692,7 @@ paths:
         + userID / deviceID / subscriptionId (if more than one is provided, userID is used over deviceID or subscriptionId)
 
 
-        + notification_xxx (referring to a placeholder `{{notification_xxx}}` in
-        the template)
+        + notification_xxx (referring to a placeholder `{{notification_xxx}}`, or `{{xxx}}` if `ignorePlaceholderPrefix` is true, in the template)
       operationId: postImportGroupedNotification
       requestBody:
         content:
@@ -6088,6 +6297,299 @@ paths:
             schema:
               $ref: '#/components/schemas/NotificationSmsTriggered'
       summary: Create Triggered SMS Message
+  /notification/fromtemplate/{template}/broadcast:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification template to use
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+      tags:
+        - Messages
+      description: >-
+        Send a message to all, based on template
+
+        You can also schedule a broadcast, if `scheduled` is true you should
+        immediately use /notification/schedule to create the schedule task.
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postNotificationFromTemplateBroadcast
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationFromTemplateBroadcast'
+      summary: Create Message Broadcast From Template
+  /notification/fromtemplate/{template}/criteria:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification template to use
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+      tags:
+        - Messages
+      description: >-
+        Send a message to devices that match a certain criteria, based on template
+
+        You can also schedule these messages, if `scheduled` is true you should
+        immediately use /notification/schedule to create a schedule task.
+
+        The request requires a criteria object. This request must be
+        authenticated with the `applicationKey` and `masterSecret`.
+      operationId: postNotificationFromTemplateCriteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationFromTemplateCriteria'
+      summary: Create Message to Criteria From Template
+  /notification/fromtemplate/{template}/event:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification template to use
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+      tags:
+        - Messages
+      description: >-
+        Send a message to any device that executed an event, based on template
+
+        You can also schedule a push message based on events, if `scheduled` is
+        true you should immediately use /notification/schedule to create the
+        schedule task.
+
+        The request requires an eventCriteria object. This request must be
+        authenticated with the `applicationKey` and `masterSecret`.
+      operationId: postNotificationFromTemplateEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationFromTemplateEvent'
+      summary: Create Message to Events From Template
+  /notification/fromtemplate/{template}/segments:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification template to use
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+          headers: {}
+      tags:
+        - Messages
+      description: >-
+        Send a message to users in any of the specified `segments`, based on template
+
+        You can also schedule these messages, if `scheduled` is true you should
+        immediately use /notification/schedule to create a schedule task.
+
+        The request requires an array of segment IDs. This request must be
+        authenticated with the `applicationKey` and `masterSecret`.
+      operationId: postNotificationFromTemplateSegments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationFromTemplateSegments'
+      summary: Create Message to Segments From Template
+  /notification/fromtemplate/{template}/tags:
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification template to use
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+      tags:
+        - Messages
+      description: >-
+        Send a message to devices in any of the specified `tags`, based on template
+
+        You can also schedule these message, if `scheduled` is true you should
+        immediately use /notification/schedule to create a schedule task.
+
+        The request requires an array of tags. This request must be
+        authenticated with the `applicationKey` and `masterSecret`.
+      operationId: postNotificationFromTemplateTags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationFromTemplateTags'
+      summary: Create Message to Tags From Template
+  '/notification/fromtemplate/{template}/user/{userID}':
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification template to use
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: >-
+            The user ID is the one the client device registered with, e.g., the
+            user's email address.
+          example: testuser@example.com
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+      tags:
+        - Messages
+      description: >-
+        Send a message to one single user and its devices, based on template
+
+        You can also schedule a private message, if `scheduled` is true you
+        should immediately use /notification/schedule to create a schedule task.
+
+        The request requires an userID. This request must be authenticated with
+        the `applicationKey` and `masterSecret`.
+      operationId: postNotificationFromTemplateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationFromTemplateUser'
+      summary: Create Message to User From Template
+  '/notification/fromtemplate/{template}/device/{deviceID}':
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification template to use
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: >-
+            The deviceID is the ID as registered by the device, e.g. APNS, FCM
+            or Web Push token.
+          example: bbff2ce9b547d2df4731bac277xxx
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+      tags:
+        - Messages
+      description: >-
+        Send a message to a single device, based on template
+
+        You can also schedule this type of messages, if `scheduled` is true you
+        should immediately use /notification/schedule to create a schedule task.
+
+        The request requires a deviceID. This request must be authenticated with
+        the `applicationKey` and `masterSecret`.
+      operationId: postNotificationFromTemplateDevice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationFromTemplateDevice'
+      summary: Create Message to Device From Template
   /notification/system:
     post:
       security:
@@ -13444,6 +13946,8 @@ components:
             type: re.notifica.event.application.Open
             useSegmentNames: true
             userID: 5354f08474adc4183214c143
+            skipErrorEmails: false
+            skipSuccessEmails: true
         date:
           $ref: '#/components/schemas/Date'
         result:
@@ -13541,6 +14045,8 @@ components:
             type: re.notifica.event.application.Open
             useSegmentNames: true
             userID: 5354f08474adc4183214c143
+            skipErrorEmails: false
+            skipSuccessEmails: true
       type: object
       required:
         - source
@@ -13692,76 +14198,14 @@ components:
         - $ref: '#/components/schemas/ImportJobBase'
         - properties:
             data:
-              properties:
-                overwrite:
-                  description: Overwrite previously imported devices that are not active
-                  type: boolean
-                  default: false
-                forceOverwrite:
-                  description: Overwrite any existing device, only applicable together with `overwrite`
-                  type: boolean
-                  default: false
-                includeTags:
-                  description: Import tags for the device
-                  type: boolean
-                  default: false
-                tagsSeparator:
-                  description: Use this separator for tags
-                  type: string
-                  example: '|'
-                  default: '|'
-                medium:
-                  description: Default medium
-                  type: string
-                  enum: [push, email, sms]
-                  default: push
-                platform:
-                  description: Default platform
-                  type: string
-                  enum: [iOS, tvOS, Android, Web]
-                transport:
-                  description: Default transport
-                  type: string
-                  enum: [APNS, GCM, HMS, WebPush, WebsitePush, Email, SMS, Notificare]
-                  default: Notificare
-                osVersion:
-                  description: Default osVersion
-                  type: string
-                  example: 10
-                sdkVersion:
-                  description: Default sdkVersion
-                  type: string
-                  example: 2.1.1
-                appVersion:
-                  description: Default appVersion
-                  type: string
-                  example: 3.0
-                osString:
-                  description: Default osString
-                  type: string
-                  example: Android 10
-                deviceString:
-                  description: Default deviceString
-                  type: string
-                  example: Google Pixel 2
-                language:
-                  description: Default language
-                  type: string
-                  example: nl
-                  default: en
-                region:
-                  description: Default region
-                  type: string
-                  example: NL
-                userID:
-                  description: Default userID
-                  type: string
-                  example: 188489101
-                userName:
-                  description: Default userName
-                  type: string
-                  example: Test User
-              type: object
+              $ref: '#/components/schemas/ImportDataDevice'
+          type: object
+    ImportJobUser:
+      allOf:
+        - $ref: '#/components/schemas/ImportJobBase'
+        - properties:
+            data:
+              $ref: '#/components/schemas/ImportDataUser'
           type: object
     ImportJobGroupedNotification:
       allOf:
@@ -13769,9 +14213,6 @@ components:
         - properties:
             data:
               $ref: '#/components/schemas/ImportDataGroupedNotification'
-            path:
-              type: string
-              example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
           type: object
     ImportJobNotification:
       allOf:
@@ -13779,9 +14220,6 @@ components:
         - properties:
             data:
               $ref: '#/components/schemas/ImportDataNotification'
-            path:
-              type: string
-              example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
           type: object
     ImportJobPass:
       allOf:
@@ -13803,9 +14241,6 @@ components:
         - properties:
             data:
               $ref: '#/components/schemas/ImportDataUserData'
-            path:
-              type: string
-              example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
           type: object
     ImportJobUserSegment:
       allOf:
@@ -13834,6 +14269,9 @@ components:
               $ref: '#/components/schemas/ObjectId'
             data:
               oneOf:
+                - $ref: '#/components/schemas/ImportDataDevice'
+                - $ref: '#/components/schemas/ImportDataUser'
+                - $ref: '#/components/schemas/ImportDataUserData'
                 - $ref: '#/components/schemas/ImportDataUserSegment'
                 - $ref: '#/components/schemas/ImportDataBeacon'
                 - $ref: '#/components/schemas/ImportDataPass'
@@ -13920,6 +14358,9 @@ components:
                 - $ref: '#/components/schemas/ImportStorageConfigGoogleCloud'
         data:
           oneOf:
+            - $ref: '#/components/schemas/ImportDataDevice'
+            - $ref: '#/components/schemas/ImportDataUser'
+            - $ref: '#/components/schemas/ImportDataUserData'
             - $ref: '#/components/schemas/ImportDataUserSegment'
             - $ref: '#/components/schemas/ImportDataBeacon'
             - $ref: '#/components/schemas/ImportDataPass'
@@ -13929,6 +14370,111 @@ components:
       type: object
       required:
         - source
+    ImportDataDevice:
+      properties:
+        overwrite:
+          description: Overwrite previously imported devices that are not active
+          type: boolean
+          default: false
+        forceOverwrite:
+          description: Overwrite any existing device, only applicable together with `overwrite`
+          type: boolean
+          default: false
+        includeTags:
+          description: Import tags for the device
+          type: boolean
+          default: false
+        tagsSeparator:
+          description: Use this separator for tags
+          type: string
+          example: '|'
+          default: '|'
+        medium:
+          description: Default medium
+          type: string
+          enum: [ push, email, sms ]
+          default: push
+        platform:
+          description: Default platform
+          type: string
+          enum: [ iOS, tvOS, Android, Web ]
+        transport:
+          description: Default transport
+          type: string
+          enum: [ APNS, GCM, HMS, WebPush, WebsitePush, Email, SMS, Notificare ]
+          default: Notificare
+        osVersion:
+          description: Default osVersion
+          type: string
+          example: 10
+        sdkVersion:
+          description: Default sdkVersion
+          type: string
+          example: 2.1.1
+        appVersion:
+          description: Default appVersion
+          type: string
+          example: 3.0
+        osString:
+          description: Default osString
+          type: string
+          example: Android 10
+        deviceString:
+          description: Default deviceString
+          type: string
+          example: Google Pixel 2
+        language:
+          description: Default language
+          type: string
+          example: nl
+          default: en
+        region:
+          description: Default region
+          type: string
+          example: NL
+        userID:
+          description: Default userID
+          type: string
+          example: 188489101
+        userName:
+          description: Default userName
+          type: string
+          example: Test User
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
+      type: object
+    ImportDataUser:
+      properties:
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
+      type: object
     ImportDataUserData:
       properties:
         ignoreEmptyValues:
@@ -13938,6 +14484,21 @@ components:
         verifyOnly:
           description: Only verify the import file
           type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
       type: object
     ImportDataUserSegment:
       properties:
@@ -13960,6 +14521,21 @@ components:
         verifyOnly:
           description: Only verify the import file
           type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
       type: object
       required:
         - userSegment
@@ -13991,6 +14567,21 @@ components:
         verifyOnly:
           description: Only verify the import file
           type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
       type: object
     ImportDataPass:
       properties:
@@ -14103,6 +14694,27 @@ components:
         verifyOnly:
           description: Only verify the import file
           type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
+        ignorePlaceholderPrefix:
+          description: >-
+            Ignore the `notification_` prefix when mapping column to placeholders in the
+            notification, e.g., column `notification_xxx` maps to placeholder `xxx` in the notification
+          type: boolean
+          default: false
       type: object
       required:
         - passbook
@@ -14194,6 +14806,21 @@ components:
         verifyOnly:
           description: Only verify the import file
           type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
       type: object
       required:
         - passbook
@@ -14229,6 +14856,27 @@ components:
         verifyOnly:
           description: Only verify the import file
           type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
+        ignorePlaceholderPrefix:
+          description: >-
+            Ignore the `notification_` prefix when mapping column to placeholders in the
+            notification, e.g., column `notification_xxx` maps to placeholder `xxx` in the notification
+          type: boolean
+          default: false
       type: object
     ImportDataGroupedNotification:
       properties:
@@ -14262,6 +14910,27 @@ components:
         verifyOnly:
           description: Only verify the import file
           type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
+        ignorePlaceholderPrefix:
+          description: >-
+            Ignore the `notification_` prefix when mapping column to placeholders in the
+            notification, e.g., column `notification_xxx` maps to placeholder `xxx` in the notification
+          type: boolean
+          default: false
       type: object
     LinkModelList:
       properties:
@@ -15020,6 +15689,81 @@ components:
           required:
             - type
             - message
+    NotificationFromTemplateDevice:
+      $ref: '#/components/schemas/NotificationFromTemplateBroadcast'
+    NotificationFromTemplateUser:
+      allOf:
+        - $ref: '#/components/schemas/NotificationFromTemplateBroadcast'
+        - type: object
+          properties:
+            tags:
+              type: array
+              items:
+                type: string
+              example: [tag1]
+    NotificationFromTemplateTags:
+      allOf:
+        - $ref: '#/components/schemas/NotificationFromTemplateBroadcast'
+        - type: object
+          properties:
+            tags:
+              type: array
+              items:
+                type: string
+              example: [tag1]
+          required:
+            - tags
+    NotificationFromTemplateSegments:
+      allOf:
+        - $ref: '#/components/schemas/NotificationFromTemplateBroadcast'
+        - type: object
+          properties:
+            segments:
+              type: array
+              items:
+                $ref: '#/components/schemas/ObjectId'
+            tags:
+              type: array
+              items:
+                type: string
+              example: [tag1]
+          required:
+            - segments
+    NotificationFromTemplateCriteria:
+      allOf:
+        - $ref: '#/components/schemas/NotificationFromTemplateBase'
+        - type: object
+          properties:
+            criteria:
+              $ref: '#/components/schemas/Criteria'
+          required:
+            - criteria
+    NotificationFromTemplateEvent:
+      allOf:
+        - $ref: '#/components/schemas/NotificationFromTemplateBroadcast'
+        - type: object
+          properties:
+            eventCriteria:
+              $ref: '#/components/schemas/EventCriteria'
+            criteria:
+              $ref: '#/components/schemas/Criteria'
+          required:
+            - eventCriteria
+    NotificationFromTemplateBroadcast:
+      allOf:
+        - $ref: '#/components/schemas/NotificationFromTemplateBase'
+        - type: object
+          properties:
+            location:
+              $ref: '#/components/schemas/MessageLocation'
+    NotificationFromTemplateBase:
+      data:
+        additionalProperties:
+          type: string
+          example:
+            key1: value1
+            key2: value2
+        type: object
     NotificationSystemDevice:
       $ref: '#/components/schemas/NotificationSystemBase'
     NotificationSystemUser:

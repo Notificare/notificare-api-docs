@@ -1,4 +1,9 @@
 # Changelog
+## [1.121.0] - 2021-01-10
+Added import job email flags
+Added export job email flags
+Added import job skip placeholder prefix
+Added data property when creating notification from template
 ## [1.119.0] - 2021-12-23
 Fixed time type in import notification schedules
 Added forceOverwrite
