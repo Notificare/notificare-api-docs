@@ -1,5 +1,7 @@
 # Changelog
-## [1.121.0] - 2021-01-10
+## [1.122.0] - 2022-01-26
+Added export interval limits
+## [1.121.0] - 2022-01-10
 Added import job email flags
 Added export job email flags
 Added import job skip placeholder prefix
