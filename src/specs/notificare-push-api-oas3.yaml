@@ -2823,7 +2823,10 @@ paths:
       tags:
         - Export
       description: >-
-        Export notifications for an application. This job might take some time
+        Export notifications for an application. 
+        Maximum time interval is 180 days, it will be trimmed automatically.
+        If no interval is given, it defaults to 30 days.
+        This job might take some time
         to finish, check the export result endpoint to obtain information about
         the status of this export job.
 
@@ -2846,23 +2849,31 @@ paths:
                       description: >-
                         Specify if export job should only include notifications
                         created before a certain date. Can not be used together with beforeSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     beforeSeconds:
                       description: >-
                         Specify if export job should only include notifications
                         created before a number of seconds ago. Can not be used together with before.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     since:
                       description: >-
                         Specify if export job should only include notifications
                         created after a certain date. Can not be used together with sinceSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     sinceSeconds:
                       description: >-
                         Specify if export job should only include notifications
                         created after a number of seconds ago. Can not be used together with since.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     useSegmentNames:
                       description: >-
@@ -2900,7 +2911,8 @@ paths:
       tags:
         - Export
       description: >-
-        Export replies for a specific notification. This job might take some
+        Export replies for a specific notification. 
+        This job might take some
         time to finish, check the export result endpoint to obtain information
         about the status of this export job.
 
@@ -2949,7 +2961,10 @@ paths:
       tags:
         - Export
       description: >-
-        Export all the events for a certain type. This job might take some time
+        Export all the events for a certain type.
+        Maximum time interval is 180 days, it will be trimmed automatically.
+        If no interval is given, it defaults to 30 days.
+        This job might take some time
         to finish, check the export result endpoint to obtain information about
         the status of this export job.
 
@@ -2970,23 +2985,31 @@ paths:
                       description: >-
                         Specify if export job should only include events
                         created before a certain date. Can not be used together with beforeSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     beforeSeconds:
                       description: >-
                         Specify if export job should only include events
                         created before a number of seconds ago. Can not be used together with before.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     since:
                       description: >-
                         Specify if export job should only include events
                         created after a certain date. Can not be used together with sinceSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     sinceSeconds:
                       description: >-
                         Specify if export job should only include events
                         created after a number of seconds ago. Can not be used together with since.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     criteria:
                       $ref: '#/components/schemas/Criteria'
@@ -3280,7 +3303,10 @@ paths:
       tags:
         - Export
       description: >-
-        Export the events for one or more campaigns. This job might take
+        Export the events for one or more campaigns. 
+        Maximum time interval is 180 days, it will be trimmed automatically.
+        If no interval is given, it defaults to 30 days.
+        This job might take
         some time to finish, check the export result endpoint to obtain
         information about the status of this export job.
 
@@ -3300,23 +3326,31 @@ paths:
                       description: >-
                         Specify if export job should only include events
                         created before a certain date. Can not be used together with beforeSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     beforeSeconds:
                       description: >-
                         Specify if export job should only include events
                         created before a number of seconds ago. Can not be used together with before.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     since:
                       description: >-
                         Specify if export job should only include events
                         created after a certain date. Can not be used together with sinceSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     sinceSeconds:
                       description: >-
                         Specify if export job should only include events
                         created after a number of seconds ago. Can not be used together with since.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     skipErrorEmails:
                       description: >-
@@ -3405,8 +3439,10 @@ paths:
       tags:
         - Export
       description: >-
-        Export the events for one or more automation connectors. This job
-        might take some time to finish, check the export result endpoint to
+        Export the events for one or more automation connectors. 
+        Maximum time interval is 180 days, it will be trimmed automatically.
+        If no interval is given, it defaults to 30 days.
+        This job might take some time to finish, check the export result endpoint to
         obtain information about the status of this export job.
 
         This request is authenticated with the `applicationKey` and
@@ -3430,23 +3466,31 @@ paths:
                       description: >-
                         Specify if export job should only include events
                         created before a certain date. Can not be used together with beforeSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     beforeSeconds:
                       description: >-
                         Specify if export job should only include events
                         created before a number of seconds ago. Can not be used together with before.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     since:
                       description: >-
                         Specify if export job should only include events
                         created after a certain date. Can not be used together with sinceSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     sinceSeconds:
                       description: >-
                         Specify if export job should only include events
                         created after a number of seconds ago. Can not be used together with since.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     skipErrorEmails:
                       description: >-
@@ -3481,8 +3525,10 @@ paths:
       tags:
         - Export
       description: >-
-        Export the notification replies for one or more automation connectors. This job
-        might take some time to finish, check the export result endpoint to
+        Export the notification replies for one or more automation connectors. 
+        Maximum time interval is 180 days, it will be trimmed automatically.
+        If no interval is given, it defaults to 30 days.
+        This job might take some time to finish, check the export result endpoint to
         obtain information about the status of this export job.
 
         This request is authenticated with the `applicationKey` and
@@ -3506,23 +3552,31 @@ paths:
                       description: >-
                         Specify if export job should only include replies
                         created before a certain date. Can not be used together with beforeSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     beforeSeconds:
                       description: >-
                         Specify if export job should only include replies
                         created before a number of seconds ago. Can not be used together with before.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     since:
                       description: >-
                         Specify if export job should only include replies
                         created after a certain date. Can not be used together with sinceSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: string
                       format: 'date-time'
                     sinceSeconds:
                       description: >-
                         Specify if export job should only include replies
                         created after a number of seconds ago. Can not be used together with since.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
                       type: number
                     skipErrorEmails:
                       description: >-
