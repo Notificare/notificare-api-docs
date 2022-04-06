@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.122.0'
+  version: '1.123.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2377,11 +2377,30 @@ paths:
           schema:
             $ref: '#/components/schemas/ObjectId'
         - description: >-
+            The aggregation id of an event of type
+            re.notifica.event.notification.Sent,
+            re.notifica.event.notification.Receive,
+            re.notifica.event.notification.Open,
+            re.notifica.event.notification.Influenced,
+            re.notifica.event.email.Bounce,
+            re.notifica.event.email.Complaint,
+            re.notifica.event.email.Deactivate or
+            re.notifica.event.email.Unsubscribe
+          in: query
+          name: aggregation
+          required: false
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: >-
             The notification's id of an event of type
             re.notifica.event.notification.Sent,
             re.notifica.event.notification.Receive,
-            re.notifica.event.notification.Open or
-            re.notifica.event.notification.Influenced
+            re.notifica.event.notification.Open,
+            re.notifica.event.notification.Influenced,
+            re.notifica.event.email.Bounce,
+            re.notifica.event.email.Complaint,
+            re.notifica.event.email.Deactivate or
+            re.notifica.event.email.Unsubscribe
           in: query
           name: notification
           required: false
@@ -2926,6 +2945,8 @@ paths:
               properties:
                 data:
                   properties:
+                    aggregation:
+                      $ref: '#/components/schemas/ObjectId'
                     notification:
                       $ref: '#/components/schemas/ObjectId'
                     skipErrorEmails:
@@ -2938,8 +2959,6 @@ paths:
                         Do not send emails when export succeeds
                       type: boolean
                       default: false
-                  required:
-                    - notification
                   type: object
               required:
                 - data
@@ -3036,11 +3055,18 @@ paths:
                         If type is any `re.notifica.event.asset.*`, optionally you
                         can specify the ID of an asset group to include only events
                         for that asset group
+                    aggregation:
+                      type: string
+                      example: 1d9e80ef851d212aca82cf23
+                      description: >-
+                        If type is any `re.notifica.event.notification.*` or `re.notifica.event.email.*`,
+                        optionally you can specify the ID of an aggregation to
+                        include only events for that aggregation
                     notification:
                       type: string
                       example: 1d9e80ef851d212aca82cf23
                       description: >-
-                        If type is any `re.notifica.event.notification.*`,
+                        If type is any `re.notifica.event.notification.*` or `re.notifica.event.email.*`,
                         optionally you can specify the ID of a notification to
                         include only events for that notification
                     scannable:
@@ -3595,6 +3621,87 @@ paths:
                 - data
               type: object
       summary: Export Automation Connectors Replies
+  /export/re.notifica.export.AutomationHistory:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Export
+      description: >-
+        Export the notification history for one or more automation connectors. 
+        Maximum time interval is 180 days, it will be trimmed automatically.
+        If no interval is given, it defaults to 30 days.
+        This job might take some time to finish, check the export result endpoint to
+        obtain information about the status of this export job.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postExportAutomationHistory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    automation:
+                      $ref: '#/components/schemas/ObjectId'
+                    before:
+                      description: >-
+                        Specify if export job should only include history
+                        created before a certain date. Can not be used together with beforeSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
+                      type: string
+                      format: 'date-time'
+                    beforeSeconds:
+                      description: >-
+                        Specify if export job should only include history
+                        created before a number of seconds ago. Can not be used together with before.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
+                      type: number
+                    since:
+                      description: >-
+                        Specify if export job should only include history
+                        created after a certain date. Can not be used together with sinceSeconds.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
+                      type: string
+                      format: 'date-time'
+                    sinceSeconds:
+                      description: >-
+                        Specify if export job should only include history
+                        created after a number of seconds ago. Can not be used together with since.
+                        Maximum time interval is 180 days, it will be trimmed automatically.
+                        If no interval is given, it defaults to 30 days.
+                      type: number
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
+                  required:
+                    - automation
+                  type: object
+              required:
+                - data
+              type: object
+      summary: Export Automation Connectors History
   /export/re.notifica.export.LinkTracker:
     post:
       security:
@@ -4375,7 +4482,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ImportJobBase'
+              $ref: '#/components/schemas/ImportJobRegion'
       summary: Import Regions
   /import/re.notifica.import.Beacon:
     post:
@@ -4869,12 +4976,16 @@ paths:
               properties:
                 data:
                   oneOf:
-                    - $ref: '#/components/schemas/ImportDataUserSegment'
-                    - $ref: '#/components/schemas/ImportDataBeacon'
-                    - $ref: '#/components/schemas/ImportDataPass'
-                    - $ref: '#/components/schemas/ImportDataPassUpdate'
-                    - $ref: '#/components/schemas/ImportDataNotification'
-                    - $ref: '#/components/schemas/ImportDataGroupedNotification'
+                  - $ref: '#/components/schemas/ImportDataDevice'
+                  - $ref: '#/components/schemas/ImportDataUser'
+                  - $ref: '#/components/schemas/ImportDataUserData'
+                  - $ref: '#/components/schemas/ImportDataUserSegment'
+                  - $ref: '#/components/schemas/ImportDataBeacon'
+                  - $ref: '#/components/schemas/ImportDataRegion'
+                  - $ref: '#/components/schemas/ImportDataPass'
+                  - $ref: '#/components/schemas/ImportDataPassUpdate'
+                  - $ref: '#/components/schemas/ImportDataNotification'
+                  - $ref: '#/components/schemas/ImportDataGroupedNotification'
                 path:
                   type: string
                   example: /imports/647431c4dc3798f2a5ae147411a787e8d52447e365d7972ec4d8535/dfeba0ade92ad65ec8619d4464333facc95f5c2feb55df98a92a78
@@ -6990,6 +7101,36 @@ paths:
         `masterSecret`.
       operationId: getNotificationInfo
       summary: Get Message Info
+  /notification/aggregation/{aggregation}:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The aggregation ID for this notification, i.e., an automation id
+          in: path
+          name: aggregation
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  info:
+                    $ref: '#/components/schemas/NotificationInfoModel'
+          description: OK
+      tags:
+        - Messages
+      description: >-
+        Retrieve information about your message performance.
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getNotificationAggregateInfo
+      summary: Get Message Aggregate Info
   /notification/log:
     get:
       security:
@@ -9719,6 +9860,59 @@ paths:
         `masterSecret`.
       operationId: deleteRegionAllCategory
       summary: Delete All Regions In Category
+  '/region/forreferencekey/{referencekey}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The referenceKey you want to search region for.
+          example: NL
+          in: path
+          name: referenceKey
+          required: true
+          schema:
+            type: string
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
+          description: OK
+      tags:
+        - Region
+      description: >-
+        Get regions by reference key for an application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getRegionByReferenceKey
+      summary: List Regions By Reference Key
   '/region/forcountry/{country}':
     get:
       security:
@@ -9766,7 +9960,7 @@ paths:
       tags:
         - Region
       description: >-
-        Get regions by timezone for an application.
+        Get regions by country for an application.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -10090,6 +10284,61 @@ paths:
         `masterSecret`.
       operationId: getReplyForNotification
       summary: List Replies For Notification
+  '/reply/foraggregation/{aggregation}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The aggregation id.
+          in: path
+          name: aggregation
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 1000
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                count: 2
+                replies:
+                  - _id: 5331703332c17e3077d5a765
+                    deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
+                    label: 'yes'
+                    notification: 53317011f90827d27c6e9c94
+                    time: '2014-03-25T12:01:55.713Z'
+                    userID: testuser@example.com
+                  - _id: 5331703332c17e3077d5a765
+                    deviceID: APA91bHWwt97wwvZ1-P8UQT1zCgczK7utZEZiqu7N4Awg
+                    label: 'yes'
+                    notification: 53317011f90827d27c6e9c94
+                    time: '2014-03-25T12:01:55.713Z'
+                    userID: testuser@example.com
+          description: OK
+      tags:
+        - Reply
+      description: >-
+        Get all replies for a specific aggregation.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getReplyForAggregation
+      summary: List Replies For Aggregation
   '/reply/{reply}':
     get:
       security:
@@ -13367,6 +13616,13 @@ components:
             Previously created notification to be sent when automation is executed.
           type: string
           example: 1d9e80ef851d212aca82cf23
+        distinctNotifications:
+          description: >-
+            Send distinct notifications for each automation trigger.
+            Info stats for notifications are grouped by aggregation property of the notification,
+            which will be equal to the automation id
+          type: boolean
+          default: false
         criteria:
           $ref: '#/components/schemas/Criteria'
         dataFilter:
@@ -14240,6 +14496,13 @@ components:
             type: string
           example: [re.notifica.event.custom.Test]
       type: object
+    ImportJobRegion:
+      allOf:
+        - $ref: '#/components/schemas/ImportJobBase'
+        - properties:
+            data:
+              $ref: '#/components/schemas/ImportDataRegion'
+          type: object
     ImportJobBeacon:
       allOf:
         - $ref: '#/components/schemas/ImportJobBase'
@@ -14328,6 +14591,7 @@ components:
                 - $ref: '#/components/schemas/ImportDataUserData'
                 - $ref: '#/components/schemas/ImportDataUserSegment'
                 - $ref: '#/components/schemas/ImportDataBeacon'
+                - $ref: '#/components/schemas/ImportDataRegion'
                 - $ref: '#/components/schemas/ImportDataPass'
                 - $ref: '#/components/schemas/ImportDataPassUpdate'
                 - $ref: '#/components/schemas/ImportDataNotification'
@@ -14417,6 +14681,7 @@ components:
             - $ref: '#/components/schemas/ImportDataUserData'
             - $ref: '#/components/schemas/ImportDataUserSegment'
             - $ref: '#/components/schemas/ImportDataBeacon'
+            - $ref: '#/components/schemas/ImportDataRegion'
             - $ref: '#/components/schemas/ImportDataPass'
             - $ref: '#/components/schemas/ImportDataPassUpdate'
             - $ref: '#/components/schemas/ImportDataNotification'
@@ -14618,6 +14883,31 @@ components:
           type: string
           example: Europe/Amsterdam
           default: UTC
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
+      type: object
+    ImportDataRegion:
+      properties:
+        overwrite:
+          description: Overwrite existing region
+          type: boolean
+          default: false
         verifyOnly:
           description: Only verify the import file
           type: boolean
@@ -15180,6 +15470,17 @@ components:
         key1: value1
         key2: value2
       type: object
+    MessageAttribution:
+      description: >-
+        A valid one-level JSON object. This is useful if you need to
+        send attribution data that you will need to proccess when 
+        a link is clicked in an email message.
+      additionalProperties:
+        type: string
+      example:
+        key1: value1
+        key2: value2
+      type: object
     MessageLights:
       description: >-
         An object containing a color string ("white", "red",
@@ -15648,6 +15949,8 @@ components:
               type: array
             extra:
               $ref: '#/components/schemas/MessageExtra'
+            attribution:
+              $ref: '#/components/schemas/MessageAttribution'
             sound:
               description: >-
                 Name of sound to play. `default` means use the default sound
@@ -15694,6 +15997,15 @@ components:
                 flag to true
               type: boolean
               default: true
+            relevanceScore:
+              description: >-
+                This is an iOS only property. Sets the relevance score between 0.0 and 1.0
+              type: number
+            interruptionLevel:
+              description: >-
+                This is an iOS only property. Sets the interruption level
+              type: string
+              enum: ['active', 'passive', 'timeSensitive', 'critical']
             critical:
               description: >-
                 This is a iOS only property. It will be used to indicate this is a critical notification
@@ -16090,6 +16402,13 @@ components:
               type: array
     NotificationBase:
       properties:
+        triggered:
+          description: >-
+            When true, this message is used for automations or geo-triggers
+          type: boolean
+          default: false
+        aggregation:
+          $ref: '#/components/schemas/ObjectId'
         scheduled:
           description: >-
             When true will prevent the message from being sent.
@@ -16248,6 +16567,8 @@ components:
           type: array
         extra:
           $ref: '#/components/schemas/MessageExtra'
+        attribution:
+          $ref: '#/components/schemas/MessageAttribution'
         sound:
           description: >-
             Name of sound to play. `default` means use the default sound
@@ -16291,6 +16612,15 @@ components:
             flag to true
           type: boolean
           default: true
+        relevanceScore:
+          description: >-
+            This is an iOS only property. Sets the relevance score between 0.0 and 1.0
+          type: number
+        interruptionLevel:
+          description: >-
+            This is an iOS only property. Sets the interruption level
+          type: string
+          enum: ['active', 'passive', 'timeSensitive', 'critical']
         critical:
           description: >-
             This is a iOS only property. It will be used to indicate this is a critical notification
@@ -17759,15 +18089,28 @@ tags:
 
       | re.notifica.event.application.Install | Stored whenever a new device
       installs the app. |
+      
+      | re.notifica.event.application.Registration | Stored whenever we detect 
+      a device for the first time after the app has been installed. 
+      Please note that this event was first introduced in SDK 1.10.0. |
 
       | re.notifica.event.application.Uninstall | Stored whenever an app was
       removed from the device, as reported by APNS, GCM or HMS feedback. |
+
+      | re.notifica.event.application.Upgrade | Stored whenever we detect a 
+      different app version in comparison with the last known version. 
+      This will only happen when a user opens the app for the first time 
+      after it has been updated. |
 
       | re.notifica.event.application.Open | Stored whenever the application
       becomes active. |
 
       | re.notifica.event.application.Close | Stored whenever the application
       goes to background. |
+      
+      | re.notifica.event.push.Registration | Stored the first time a user 
+      enables and allows push notifications. Please note that this event was 
+      first introduced in SDK 3.0.0. |
 
       | re.notifica.event.notification.Influenced | Stored whenever a
       notification when app is not active. |
@@ -17780,6 +18123,38 @@ tags:
 
       | re.notifica.event.notification.Open | Stored whenever a notification is
       open. |
+
+      | re.notifica.event.email.Subscribe | Stored whenever an email contact 
+      confirms its subscription, either via one of our email subscription forms 
+      or when you create a new contact that requires opt-in. |
+
+      | re.notifica.event.email.Unsubscribe | Stored whenever an email contact 
+      clicks an unsubscribe link. |
+
+      | re.notifica.event.email.Bounce | Stored whenever an email message could
+      not be delivered / bounced. |
+
+      | re.notifica.event.email.Complaint | Stored whenever an email message 
+      received a complaint. |
+
+      | re.notifica.event.email.Deactivate | Stored whenever an email contact 
+      was deactivated after a message bounced. |
+      
+      | re.notifica.event.email.ViewOnline | Stored whenever an email contact
+      views a message online. |
+
+      | re.notifica.event.email.LinkTracked | Stored whenever an email contact 
+      clicks in a link in any of your messages (when link tracking is enabled). |
+
+      | re.notifica.event.sms.Subscribe | Stored whenever an SMS contact 
+      confirms its subscription, either via one of our SMS subscription forms 
+      or when you create a new contact that requires opt-in. |
+
+      | re.notifica.event.sms.Unsubscribe | Stored whenever an SMS contact 
+      clicks an unsubscribe link. |
+
+      | re.notifica.event.sms.Nondeliverable | Stored whenever an SMS message 
+      could not be delivered. |
 
       | re.notifica.event.region.Session | Stored whenever a user enters and
       leaves a region. |
@@ -17795,8 +18170,7 @@ tags:
 
       | re.notifica.event.pass.Redeem | Stored whenever a pass is redeemed. |
 
-      | re.notifica.event.asset.Load | Stored whenever an asset group is loaded.
-      |
+      | re.notifica.event.asset.Load | Stored whenever an asset group is loaded. |
 
       | re.notifica.event.scannable.Scan | Stored whenever a scannable is
       scanned. |
