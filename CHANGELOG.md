@@ -1,4 +1,14 @@
 # Changelog
+## [1.123.0] - 2022-04-06
+Added aggregation for exporting events and replies
+Added aggregation for listing events and replies
+Added aggregation for listing notification info
+Added distinctNotification for automations
+Added attribution for messages and templates
+Added automation history export
+Added new event types
+Added list region by referencekey
+Added regions import overwrite
 ## [1.122.0] - 2022-01-26
 Added export interval limits
 ## [1.121.0] - 2022-01-10
