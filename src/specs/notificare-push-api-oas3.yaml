@@ -18113,7 +18113,7 @@ tags:
       first introduced in SDK 3.0.0. |
 
       | re.notifica.event.notification.Influenced | Stored whenever a
-      notification when app is not active. |
+      notification is open when app is not active. |
 
       | re.notifica.event.notification.Sent | Stored whenever a notification is
       sent. |

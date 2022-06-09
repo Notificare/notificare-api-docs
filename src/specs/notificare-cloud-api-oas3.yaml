@@ -628,8 +628,12 @@ paths:
         | re.notifica.event.application.Install | Stored whenever a new device
         installs the app. |
 
+        | re.notifica.event.application.Registration | Stored whenever a new device is registered. |
+
         | re.notifica.event.application.Uninstall | Stored whenever an app was
         removed from the device, as reported by APNS, GCM or HMS feedback. |
+
+        | re.notifica.event.application.Upgrade | Stored whenever we detect a new app version. |
 
         | re.notifica.event.application.Open | Stored whenever the application
         becomes active. |
@@ -637,8 +641,9 @@ paths:
         | re.notifica.event.application.Close | Stored whenever the application
         goes to background. |
 
-        | re.notifica.event.notification.Influenced | Stored whenever a
-        notification when app is not active. |
+        | re.notifica.event.application.Exception | Stored whenever the application encounters an exception. |
+
+        | re.notifica.event.notification.Sent | Stored whenever a notification is sent. |
 
         | re.notifica.event.notification.Receive | Stored whenever a
         notification arrives. |
@@ -646,11 +651,32 @@ paths:
         | re.notifica.event.notification.Open | Stored whenever a notification
         is open. |
 
+        | re.notifica.event.notification.Influenced | Stored whenever a
+        notification is open when app is not active. |
+
+        | re.notifica.event.push.Registration | Stored whenever a device is registered with an APNS/FCM token (SDK v3 and up). |
+
+        | re.notifica.event.email.Subscribe | Stored whenever an email contact subscribes. |
+
+        | re.notifica.event.email.LinkTracked | Stored whenever a link in an email message is clicked. |
+
+        | re.notifica.event.email.ViewOnline | Stored whenever the view online link in an email message is clicked. |
+
+        | re.notifica.event.email.Unsubscribe | Stored whenever an email contact unsubscribes. |
+
+        | re.notifica.event.sms.Subscribe | Stored whenever a phone number subscribes. |
+
+        | re.notifica.event.sms.Unsubscribe | Stored whenever a phone number unsubscribes. |
+
         | re.notifica.event.region.Session | Stored whenever a user enters and
         leaves a region. |
 
         | re.notifica.event.beacon.Session | Stored whenever a user is on the
         proximity of a beacon. |
+
+        | re.notifica.event.scannable.Scan | Stored whenever a Scannable tag is scanned. |
+
+        | re.notifica.event.link.Click | Stored whenever a Link is clicked. |
 
         | re.notifica.event.pass.Add | Stored whenever a pass is added to a
         device's wallet. |
@@ -668,8 +694,11 @@ paths:
         | re.notifica.event.product.Buy.{store}.{identifier} | Stored whenever a
         purchase is done, where store is AppStore or GooglePlay. |
 
+        | re.notifica.event.asset.Load | Stored whenever an Asset Group is loaded. |
+
         | re.notifica.event.custom.{name} | Any other event stored by your
         application. |
+
       operationId: postEvent
       requestBody:
         content:
