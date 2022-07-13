@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.123.0'
+  version: '1.123.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -16124,6 +16124,13 @@ components:
               $ref: '#/components/schemas/MessageLocation'
     NotificationFromTemplateBase:
       properties:
+        scheduled:
+          description: >-
+            When true will prevent the message from being sent.
+            Additionally you will have to create a schedule task by
+            calling the /notification/schedule.
+          type: boolean
+          default: false
         data:
           additionalProperties:
             type: string

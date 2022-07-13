@@ -1,4 +1,6 @@
 # Changelog
+## [1.123.1] - 2022-07-13
+Added scheduled property to notification from template
 ## [1.123.0] - 2022-04-06
 Added aggregation for exporting events and replies
 Added aggregation for listing events and replies
