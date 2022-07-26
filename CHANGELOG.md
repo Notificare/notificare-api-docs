@@ -1,4 +1,6 @@
 # Changelog
+## [1.123.2] - 2022-07-26
+Fix example for notification from template
 ## [1.123.1] - 2022-07-13
 Added scheduled property to notification from template
 ## [1.123.0] - 2022-04-06
