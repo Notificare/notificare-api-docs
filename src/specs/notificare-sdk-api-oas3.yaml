@@ -715,6 +715,13 @@ paths:
           schema:
             type: string
           example: foreground
+        - description: The device ID
+          in: query
+          name: deviceID
+          required: true
+          schema:
+            type: string
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
       responses:
         '200':
           content:
