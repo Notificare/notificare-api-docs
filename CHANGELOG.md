@@ -1,4 +1,6 @@
 # Changelog
+## [1.124.0] - 2022-09-05
+Added in-app messaging
 ## [1.123.2] - 2022-07-26
 Fix example for notification from template
 ## [1.123.1] - 2022-07-13
