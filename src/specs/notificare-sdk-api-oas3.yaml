@@ -20,7 +20,7 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.109.0'
+  version: '1.124.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -703,6 +703,34 @@ paths:
             schema:
               $ref: '#/components/schemas/EventCreate'
       summary: Register an event
+  '/inappmessage/forcontext/{context}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The context (launch or foreground)
+          in: path
+          name: context
+          required: true
+          schema:
+            type: string
+          example: foreground
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  message:
+                    $ref: '#/components/schemas/InAppMessageModel'
+                type: object
+          description: OK
+      tags:
+        - In-App Messaging
+      description: >-
+        Get an in-app message for a context
+      operationId: getInAppMessageForContext
+      summary: Get In-App Message For Context
   '/link/dynamic/{link}':
     get:
       security:
@@ -1697,6 +1725,63 @@ components:
         - startDate
         - endDate
       type: object
+    InAppMessageModel:
+      properties:
+        type:
+          description: >-
+            Defines the type of in-app message to show. Please
+            refer to Message Types for all available types.
+          type: string
+          example: re.notifica.inappmessage.Card
+        context:
+          description: >-
+            Defines the context(s) in which the message should be displayed, either `launch` 
+            (only during app launch from an initial state), 
+            `foreground` (whenever an app comes to foreground), or both (the default)
+          type: array
+          items: string
+          example: [ 'launch', 'foreground' ]
+        name:
+          description: >-
+            Name of the in-app message, for purposes of listing in the Dashboard
+          type: string
+        title:
+          description: >-
+            A title to be shown on top of the in-app message
+          type: string
+          example: Hello world
+        message:
+          description: >-
+            Text to be shown on the in-app message
+          type: string
+          example: Hello world
+        image:
+          type: string
+          format: 'uri'
+        landscapeImage:
+          type: string
+          format: 'uri'
+        delaySeconds:
+          description: >-
+            Number of seconds the display of the message will be delayed
+          type: number
+          example: 10
+        primaryAction:
+          $ref: '#/components/schemas/InAppMessageAction'
+        secondaryAction:
+          $ref: '#/components/schemas/InAppMessageAction'
+    InAppMessageAction:
+      properties:
+        label:
+          type: string
+          example: Yes
+        url:
+          type: string
+          format: 'uri'
+        destructive:
+          default: false
+          type: boolean
+      type: object
     InboxItemList:
       properties:
         inboxItems:
@@ -2606,6 +2691,8 @@ tags:
     name: Device
   - description: All methods to handle event related operations.
     name: Event
+  - description: All methods to handle in-app messaging related operations.
+    name: In-App Messaging
   - description: All methods to handle notification related operations.
     name: Notification
   - description: All methods to handle pass related operations.

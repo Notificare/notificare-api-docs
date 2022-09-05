@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.123.2'
+  version: '1.124.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -5270,6 +5270,261 @@ paths:
                   format: date-time
                   description: check for import files newer than this date
       summary: Retry Import Schedule
+  /inappmessage:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+        - description: Sort order
+          example: 'asc'
+          in: query
+          name: order
+          required: false
+          schema:
+            type: string
+        - description: Name of in-app message to search for
+          example: 'Test'
+          in: query
+          name: name
+          required: false
+          schema:
+            type: string
+        - description: Show archived messages
+          example: '1'
+          in: query
+          name: archived
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/InAppMessageModelList'
+          description: OK
+      tags:
+        - In-App Messaging
+      description: >-
+        Retrieves the list of messages sent by this app (excluding triggered,
+        campaigns or private messages).
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getInAppMessage
+      summary: List In-App Messages
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessageCreated'
+              example:
+                _id: 5245bc5b3e66a3b01f0024d4
+                message: notifications are queued
+          description: Created
+      tags:
+        - In-App Messaging
+      description: >-
+        
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postInAppMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InAppMessageBase'
+      summary: Create In-App Message
+  /inappmessage/byname/{name}:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+        - description: Sort order
+          example: 'asc'
+          in: query
+          name: order
+          required: false
+          schema:
+            type: string
+        - description: Name of in-app message to search for
+          example: 'Test'
+          in: path
+          name: name
+          required: false
+          schema:
+            type: string
+        - description: Show archived messages
+          example: '1'
+          in: query
+          name: archived
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/InAppMessageModelList'
+          description: OK
+      tags:
+        - In-App Messaging
+      description: >-
+        Retrieves the list of messages sent by this app (excluding triggered,
+        campaigns or private messages).
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getInAppMessageByName
+      summary: List In-App Messages By Name
+  '/inappmessage/{message}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The message ID given whenever you create an in-app message.
+          in: path
+          name: message
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  message:
+                    $ref: '#/components/schemas/InAppMessageModel'
+          description: OK
+      tags:
+        - In-App Messaging
+      description: >-
+        Retrieve a specific message object.
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getInAppMessageById
+      summary: Get In-App message
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The message ID given whenever you create an in-app message.
+          in: path
+          name: message
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: message updated
+          description: OK
+      tags:
+        - In-App Messaging
+      description: >-
+        Update a specific message object.
+      operationId: updateInAppMessageById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InAppMessageBase'
+      summary: Update In-App Message
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The message ID given whenever you create an in-app message.
+          in: path
+          name: message
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: message deleted
+          description: OK
+      tags:
+        - In-App Messaging
+      description: >-
+        Delete a specific message object.
+      operationId: deleteInAppMessageById
+      summary: Delete In-App Message
+  '/inappmessage/{message}/info':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The message ID given whenever you create an in-app message.
+          in: path
+          name: message
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  info:
+                    $ref: '#/components/schemas/InAppMessageInfoModel'
+          description: OK
+      tags:
+        - In-App Messaging
+      description: >-
+        Retrieve a specific message's info stats
+
+        This request must be authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getInAppMessageInfo
+      summary: Get In-App Message Info
   /link:
     get:
       security:
@@ -15276,6 +15531,212 @@ components:
           type: boolean
           default: false
       type: object
+    InAppMessageModelList:
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/InAppMessageModel'
+        count:
+          type: number
+          example: 2
+    InAppMessageModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            created:
+              type: string
+              format: 'date-time'
+              example: '2022-09-01T15:00:00.000Z'
+            lastModified:
+              type: string
+              format: 'date-time'
+              example: '2022-09-01T15:00:00.000Z'
+        - $ref: '#/components/schemas/InAppMessageBase'
+    InAppMessageBase:
+      properties:
+        type:
+          description: >-
+            Defines the type of in-app message to show. Please
+            refer to Message Types for all available types.
+          type: string
+          example: re.notifica.inappmessage.Card
+        context:
+          description: >-
+            Defines the context(s) in which the message should be displayed, either `launch` 
+            (only during app launch from an initial state), 
+            `foreground` (whenever an app comes to foreground), or both (the default)
+          type: array
+          items: string
+          example: ['launch', 'foreground']
+        criteria:
+          $ref: '#/components/schemas/Criteria'
+        name:
+          description: >-
+            Name of the in-app message, for purposes of listing in the Dashboard
+          type: string
+        title:
+          description: >-
+            A title to be shown on top of the in-app message
+          type: string
+          example: Hello world
+        message:
+          description: >-
+            Text to be shown on the in-app message
+          type: string
+          example: Hello world
+        image:
+          type: string
+          format: 'uri'
+        landscapeImage:
+          type: string
+          format: 'uri'
+        delaySeconds:
+          description: >-
+            Number of seconds the display of the message will be delayed
+          type: number
+          example: 10
+        snoozeSeconds:
+          description: >-
+            Number of seconds the message will not be displayed again. 
+            A value of 0 means it will be displayed every time.
+          type: number
+          example: 86400
+        priority:
+          type: number
+          example: 1
+        notBefore:
+          description: Message will not display before this date.
+          type: string
+          format: 'date-time'
+        notAfter:
+          description: Message will not display after this date.
+          type: string
+          format: 'date-time'
+        rules:
+          description: >-
+            Adds one or more rules to an in-app message. An array of rules
+            objects. Please refer to Rules objects for all types
+            available.
+          items:
+            $ref: '#/components/schemas/MessageRule'
+          type: array
+        primaryAction:
+          $ref: '#/components/schemas/InAppMessageAction'
+        secondaryAction:
+          $ref: '#/components/schemas/InAppMessageAction'
+        archived:
+          description: >-
+            Whether this message is archived or not
+          type: boolean
+        languages:
+          type: array
+          example: ['en']
+          items:
+            type: string
+        localizedContent:
+          description: >-
+            Localized versions per language for content. Rules and Custom events properties in actions
+            are duplicated here like in the main primaryAction / secondaryAction but are
+            ignored when processing the action, instead, the rules and custom events from the
+            main primaryAction / secondaryAction are executed
+          type: array
+          items:
+            properties:
+              message:
+                type: string
+              title:
+                type: string
+              image:
+                type: string
+                format: 'uri'
+              landscapeImage:
+                type: string
+                format: 'uri'
+              primaryAction:
+                $ref: '#/components/schemas/InAppMessageAction'
+              secondaryAction:
+                $ref: '#/components/schemas/InAppMessageAction'
+      required:
+        - type
+        - message
+        - name
+    InAppMessageAction:
+      properties:
+        label:
+          type: string
+          example: Yes
+        url:
+          type: string
+          format: 'uri'
+        destructive:
+          default: false
+          type: boolean
+        rules:
+          items:
+            $ref: '#/components/schemas/MessageRule'
+          type: array
+        customEvents:
+          items:
+            type: string
+          example: ['Test']
+          type: array
+      type: object
+    InAppMessageInfoModel:
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        application:
+          $ref: '#/components/schemas/ObjectId'
+        message:
+          $ref: '#/components/schemas/ObjectId'
+        viewed:
+          type: number
+          example: 2
+        uniqueViewed:
+          type: number
+          example: 1
+        primaryAction:
+          properties:
+            clicked:
+              type: number
+              example: 2
+            uniqueClicked:
+              type: number
+              example: 1
+        secondaryAction:
+          properties:
+            clicked:
+              type: number
+              example: 2
+            uniqueClicked:
+              type: number
+              example: 1
+        localized:
+          type: object
+          description: If message has multiple languages, contains the info for each localized version of the message, default language has key "default"
+          example:
+            default:
+              viewed: 2
+              uniqueViewed: 1
+              primaryAction:
+                clicked: 1
+                uniqueClicked: 1
+              secondaryAction:
+                clicked: 1
+                uniqueClicked: 1
+            en:
+              viewed: 0
+              uniqueViewed: 0
+              primaryAction:
+                clicked: 0
+                uniqueClicked: 0
+              secondaryAction:
+                clicked: 0
+                uniqueClicked: 0
     LinkModelList:
       properties:
         links:
@@ -18131,6 +18592,12 @@ tags:
       | re.notifica.event.notification.Open | Stored whenever a notification is
       open. |
 
+      | re.notifica.event.inappmessage.View | Stored whenever an in-app message is
+      viewed. |
+
+      | re.notifica.event.inappmessage.Action | Stored whenever an in-app message 
+      action is executed. |
+
       | re.notifica.event.email.Subscribe | Stored whenever an email contact 
       confirms its subscription, either via one of our email subscription forms 
       or when you create a new contact that requires opt-in. |
@@ -18198,6 +18665,45 @@ tags:
       Use this [endpoint](https://api-docs.notifica.re/#tag/Upload) to
       upload a file.
     name: Import
+  - description: >-
+      Methods for in-app messaging.
+      
+      ## Message Types:
+
+
+      | type | description |
+
+      |:---------:|-------------|
+
+      | re.notifica.inappmessage.Banner | This type is ideal for small bits of information. 
+      It will contain a title and a message and an optional image or action. |
+
+      | re.notifica.inappmessage.Card | The card will present a familiar dialogue window, where a title, 
+      a message and at least one action is displayed. It can also contain an image and an additional image. |
+
+      | re.notifica.inappmessage.Fullscreen | This will use the full width and height of the device to display rich content. 
+      It must contain at least one image, but a title, a message and an action can be also included. |
+
+      ## Rules Objects:
+
+
+      | type | params |
+
+      |:---------:|-------------|
+
+      | re.notifica.rule segment.Add | array of segment Ids (eg.:
+      ["532434df434657df4664","532434df434657df4664"]) |
+
+      | re.notifica.rule segment.Remove | array of segment Ids (eg.:
+      ["532434df434657df4664","532434df434657df4664"]) |
+
+      | re.notifica.rule tag.Add | array of tags (eg.: ["tag_news","tag_press"])
+      |
+
+      | re.notifica.rule tag.Remove | array of tags (eg.:
+      ["tag_news","tag_press"]) |
+
+    name: In-App Messaging
   - description: >-
       Methods to create short links in Notificare. Links can be used to redirect
       users to existing web pages or to server HTML markup hosted in Notificare.
