@@ -1,4 +1,6 @@
 # Changelog
+## [1.125.0] - 2022-10-20
+Fixed a typo in SMS sending call
 ## [1.124.0] - 2022-09-05
 Added in-app messaging
 ## [1.123.2] - 2022-07-26
