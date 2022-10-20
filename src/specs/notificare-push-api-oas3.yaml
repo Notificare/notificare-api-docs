@@ -6653,7 +6653,7 @@ paths:
       security:
         - MasterSecret: []
       parameters:
-        - description: The contactID generated for this email contact.
+        - description: The number ID generated for this sms number.
           example: bbff2ce9b547d2df4731bac277xxx
           in: path
           name: deviceID
