@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.125.0'
+  version: '1.125.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2071,9 +2071,8 @@ paths:
       description: >-
         Register a userID and userName to a device. For this endpoint to work,
         you need to set the User Registration to API Level. This can be done
-        from the Settings > Configure App > User Registration or (if you have
-        the Users & Authentication add-on) from the Users & Authentication
-        add-on service page. This will prevent you apps from registering users
+        from the Settings > Configure App > User Registration. 
+        This will prevent you apps from registering users
         with only the app keys and instead you can take care of this at the
         server side. Use this method to add a userID and userName to a device.
 
@@ -2120,9 +2119,8 @@ paths:
       description: >-
         Unregister a userID and userName from a device. For this endpoint to
         work, you need to set the User Registration to API Level. This can be
-        done from the Settings > Configure App > User Registration or (if you
-        have the Users & Authentication add-on) from the Users & Authentication
-        add-on service page. This will prevent you apps from registering users
+        done from the Settings > Configure App > User Registration. 
+        This will prevent you apps from registering users
         with only the app keys and instead you can take care of this at the
         server side. Use this method to remove a userID and userName from a
         device.
