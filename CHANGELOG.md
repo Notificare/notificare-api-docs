@@ -1,4 +1,6 @@
 # Changelog
+## [1.125.1] - 2022-10-31
+Remove users & auth mentions
 ## [1.125.0] - 2022-10-20
 Fixed a typo in SMS sending call
 ## [1.124.0] - 2022-09-05
