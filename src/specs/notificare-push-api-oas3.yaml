@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.125.1'
+  version: '1.127.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -4761,6 +4761,9 @@ paths:
         The notifications can also be scheduled by providing a
         `notificationSchedule` with `time` and `timezone`, defaulting to 'UTC'.
 
+        The aggregated info of the sent notifications can be retrieved by using the
+        `_id` property of the created import job and calling [getNotificationAggregateInfo](#tag/Messages/operation/getNotificationAggregateInfo)
+        
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
 
@@ -4837,6 +4840,13 @@ paths:
 
         The notification can also be scheduled by providing a
         `notificationSchedule` with `time` and `timezone`, defaulting to 'UTC'.
+
+
+        The actual sent notification (and its info) can be retrieved by using the
+        `data.notification` property of the created import job after it is finished to call
+        [getNotificationById](#tag/Messages/operation/getNotificationById) or
+        [getNotificationInfo](#tag/Messages/operation/getNotificationInfo)
+
 
         Values of columns prefixed with `notification_` in the CSV can be used
         as placeholders in the template
@@ -7360,7 +7370,7 @@ paths:
         - MasterSecret: []
       parameters:
         - description: >-
-            The aggregation ID for this notification, i.e., an automation id
+            The aggregation ID for this notification, i.e., an automation id or an import job id for private messages import
           in: path
           name: aggregation
           required: true
@@ -15477,6 +15487,14 @@ components:
       type: object
     ImportDataGroupedNotification:
       properties:
+        notification:
+          description: >-
+            The notification that was generated when sending the message
+            It can be used to retrieve statistics for the message, by calling
+            [getNotificationInfo](/#tag/Messages/operation/getNotificationInfo)
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+          readOnly: true
         notificationTemplate:
           description: Use previously created template for messages
           type: string
@@ -16229,7 +16247,7 @@ components:
           type: number
           example: 1
       type: object
-    NotificationModel:
+    NotificationPushModel:
       allOf:
         - $ref: '#/components/schemas/NotificationPushBase'
         - properties:
@@ -16240,16 +16258,45 @@ components:
             medium:
               description: The medium of the message
               type: string
-              enum: [push, email, sms]
+              enum: [ push, email, sms ]
               default: push
               readOnly: true
-            subject:
-              description: Subject of your email message
-              type: string
-              example: Hello world
-            sender:
-              $ref: '#/components/schemas/MessageSender'
           type: object
+    NotificationEmailModel:
+      allOf:
+        - $ref: '#/components/schemas/NotificationEmailBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            medium:
+              description: The medium of the message
+              type: string
+              enum: [ push, email, sms ]
+              default: push
+              readOnly: true
+          type: object
+    NotificationSmsModel:
+      allOf:
+        - $ref: '#/components/schemas/NotificationSmsBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            medium:
+              description: The medium of the message
+              type: string
+              enum: [ push, email, sms ]
+              default: push
+              readOnly: true
+          type: object
+    NotificationModel:
+      oneOf:
+        - $ref: '#/components/schemas/NotificationPushModel'
+        - $ref: '#/components/schemas/NotificationEmailModel'
+        - $ref: '#/components/schemas/NotificationSmsModel'
     NotificationPushTriggered:
       allOf:
         - $ref: '#/components/schemas/NotificationPushBroadcast'
