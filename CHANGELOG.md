@@ -1,4 +1,8 @@
 # Changelog
+## [1.127.0] - 2022-12-07
+Split notification mediums 
+Add notification info to message imports
+Fix menu CSS
 ## [1.125.1] - 2022-10-31
 Remove users & auth mentions
 ## [1.125.0] - 2022-10-20
