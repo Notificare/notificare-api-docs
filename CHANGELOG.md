@@ -1,4 +1,7 @@
 # Changelog
+## [1.128.0] - 2023-01-07
+Added user inbox
+Added live activities
 ## [1.127.0] - 2022-12-07
 Split notification mediums 
 Add notification info to message imports

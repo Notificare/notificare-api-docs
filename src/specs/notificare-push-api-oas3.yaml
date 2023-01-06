@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.127.0'
+  version: '1.128.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -5783,6 +5783,81 @@ paths:
         Delete a link prefix. Link prefixes can only be re-registered after 30 days.
       operationId: deleteLinkPrefixById
       summary: Delete Link Prefix
+  /live-activity/fordevice/{deviceID}:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The deviceID is the ID as registered by the device, e.g. APNS, FCM
+            or Web Push token.
+          example: bbff2ce9b547d2df4731bac277xxx
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/LiveActivityDeviceModelList'
+          description: OK
+      tags:
+        - Live Activities
+      description: >-
+        Get all the live activities for a device
+      operationId: getLiveActivityForDevice
+      summary: List live activities
+  /live-activity/message/fordevice/{deviceID}:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: live activity message queued
+          description: OK
+      tags:
+        - Live Activities
+      description: >-
+        Send an update to a live activity on a device
+      operationId: postLiveActivityMessageForDevice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveActivityMessageBase'
+      summary: Update Live Activity for device
+  /live-activity/message:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: live activity message queued
+          description: OK
+      tags:
+        - Live Activities
+      description: >-
+        Send an update to a live activity
+      operationId: postLiveActivityMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveActivityMessageBase'
+      summary: Update Live Activity
   /notification:
     get:
       security:
@@ -8826,6 +8901,122 @@ paths:
             schema:
               $ref: '#/components/schemas/NotificationTestSmsDevice'
       summary: Test SMS Message to Phone
+  '/notification/userinbox/foruser/{userID}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your user.
+          example: 123456789
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+        - description: >-
+            A date that we will use to retrieve items. When provided we will
+            only retrieve items since that date.
+          in: query
+          name: since
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - description: The maximum number of results to retrieve.
+          example: 10
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip.
+          example: 0
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInboxItemList'
+          description: OK
+      tags:
+        - Message User Inbox
+      description: Get a specific user's inbox
+      operationId: getUserInboxForUser
+      summary: Get a specific user's inbox
+    put:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your user.
+          example: 123456789
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+          description: OK
+      tags:
+        - Message User Inbox
+      description: Mark all items in user's inbox read
+      operationId: putUserInboxForUser
+      summary: Mark all items in user's inbox read
+    delete:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your user.
+          example: 123456789
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+          description: OK
+      tags:
+        - Message User Inbox
+      description: Clear user's inbox
+      operationId: deleteUserInboxForUser
+      summary: Clear user's inbox
+  '/notification/userinbox/{id}':
+    delete:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The identifier for a user inbox message.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+          description: OK
+      tags:
+        - Message User Inbox
+      description: Delete item from user's inbox
+      operationId: deleteUserInboxById
+      summary: Delete item from user's inbox
   /pass:
     get:
       security:
@@ -15859,6 +16050,77 @@ components:
         prefix:
           type: string
           example: myamazingapp
+    LiveActivityDeviceModelList:
+      properties:
+        liveActivityDevices:
+          type: array
+          items:
+            $ref: '#/components/schemas/LiveActivityDeviceModel'
+      type: object
+    LiveActivityDeviceModel:
+      properties:
+        application:
+          $ref: '#/components/schemas/ObjectId'
+        activity:
+          description: The name of the activity as registered by the device
+          example: orderActivity
+          type: string
+        token:
+          description: The update token as registered by the device
+          example: bbff2ce9b547d2df4731bac277xxx
+          type: string
+        deviceID:
+          description: The deviceID of the device
+          example: bbff2ce9b547d2df4731bac277xxx
+          type: string
+        transport:
+          description: The transport used by the device
+          example: APNS
+          type: string
+        language:
+          description: The language of the device
+          example: nl
+          type: string
+        region:
+          description: The region of the device
+          example: NL
+          type: string
+        topics:
+          description: The topics for this activity as registered by the device
+          type: array
+          example: [myOrder1, myOrder2]
+          items: string
+        created:
+          $ref: '#/components/schemas/Date'
+    LiveActivityMessageBase:
+      properties:
+        activity:
+          description: The name of the activity as registered by the device
+          type: string
+          required: true
+        final:
+          type: boolean
+        dismissalDate:
+          $ref: '#/components/schemas/Date'
+        dismissalDelay:
+          type: number
+        message:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        content:
+          additionalProperties:
+            type: string
+          example:
+            key1: value1
+            key2: value2
+          type: object
+          required: true
+        topic:
+          description: The topic
+          type: string
     LocationsCriteria:
       properties:
         locations:
@@ -16477,8 +16739,8 @@ components:
               description: >-
                 This is an iOS only property. A badge will be displayed over
                 your app icon whenever a notification arrives. Use a number
-                from 1 to 9999.
-              type: number
+                from 1 to 9999, strings not parseable as integer are ignored.
+              type: string
               example: 1
             presentation:
               description: >-
@@ -17101,8 +17363,8 @@ components:
           description: >-
             This is a iOS only property. A badge will be displayed over
             your app icon whenever a notification arrives. Use a number
-            from 1 to 9999.
-          type: number
+            from 1 to 9999, strings not parseable as integer are ignored.
+          type: string
         presentation:
           description: >-
             In iOS (2.1 and higher), will set presentation mode for
@@ -18491,6 +18753,51 @@ components:
                   - type: boolean
           example: John
       type: object
+    UserInboxItemList:
+      properties:
+        inboxItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserInboxItemModel'
+        count:
+          type: number
+          example: 10
+        unread:
+          type: number
+          example: 1
+    UserInboxItemModel:
+      description: Item in a user inbox
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        notification:
+          $ref: '#/components/schemas/ObjectId'
+        message:
+          type: string
+          example: Ready for beers?
+        title:
+          type: string
+          example: message
+        subtitle:
+          type: string
+          example: message
+        subject:
+          type: string
+          example: message
+        attachment:
+          $ref: '#/components/schemas/MessageAttachment'
+        extra:
+          $ref: '#/components/schemas/MessageExtra'
+        opened:
+          type: boolean
+          default: false
+        time:
+          $ref: '#/components/schemas/Date'
+        visible:
+          type: boolean
+          default: true
+        expires:
+          $ref: '#/components/schemas/Date'
     UserSegmentCreate:
       properties:
         name:
@@ -18754,6 +19061,9 @@ tags:
       users to existing web pages or to server HTML markup hosted in Notificare.
     name: Links
   - description: >-
+      Methods to send updates to Live Activities.
+    name: Live Activities
+  - description: >-
       Methods to create, send and schedule messages to your audience. We support
       several channels: Push (iOS, Android & Web), Email and SMS.
 
@@ -19014,6 +19324,9 @@ tags:
       endpoints execute a dry-run for your audience selection and will not send
       any message.
     name: Message Test
+  - description: >-
+      Methods to fetch and mark items in user's inbox
+    name: Message User Inbox
   - description: >-
       Methods to manage your passes. Before creating passes you must create
       passbook templates. To create, edit and delete templates see the
