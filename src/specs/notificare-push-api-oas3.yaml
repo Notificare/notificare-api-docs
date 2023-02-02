@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.128.0'
+  version: '1.129.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -16184,16 +16184,254 @@ components:
         - uri
         - mimeType
       type: object
-    MessageContent:
+    MessageContentText:
       properties:
         type:
-          description: type according to the type of push message. Please refer to Content types for all available types
           type: string
-          example: 're.notifica.content.HTML'
+          enum:
+            - 're.notifica.content.Text'
         data:
-          description: data according to the type of push message. Please refer to Content types for all available types
+          description: text document
+          type: string
+          example: 'Hello'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentHTML:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.HTML'
+        data:
+          description: HTML document
           type: string
           example: '<h1>Hello</h1>'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentURL:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.URL'
+        data:
+          description: URL of webpage to load as HTML
+          type: string
+          example: 'https://www.example.com/'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentImage:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.Image'
+        data:
+          description: URL of image to load
+          type: string
+          example: 'https://www.example.com/image1.png'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentMarker:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.Marker'
+        data:
+          description: marker on a map
+          type: object
+          properties:
+            title:
+              type: string
+              example: Some Place
+            description:
+              type: string
+              example: Some description about that place
+            latitude:
+              type: number
+              format: double
+              example: 4.098765,
+            longitude:
+              type: number
+              format: double
+              example: 5.08875
+      required:
+        - type
+        - data
+      type: object
+    MessageContentPKPass:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.PKPass'
+        data:
+          description: URL of PKPass to load
+          type: string
+          example: 'http://notifica.re/path/to/my/pass.pkpass'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentYouTube:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.YouTube'
+        data:
+          description: ID of Youtube video to load
+          type: string
+          example: '3t_EN-HZVLw'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentVimeo:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.Vimeo'
+        data:
+          description: ID of Vimeo video to load
+          type: string
+          example: '75196023'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentHTML5Video:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.HTML5Video'
+        data:
+          description: URL of HTML5 video to load
+          type: string
+          example: 'https://push.notifica.re/asset/file/3d99d18.../1b029...'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentGooglePlayCollection:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.GooglePlayCollection'
+        data:
+          description: the name of a google play collection
+          type: string
+          example: 'example'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentGooglePlayDetails:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.GooglePlayDetails'
+        data:
+          description: package name of the app
+          type: string
+          example: 're.notifica.go'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentGooglePlayDeveloper:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.GooglePlayDeveloper'
+        data:
+          description: developer name
+          type: string
+          example: 'notificare'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentGooglePlaySearch:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.GooglePlaySearch'
+        data:
+          description: search query
+          type: string
+          example: 'notificare'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentAppGalleryDetails:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.AppGalleryDetails'
+        data:
+          description: App ID in AppGallery
+          type: string
+          example: '123456789'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentAppGallerySearch:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.AppGallerySearch'
+        data:
+          description: search query
+          type: string
+          example: 'notificare'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentAppStore:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.AppStore'
+        data:
+          description: details of AppStore catalog item to recommend
+          type: object
+          properties:
+            identifier:
+              description: iTunes identifier of the app
+              type: string
+            affiliateToken:
+              description: a string representing the affiliate identifier you wish to use for any purchase made through the presented view.
+              type: string
+            campaignToken:
+              description: a string representing an App Analytics campaign which can contain any 40-byte string
+              type: string
+            providerToken:
+              description: a string containing the provider token for the developer that created the app specified by the 'SKStoreProductParameterITunesItemIdentifier' key.
+              type: string
+          required:
+            - identifier
       required:
         - type
         - data
@@ -16252,7 +16490,23 @@ components:
           type: array
         content:
           items:
-            $ref: '#/components/schemas/MessageContent'
+            oneOf:
+              - $ref: '#/components/schemas/MessageContentText'
+              - $ref: '#/components/schemas/MessageContentHTML'
+              - $ref: '#/components/schemas/MessageContentURL'
+              - $ref: '#/components/schemas/MessageContentImage'
+              - $ref: '#/components/schemas/MessageContentMarker'
+              - $ref: '#/components/schemas/MessageContentPKPass'
+              - $ref: '#/components/schemas/MessageContentYouTube'
+              - $ref: '#/components/schemas/MessageContentVimeo'
+              - $ref: '#/components/schemas/MessageContentHTML5Video'
+              - $ref: '#/components/schemas/MessageContentGooglePlayDetails'
+              - $ref: '#/components/schemas/MessageContentGooglePlayDeveloper'
+              - $ref: '#/components/schemas/MessageContentGooglePlaySearch'
+              - $ref: '#/components/schemas/MessageContentGooglePlayCollection'
+              - $ref: '#/components/schemas/MessageContentAppGalleryDetails'
+              - $ref: '#/components/schemas/MessageContentAppGallerySearch'
+              - $ref: '#/components/schemas/MessageContentAppStore'
           type: array
         message:
           type: string
@@ -16643,9 +16897,22 @@ components:
                 Defines the type of content to show. Types of messages are
                 represented by namespaces. Message types should match the
                 following namespace: re.notifica.notification.*. Please refer
-                to Message Types for all available types.
+                to [Message Types](#section/Push/Message-Types:) for all available types.
               type: string
-              example: re.notifica.notification.Alert
+              default: re.notifica.notification.Alert
+              enum:
+                - re.notifica.notification.Alert
+                - re.notifica.notification.WebView
+                - re.notifica.notification.InAppBrowser
+                - re.notifica.notification.URL
+                - re.notifica.notification.Image
+                - re.notifica.notification.Map
+                - re.notifica.notification.Rate
+                - re.notifica.notification.Store
+                - re.notifica.notification.Passbook
+                - re.notifica.notification.Video
+                - re.notifica.notification.URLScheme
+                - re.notifica.notification.None
             title:
               description: >-
                 Small text shown in the device's lock screen or notification
@@ -16675,7 +16942,23 @@ components:
                 message. Please refer to Content types for all available
                 types.
               items:
-                $ref: '#/components/schemas/MessageContent'
+                oneOf:
+                  - $ref: '#/components/schemas/MessageContentText'
+                  - $ref: '#/components/schemas/MessageContentHTML'
+                  - $ref: '#/components/schemas/MessageContentURL'
+                  - $ref: '#/components/schemas/MessageContentImage'
+                  - $ref: '#/components/schemas/MessageContentMarker'
+                  - $ref: '#/components/schemas/MessageContentPKPass'
+                  - $ref: '#/components/schemas/MessageContentYouTube'
+                  - $ref: '#/components/schemas/MessageContentVimeo'
+                  - $ref: '#/components/schemas/MessageContentHTML5Video'
+                  - $ref: '#/components/schemas/MessageContentGooglePlayDetails'
+                  - $ref: '#/components/schemas/MessageContentGooglePlayDeveloper'
+                  - $ref: '#/components/schemas/MessageContentGooglePlaySearch'
+                  - $ref: '#/components/schemas/MessageContentGooglePlayCollection'
+                  - $ref: '#/components/schemas/MessageContentAppGalleryDetails'
+                  - $ref: '#/components/schemas/MessageContentAppGallerySearch'
+                  - $ref: '#/components/schemas/MessageContentAppStore'
               type: array
             attachments:
               description: >-
@@ -17037,12 +17320,13 @@ components:
           properties:
             type:
               description: >-
-                Defines the type of content to show. Types of messages are
-                represented by namespaces. Message types should match the
-                following namespace: re.notifica.notification.*. Please refer
-                to Message Types for all available types.
+                Defines the type of content to show. Please refer
+                to [Message Types](#section/Email/Email-Message-Types:) for all available types.
               type: string
-              example: re.notifica.notification.Alert
+              default: re.notifica.notification.HTML
+              enum:
+                - re.notifica.notification.HTML
+                - re.notifica.notification.Notificare
             subject:
               description: >-
                 Subject of your email message
@@ -17054,7 +17338,9 @@ components:
                 message. Please refer to Content types for all available
                 types.
               items:
-                $ref: '#/components/schemas/MessageContent'
+                oneOf:
+                  - $ref: '#/components/schemas/MessageContentText'
+                  - $ref: '#/components/schemas/MessageContentHTML'
               type: array
             attachments:
               items:
@@ -17287,7 +17573,23 @@ components:
             Notification. Please refer to Content types for all
             available types.
           items:
-            $ref: '#/components/schemas/MessageContent'
+            oneOf:
+              - $ref: '#/components/schemas/MessageContentText'
+              - $ref: '#/components/schemas/MessageContentHTML'
+              - $ref: '#/components/schemas/MessageContentURL'
+              - $ref: '#/components/schemas/MessageContentImage'
+              - $ref: '#/components/schemas/MessageContentMarker'
+              - $ref: '#/components/schemas/MessageContentPKPass'
+              - $ref: '#/components/schemas/MessageContentYouTube'
+              - $ref: '#/components/schemas/MessageContentVimeo'
+              - $ref: '#/components/schemas/MessageContentHTML5Video'
+              - $ref: '#/components/schemas/MessageContentGooglePlayDetails'
+              - $ref: '#/components/schemas/MessageContentGooglePlayDeveloper'
+              - $ref: '#/components/schemas/MessageContentGooglePlaySearch'
+              - $ref: '#/components/schemas/MessageContentGooglePlayCollection'
+              - $ref: '#/components/schemas/MessageContentAppGalleryDetails'
+              - $ref: '#/components/schemas/MessageContentAppGallerySearch'
+              - $ref: '#/components/schemas/MessageContentAppStore'
           type: array
         attachments:
           description: >-
@@ -19097,6 +19399,11 @@ tags:
       requires a Content object of type `re.notifica.content.URL`. You can
       additionally add Action objects to this type of push message. |
 
+      | re.notifica.notification.InAppBrowser | Use this type to open any URL in
+      an in-app browser. 
+      It requires a Content object of type `re.notifica.content.URL`. You can
+      additionally add Action objects to this type of push message. |
+
       | re.notifica.notification.Image | Add one or more images to your push
       messages. It requires one or more Content objects of types
       `re.notifica.content.JPEG`, `re.notifica.content.PNG` or
@@ -19133,6 +19440,14 @@ tags:
       Schemes by providing them in you app's Info.plist (iOS) or
       AndroidManifest.xml (Android). This type is only available for SDKs 1.8.0
       and up. |
+
+      | re.notifica.notification.Store | Use this type if you want to make use of 
+      native functionality to drive users to the App Store, Google Play and Huawei's 
+      AppGallery and suggest the download of any app published in those stores. 
+      requires content items for `re.notifica.content.AppStore` and any of 
+      `re.notifica.content.GooglePlayDetails`, `re.notifica.content.GooglePlayDeveloper`, 
+      `re.notifica.content.GooglePlaySearch`, `re.notifica.content.GooglePlayCollection`,
+      and any of `re.notifica.content.AppGalleryDetails` or `re.notifica.content.AppGallerySearch` |
 
       | re.notifica.notification.None | Use this type if you do not wish to show
       any UI in Notificare but still make sure we gather metrics. When using
@@ -19171,6 +19486,20 @@ tags:
 
       | re.notifica.content.HTML5Video | string (eg.:
       "https://push.notifica.re/asset/file/3d99d18.../1b029...") |
+
+      | re.notifica.content.GooglePlayDetails | string (eg.: "re.notifica.go") |
+
+      | re.notifica.content.GooglePlayDeveloper | string (eg.: "notificare") |
+
+      | re.notifica.content.GooglePlayCollection | string (eg.: "games") |
+
+      | re.notifica.content.GooglePlaySearch | string (eg.: "notificare") |
+
+      | re.notifica.content.AppGalleryDetails | string (eg.: "re.notifica.go") |
+
+      | re.notifica.content.AppGallerySearch | string (eg.: "notificare") |
+
+      | re.notifica.content.AppStore | object (eg.: { "identifier": string, "campaignToken": string, "affiliateToken": string, "providerToken": string }) |
 
 
       ## Action Objects:
