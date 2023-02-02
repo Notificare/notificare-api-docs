@@ -1,4 +1,8 @@
 # Changelog
+## [1.130.0] - 2023-02-02
+Added skipDays
+Added overrideSendingLimit
+Added content types
 ## [1.128.0] - 2023-01-07
 Added user inbox
 Added live activities
