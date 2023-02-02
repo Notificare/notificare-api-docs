@@ -1834,6 +1834,9 @@ components:
           default: true
         expires:
           $ref: '#/components/schemas/Date'
+        limited:
+          type: boolean
+          default: false
     LocationsCriteria:
       properties:
         locations:
@@ -2262,12 +2265,21 @@ components:
                 false it will not create a message in the app's inbox.
                 By default this property will be true. Please note that this
                 property will be ignored if Inbox is not being used.
+              type: boolean
+              default: true
             inboxTtl:
               description: >-
                 This property is only available for SDKs 2.3.0 and up. When
                 set it will expire the message in the device inbox after
                 this amount of seconds. Please note that this
                 property will be ignored if Inbox is not being used.
+              type: number
+            overrideSendingLimit:
+              description: >-
+                If set to true, this message will not count against the sendingLimit
+                for the application
+              type: boolean
+              default: false
           required:
             - type
             - message

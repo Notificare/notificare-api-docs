@@ -13932,6 +13932,12 @@ components:
           description: Asset groups will not be visible before this date.
           type: string
           format: 'date-time'
+        skipDays:
+          description: Asset groups will not be visble on any of these days. Sunday is `0`.
+          items:
+            type: number
+          type: array
+          example: [ 0, 7 ]
         segment:
           description: The segment for this asset group
           type: string
@@ -15823,6 +15829,12 @@ components:
           description: Message will not display after this date.
           type: string
           format: 'date-time'
+        skipDays:
+          description: Messages will not display on any of these days. Sunday is `0`.
+          items:
+            type: number
+          type: array
+          example: [ 0, 7 ]
         rules:
           description: >-
             Adds one or more rules to an in-app message. An array of rules
@@ -17097,12 +17109,21 @@ components:
                 false it will not create a message in the app's inbox.
                 By default this property will be true. Please note that this
                 property will be ignored if Inbox is not being used.
+              type: boolean
+              default: true
             inboxTtl:
               description: >-
                 This property is only available for SDKs 2.3.0 and up. When
                 set it will expire the message in the device inbox after
                 this amount of seconds. Please note that this
                 property will be ignored if Inbox is not being used.
+              type: number
+            overrideSendingLimit:
+              description: >-
+                If set to true, this message will not count against the sendingLimit
+                for the application
+              type: boolean
+              default: false
           required:
             - type
             - message
@@ -17727,12 +17748,21 @@ components:
             false it will not create a message in the app's inbox.
             By default this property will be true. Please note that this
             property will be ignored if Inbox is not being used.
+          type: boolean
+          default: true
         inboxTtl:
           description: >-
             This property is only available for SDKs 2.3.0 and up. When
             set it will expire the message in the device inbox after
             this amount of seconds. Please note that this
             property will be ignored if Inbox is not being used.
+          type: number
+        overrideSendingLimit:
+          description: >-
+            If set to true, this message will not count against the sendingLimit
+            for the application
+          type: boolean
+          default: false
         openTracking:
           description: If set to false, will disable tracking of the message being opened
           type: boolean
