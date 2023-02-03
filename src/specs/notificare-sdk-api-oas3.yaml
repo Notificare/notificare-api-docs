@@ -20,7 +20,7 @@ info:
 
     For technical support please [contact us](http://notifica.re/contact).
   title: Notificare SDK API
-  version: '1.130.0'
+  version: '1.130.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -654,8 +654,14 @@ paths:
         | re.notifica.event.application.Install | Stored whenever a new device
         installs the app. |
 
+        | re.notifica.event.application.Registration | Stored whenever we detect 
+        a device for the first time after the app has been installed. Please note 
+        that this event was first introduced in SDK 1.10.0. |
+        
         | re.notifica.event.application.Uninstall | Stored whenever an app was
         removed from the device, as reported by APNS, GCM or HMS feedback. |
+
+        | re.notifica.event.application.Upgrade | Stored whenever an app is upgraded. |
 
         | re.notifica.event.application.Open | Stored whenever the application
         becomes active. |
@@ -663,15 +669,30 @@ paths:
         | re.notifica.event.application.Close | Stored whenever the application
         goes to background. |
 
-        | re.notifica.event.notification.Influenced | Stored whenever a
-        notification when app is not active. |
-
+        | re.notifica.event.application.Exception | Stored whenever the application 
+        encounters an exception. |
+        
         | re.notifica.event.notification.Receive | Stored whenever a
         notification arrives. |
 
         | re.notifica.event.notification.Open | Stored whenever a notification
         is open. |
 
+        | re.notifica.event.notification.Sent | Stored whenever a notification is sent. |
+
+        | re.notifica.event.notification.Influenced | Stored whenever a
+        notification when app is not active. |
+
+        |  re.notifica.event.push.Registration | Stored the first time a user enables 
+        and allows push notifications. Please note that this event was first 
+        introduced in SDK 3.0.0. |
+
+        | re.notifica.event.inappmessage.View | Stored whenever an in-app message 
+        is viewed. |
+        
+        | re.notifica.event.inappmessage.Action	| Stored whenever an in-app message 
+        action is executed. |
+        
         | re.notifica.event.region.Session | Stored whenever a user enters and
         leaves a region. |
 
@@ -685,6 +706,10 @@ paths:
         a device's wallet. |
 
         | re.notifica.event.pass.Redeem | Stored whenever a pass is redeemed. |
+
+        |  re.notifica.event.asset.Load | Stored whenever an asset group is loaded. |
+
+        |  re.notifica.event.scannable.Scan | Stored whenever a scannable is scanned. |
 
         | re.notifica.event.product.Buy | Stored whenever a purchase is done. |
 
@@ -766,6 +791,64 @@ paths:
         Get a dynamic link object.
       operationId: getDynamicLinkById
       summary: Get Dynamic Link
+  /live-activity:
+    post:
+      security:
+        - ApplicationSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: 'live activity successfully registered'
+          description: OK
+          headers: {}
+      tags:
+        - LiveActivity
+      description: Register a live activity
+      operationId: postLiveActivity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveActivityDeviceCreate'
+      summary: Register a live activity
+  '/live-activity/:activity/{deviceID}':
+    delete:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The identifier for your activity.
+          example: OrderStatusUpdate
+          in: path
+          name: activity
+          required: true
+          schema:
+            type: string
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                count: 0
+                message: live activity successfully unregistered
+          description: OK
+      tags:
+        - LiveActivity
+      description: Delete live activity from device
+      operationId: deleteLiveActivity
+      summary: Delete live activity from device
   '/notification/inbox/fordevice/{deviceID}':
     get:
       security:
@@ -914,6 +997,71 @@ paths:
       description: Get a specific notification
       operationId: getNotificationById
       summary: Get a specific notification
+  '/notification/userinbox/{id}/fordevice/{deviceID}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The inbox item's unique identifier.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/NotificationModel'
+          description: OK
+      tags:
+        - Notification
+      description: Get a specific notification
+      operationId: getUserInboxByIdForDevice
+      summary: Get a specific user inbox notification
+    delete:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The inbox item's unique identifier.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/ResponseMessage'
+                  example:
+                    message: inbox item removed
+          description: OK
+      tags:
+        - Notification
+      description: Delete a specific user inbox item
+      operationId: deleteUserInboxByIdForDevice
+      summary: Delete a specific user inbox notification
   '/pass/forbarcode/{barcode}':
     get:
       parameters:
@@ -965,6 +1113,133 @@ paths:
       description: Get a pass with a specific serial
       operationId: getPassForSerial
       summary: Get a pass with a specific serial
+  /product/active:
+    get:
+      security:
+        - ApplicationSecret: [ ]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+          description: OK
+      tags:
+        - Product
+      description: Get all the active products.
+      operationId: getActiveProducts
+      summary: Retrieve all active products
+  /product/active/{id}:
+    get:
+      security:
+        - ApplicationSecret: [ ]
+      parameters:
+        - description: The unique identifier of the product
+          in: path
+          name: identifier
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  product:
+                    $ref: '#/components/schemas/ProductModel'
+          description: OK
+      tags:
+        - Product
+      description: Get a specific product.
+      operationId: getActiveProductById
+      summary: Retrieve a specific active product
+  /product/active/foridentifier/{identifier}:
+    get:
+      security:
+        - ApplicationSecret: [ ]
+      parameters:
+        - description: The identifier in the store
+          example: 12345
+          in: path
+          name: identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  product:
+                    $ref: '#/components/schemas/ProductModel'
+          description: OK
+      tags:
+        - Product
+      description: Get a specific product.
+      operationId: getActiveProductByIdentifier
+      summary: Retrieve a specific active product
+  /purchase/fordevice/{deviceID}:
+    post:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                purchase:
+                  properties:
+                    _id: 5477c86387c552350c886d2f
+                    application: 5354f0bb3fa544452ff4c7c0
+                    currency: EUR
+                    data:
+                      bid: re.notifica.office
+                      bvrs: 1.0.36
+                      item_id: '944702328'
+                      original_purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                      original_purchase_date_ms: '1417136222704'
+                      original_purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                      original_transaction_id: '1000000133399653'
+                      product_id: re.notifica.office.consumable
+                      purchase_date: '2014-11-28 00:57:02 Etc/GMT'
+                      purchase_date_ms: '1417136222704'
+                      purchase_date_pst: '2014-11-27 16:57:02 America/Los_Angeles'
+                      quantity: '1'
+                      transaction_id: '1000000133399653'
+                      unique_identifier: d30aeae69ba81cd6077a062f721059b8f1c1ffe8
+                      unique_vendor_identifier: 7F64F64E-8DAF-4445-93A2-B4632DDBAED3
+                    date: '2014-11-28T00:57:02.704Z'
+                    deviceID: >-
+                      1ebffb005c83b016e5dffafbf2755fabb79e4db87f0092dd30a903cdb0c44bad
+                    identifier: re.notifica.office.consumable
+                    price: 0.89
+                    transactionIdentifier: '1000000133399653'
+                    userID: joel@notifica.re
+          description: OK
+      tags:
+        - Purchase
+      description: Register a purchase
+      operationId: postPurchase
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                receipt:
+                  type: string
+                signature:
+                  type: string
+      summary: Register a purchase
   /region/bylocation/{latitude}/{longitude}:
     get:
       security:
@@ -1037,6 +1312,30 @@ paths:
             schema:
               $ref: '#/components/schemas/ReplyCreate'
       summary: Register a reply
+  '/scannable/tag/{tag}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The scannable tag.
+          in: path
+          name: tag
+          required: true
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  scannable:
+                    $ref: '#/components/schemas/ScannableModel'
+          description: OK
+      tags:
+        - Scannable
+      description: Get a specific scannable
+      operationId: getScannableForTag
+      summary: Get a specific scannable
   '/trigger/{type}':
     post:
       security:
@@ -2029,6 +2328,29 @@ components:
           format: uri
       required:
         - target
+    LiveActivityDeviceCreate:
+      properties:
+        activity:
+          description: The name of the activity as registered by the device
+          example: orderActivity
+          type: string
+        token:
+          description: The update token as registered by the device
+          example: bbff2ce9b547d2df4731bac277xxx
+          type: string
+        deviceID:
+          description: The deviceID of the device
+          example: bbff2ce9b547d2df4731bac277xxx
+          type: string
+        topics:
+          description: The topics for this activity as registered by the device
+          type: array
+          example: [myOrder1, myOrder2]
+          items: string
+      required:
+        - activity
+        - token
+        - deviceID
     NotificationModel:
       allOf:
         - properties:
@@ -2487,6 +2809,65 @@ components:
         - coordinates
         - type
       type: object
+    ProductCreate:
+      allOf:
+        - $ref: '#/components/schemas/ProductBase'
+        - type: object
+          properties:
+            identifier:
+              type: string
+              example: re.notifica.office.consumable
+            name:
+              type: string
+              example: Consumable
+            type:
+              type: string
+              enum: [consumable, onetime, subscription]
+          required:
+            - name
+            - type
+            - identifier
+    ProductList:
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    ProductModel:
+      allOf:
+        - $ref: '#/components/schemas/ProductBase'
+        - type: object
+          properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+    ProductBase:
+      properties:
+        active:
+          type: boolean
+        identifier:
+          type: string
+          example: re.notifica.office.consumable
+        name:
+          type: string
+          example: Consumable
+        stores:
+          items:
+            type: string
+            enum: [AppStore, GooglePlay]
+            example:
+              - AppStore
+              - GooglePlay
+          type: array
+        type:
+          type: string
+          enum: [consumable, onetime, subscription]
+      type: object
     PropertiesCriteria:
       description: >-
         A list of filters for device properties. The results are intersected / AND'ed
@@ -2660,6 +3041,36 @@ components:
       properties:
         _id:
           $ref: '#/components/schemas/ObjectId'
+    ScannableBase:
+      type: object
+      properties:
+        active:
+          type: boolean
+          default: true
+        tag:
+          type: string
+          example: MyScannable
+        name:
+          type: string
+          example: My Scannable Tag
+        type:
+          type: string
+          default: 're.notifica.scannable.Notification'
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - name
+        - tag
+    ScannableModel:
+      allOf:
+        - $ref: '#/components/schemas/ScannableBase'
+        - type: object
+          properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
     SegmentsCriteria:
       properties:
         quantifier:

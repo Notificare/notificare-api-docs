@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.130.0'
+  version: '1.130.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -7581,7 +7581,7 @@ paths:
               properties:
                 mjml:
                   type: string
-                  example: '<mjml><mj-body><mj-section><mj-column><mj-text">Test</mj-text></mj-column></mj-section></mj-body></mjml>'
+                  example: '<mjml><mj-body><mj-section><mj-column><mj-text>Test</mj-text></mj-column></mj-section></mj-body></mjml>'
       summary: Transform MJML Content
   /notification/partial:
     get:
@@ -16203,7 +16203,7 @@ components:
           enum:
             - 're.notifica.content.Text'
         data:
-          description: text document
+          description: text only variant of email, only needed when it is not the same as the HTML content, or when there is no HTML content
           type: string
           example: 'Hello'
       required:
@@ -16220,6 +16220,20 @@ components:
           description: HTML document
           type: string
           example: '<h1>Hello</h1>'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentMJML:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.MJML'
+        data:
+          description: MJML document for email content, only used for editing in the Notificare Email Component editor
+          type: string
+          example: '<mjml><mj-body><mj-text>Hello World!</mj-text></mj-body></mjml>'
       required:
         - type
         - data
@@ -16505,6 +16519,7 @@ components:
             oneOf:
               - $ref: '#/components/schemas/MessageContentText'
               - $ref: '#/components/schemas/MessageContentHTML'
+              - $ref: '#/components/schemas/MessageContentMJML'
               - $ref: '#/components/schemas/MessageContentURL'
               - $ref: '#/components/schemas/MessageContentImage'
               - $ref: '#/components/schemas/MessageContentMarker'
@@ -16951,11 +16966,10 @@ components:
             content:
               description: >-
                 An array of Content objects according to the type of push
-                message. Please refer to Content types for all available
+                message. Please refer to [Content Types](#section/Push/Content-Objects:) for all available
                 types.
               items:
                 oneOf:
-                  - $ref: '#/components/schemas/MessageContentText'
                   - $ref: '#/components/schemas/MessageContentHTML'
                   - $ref: '#/components/schemas/MessageContentURL'
                   - $ref: '#/components/schemas/MessageContentImage'
@@ -17356,12 +17370,13 @@ components:
             content:
               description: >-
                 An array of Content objects according to the type of push
-                message. Please refer to Content types for all available
+                message. Please refer to [Content Types](#section/Email/Content-Objects:) for all available
                 types.
               items:
                 oneOf:
                   - $ref: '#/components/schemas/MessageContentText'
                   - $ref: '#/components/schemas/MessageContentHTML'
+                  - $ref: '#/components/schemas/MessageContentMJML'
               type: array
             attachments:
               items:
@@ -17563,7 +17578,7 @@ components:
             Defines the type of content to show. Types of messages are
             represented by namespaces. Message types should match the
             following namespace: re.notifica.notification.*. Please
-            refer to Message Types for all available types.
+            refer to [Message Types](#section/Push/Message-Types:) for all available types.
           type: string
         sender:
           $ref: '#/components/schemas/MessageSender'
@@ -17591,12 +17606,13 @@ components:
         content:
           description: >-
             An array of Content objects according to the type of
-            Notification. Please refer to Content types for all
+            Notification. Please refer to [Content Types](#section/Push/Content-Objects:) for all
             available types.
           items:
             oneOf:
               - $ref: '#/components/schemas/MessageContentText'
               - $ref: '#/components/schemas/MessageContentHTML'
+              - $ref: '#/components/schemas/MessageContentMJML'
               - $ref: '#/components/schemas/MessageContentURL'
               - $ref: '#/components/schemas/MessageContentImage'
               - $ref: '#/components/schemas/MessageContentMarker'
@@ -18656,6 +18672,46 @@ components:
         deviceID:
           type: string
           format: 'uuid'
+    ScannableBase:
+      type: object
+      properties:
+        active:
+          type: boolean
+          default: true
+        tag:
+          type: string
+          example: MyScannable
+        name:
+          type: string
+          example: My Scannable Tag
+        type:
+          type: string
+          default: 're.notifica.scannable.Notification'
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - name
+        - tag
+    ScannableList:
+      properties:
+        scannables:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScannableModel'
+        count:
+          type: number
+          example: 2
+      type: object
+    ScannableModel:
+      allOf:
+        - $ref: '#/components/schemas/ScannableBase'
+        - type: object
+          properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
     SegmentsCriteria:
       properties:
         quantifier:
@@ -19625,6 +19681,8 @@ tags:
       | re.notifica.content.Text | string (eg.: "Hello World!") |
 
       | re.notifica.content.HTML | string (eg.: "\<h1>Hello World!\</h1>") |
+
+      | re.notifica.content.MJML | string (eg.: "\<mjml>\<mj-body>\<mj-text>Hello World!\</mj-text>\</mj-body>\</mjml>") |
 
 
       ## Rules Objects:

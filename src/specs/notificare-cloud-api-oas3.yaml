@@ -656,17 +656,11 @@ paths:
 
         | re.notifica.event.push.Registration | Stored whenever a device is registered with an APNS/FCM token (SDK v3 and up). |
 
-        | re.notifica.event.email.Subscribe | Stored whenever an email contact subscribes. |
-
-        | re.notifica.event.email.LinkTracked | Stored whenever a link in an email message is clicked. |
-
-        | re.notifica.event.email.ViewOnline | Stored whenever the view online link in an email message is clicked. |
-
-        | re.notifica.event.email.Unsubscribe | Stored whenever an email contact unsubscribes. |
-
-        | re.notifica.event.sms.Subscribe | Stored whenever a phone number subscribes. |
-
-        | re.notifica.event.sms.Unsubscribe | Stored whenever a phone number unsubscribes. |
+        | re.notifica.event.inappmessage.View | Stored whenever an in-app message 
+        is viewed. |
+        
+        | re.notifica.event.inappmessage.Action	| Stored whenever an in-app message 
+        action is executed. |
 
         | re.notifica.event.region.Session | Stored whenever a user enters and
         leaves a region. |

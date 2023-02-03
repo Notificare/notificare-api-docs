@@ -1,4 +1,10 @@
 # Changelog
+## [1.130.1] - 2023-02-03
+Added live activity to SDK
+Added missing events to SDK and Cloud
+Added product to SDK
+Added purchase to SDK
+Added userinbox to SDK
 ## [1.130.0] - 2023-02-02
 Added skipDays
 Added overrideSendingLimit
