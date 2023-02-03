@@ -8901,10 +8901,10 @@ paths:
             schema:
               $ref: '#/components/schemas/NotificationTestSmsDevice'
       summary: Test SMS Message to Phone
-  '/notification/userinbox/foruser/{userID}':
+  '/notification/userinbox/foruserid/{userID}':
     get:
       security:
-        - ApplicationSecret: []
+        - MasterSecret: []
       parameters:
         - description: The unique identifier for your user.
           example: 123456789
@@ -8950,7 +8950,7 @@ paths:
       summary: Get a specific user's inbox
     put:
       security:
-        - ApplicationSecret: []
+        - MasterSecret: []
       parameters:
         - description: The unique identifier for your user.
           example: 123456789
@@ -8973,7 +8973,7 @@ paths:
       summary: Mark all items in user's inbox read
     delete:
       security:
-        - ApplicationSecret: []
+        - MasterSecret: []
       parameters:
         - description: The unique identifier for your user.
           example: 123456789
@@ -8997,7 +8997,7 @@ paths:
   '/notification/userinbox/{id}':
     delete:
       security:
-        - ApplicationSecret: []
+        - MasterSecret: []
       parameters:
         - description: The identifier for a user inbox message.
           in: path

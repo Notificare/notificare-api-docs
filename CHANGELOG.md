@@ -1,4 +1,6 @@
 # Changelog
+## [1.130.2] - 2023-02-03
+Fixed user inbox auth and endpoint
 ## [1.130.1] - 2023-02-03
 Added live activity to SDK
 Added missing events to SDK and Cloud
