@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.130.1'
+  version: '1.130.2'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -9085,6 +9085,40 @@ paths:
             schema:
               $ref: '#/components/schemas/PassCreate'
       summary: Create Pass
+      deprecated: true
+  /pass/v2:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Pass
+      description: >-
+        Create a new pass. You should first create a pass template to help you
+        bootstrap a new pass. Please read the [Pass
+        Template](https://api-docs.notifica.re/#tag/Pass-Templates)
+        endpoints to learn how to create pass templates. Passes will require
+        images, see also the
+        [Uploads](https://api-docs.notifica.re/#tag/Upload) endpoints
+        to learn how to upload a file.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postPassV2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassV2Create'
+      summary: Create Pass (v2)
   '/pass/passbook/{passbook}':
     post:
       security:
@@ -9125,6 +9159,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PassPassbookCreate'
       summary: Create Pass From Passbook
+      deprecated: true
   '/pass/barcode/forserial/{serial}':
     get:
       parameters:
@@ -9290,6 +9325,41 @@ paths:
         This request does not require authentication.
       operationId: gePassPKPass
       summary: Download Pass
+  '/pass/savelinks/{serial}':
+    get:
+      parameters:
+        - description: The serial number of an active pass.
+          in: path
+          name: serial
+          required: true
+          example: 402ab90b-65b5-4b4f-91fa-9823b2972f85
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  saveLinks:
+                    properties:
+                      appleWallet:
+                        type: string
+                        format: uri
+                        example: 'https://push.notifica.re/pass/pkpass/402ab90b-65b5-4b4f-91fa-9823b2972f85'
+                      googlePay:
+                        type: string
+                        format: uri
+                        example: 'https://pay.google.com/gp/v/save/12646187ha9ash9s98a81a'
+          description: OK
+      tags:
+        - Pass
+      description: |-
+        Get the links to save the pass to AppleWallet or GoogleWallet
+        This request does not require authentication.
+      operationId: gePassV2SaveLinks
+      summary: Get Pass Save Links (v2)
   '/pass/redeem/{barcode}':
     put:
       security:
@@ -9339,7 +9409,9 @@ paths:
               schema:
                 properties:
                   pass:
-                    $ref: '#/components/schemas/PassModel'
+                    oneOf:
+                    - $ref: '#/components/schemas/PassModel'
+                    - $ref: '#/components/schemas/PassV2Model'
           description: OK
       tags:
         - Pass
@@ -9350,6 +9422,7 @@ paths:
         `masterSecret`.
       operationId: getPassById
       summary: Get Pass
+      deprecated: true
     put:
       security:
         - MasterSecret: []
@@ -9383,6 +9456,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PassBase'
       summary: Update Pass
+      deprecated: true
     delete:
       security:
         - MasterSecret: []
@@ -9445,6 +9519,73 @@ paths:
             schema:
               $ref: '#/components/schemas/PassFieldsUpdate'
       summary: Update Pass Fields
+      deprecated: true
+  '/pass/v2/{pass}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of pass.
+          in: path
+          name: pass
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  pass:
+                    $ref: '#/components/schemas/PassV2Model'
+          description: OK
+      tags:
+        - Pass
+      description: >-
+        Get a pass object.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getPassV2ById
+      summary: Get Pass (v2)
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active pass.
+          in: path
+          name: pass
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: pass updated
+          description: OK
+      tags:
+        - Pass
+      description: >-
+        Modify a pass.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putPassV2ById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  $ref: '#/components/schemas/PassV2Data'
+              required:
+                -data
+      summary: Update Pass (v2)
   /passbook:
     get:
       security:
@@ -9481,6 +9622,7 @@ paths:
         `masterSecret`.
       operationId: getPassbook
       summary: Get Pass Templates
+      deprecated: true
     post:
       security:
         - MasterSecret: []
@@ -9622,6 +9764,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PassbookCreate'
       summary: Create Pass Template
+      deprecated: true
   '/passbook/{passbook}':
     get:
       security:
@@ -9651,6 +9794,7 @@ paths:
         `masterSecret`.
       operationId: getPassbookById
       summary: Get Pass Template
+      deprecated: true
     put:
       security:
         - MasterSecret: []
@@ -9696,6 +9840,7 @@ paths:
                 - data
               type: object
       summary: Update Pass Template
+      deprecated: true
     delete:
       security:
         - MasterSecret: []
@@ -9724,6 +9869,159 @@ paths:
         `masterSecret`.
       operationId: deletePassbookById
       summary: Delete Pass Template
+      deprecated: true
+  /pass/template:
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/PassTemplateList'
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Get all pass templates for an application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getPassTemplate
+      summary: Get Pass Templates (v2)
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  passbook:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Pass Templates
+      description: >-
+        Create a new pass template.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postPassTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassTemplateBase'
+      summary: Create Pass Template (v2)
+  '/pass/template/{template}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active passbook template.
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  passTemplate:
+                    $ref: '#/components/schemas/PassTemplateModel'
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Get a pass template object.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getPassTemplateById
+      summary: Get Pass Template (v2)
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active template.
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: pass template updated
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Modify a pass template.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putPassbookById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassTemplateBase'
+      summary: Update Pass Template
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active template.
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: pass template deleted
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Delete a pass template. This operation cannot be undone.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deletePassTemplateById
+      summary: Delete Pass Template (v2)
   /product:
     get:
       security:
@@ -18249,12 +18547,68 @@ components:
         transitType:
           type: string
           enum: [PKTransitTypeAir, PKTransitTypeBoat, PKTransitTypeTrain, PKTransitTypeBus, PKTransitTypeGeneric]
+    PassV2Data:
+      description: >-
+        The data object containing all the information, colours and
+        fields for a pass.
+      properties:
+        relevantDate:
+          description: Date and time when the pass becomes relevant (AppleWallet only)
+          type: string
+          format: 'date-time'
+        expirationDate:
+          description: Date and time when the pass expires
+          type: string
+          format: 'date-time'
+        beacons:
+          type: array
+          description: Beacons for which this pass is relevant (AppleWallet only).
+          items:
+            properties:
+              proximityUUID:
+                type: string
+              major:
+                type: string
+              minor:
+                type: string
+              relevantText:
+                description: Text displayed on the lock screen when the pass is currently relevant.
+                type: string
+            required:
+              - proximityUUID
+        locations:
+          type: array
+          items:
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+              altitude:
+                description: The altitude (AppleWallet only)
+                type: number
+              relevantText:
+                description: Text displayed on the lock screen when the pass is currently relevant. (AppleWallet only)
+                type: string
+            required:
+              - latitude
+              - longitude
+        fields:
+          description: The values for the fields as described by the template for this pass
+          additionalProperties: true
+          example:
+            field1: value1
+            field2: value2
+      required:
+        - fields
     PassList:
       properties:
         passes:
           type: array
           items:
-            $ref: '#/components/schemas/PassModel'
+            oneOf:
+              - $ref: '#/components/schemas/PassModel'
+              - $ref: '#/components/schemas/PassV2Model'
         count:
           type: number
           example: 10
@@ -18265,6 +18619,10 @@ components:
               $ref: '#/components/schemas/ObjectId'
             application:
               $ref: '#/components/schemas/ObjectId'
+            version:
+              type: number
+              enum:
+                - 1
             passbook:
               $ref: '#/components/schemas/ObjectId'
             barcode:
@@ -18280,6 +18638,32 @@ components:
                   comments:
                     type: string
         - $ref: '#/components/schemas/PassBase'
+    PassV2Model:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            version:
+              type: number
+              enum:
+                - 2
+            template:
+              $ref: '#/components/schemas/ObjectId'
+            barcode:
+              type: string
+              example: 18847737723
+            redeemHistory:
+              type: array
+              items:
+                properties:
+                  date:
+                    type: string
+                    format: 'date-time'
+                  comments:
+                    type: string
+        - $ref: '#/components/schemas/PassV2Base'
     PassCreate:
       properties:
         passbook:
@@ -18306,6 +18690,32 @@ components:
       required:
         - passbook
         - redeem
+        - data
+    PassV2Create:
+      properties:
+        template:
+          $ref: '#/components/schemas/ObjectId'
+        barcode:
+          type: string
+          example: 18847737723
+        data:
+          $ref: '#/components/schemas/PassV2Data'
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
+      required:
+        - template
         - data
     PassPassbookCreate:
       properties:
@@ -18336,6 +18746,24 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/PassFieldsData'
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
+    PassV2Base:
+      properties:
+        data:
+          $ref: '#/components/schemas/PassV2Data'
         limit:
           description: >-
             When using `limit` as a redeem option, you should provide
@@ -18404,6 +18832,145 @@ components:
         - data
         - name
       type: object
+    PassTemplateDataField:
+      type: object
+      properties:
+        key:
+          type: string
+        type:
+          type: string
+          enum:
+            - string
+            - number
+            - text
+            - date
+            - money
+            - color
+            - image
+            - boolean
+            - any
+    PassTemplatePassDataField:
+      allOf:
+        - $ref: '#/components/schemas/PassTemplateDataField'
+        - properties:
+            default:
+              type: string
+              example: value1
+    PassTemplateTemplateDataField:
+      allOf:
+        - $ref: '#/components/schemas/PassTemplateDataField'
+        - properties:
+            value:
+              type: string
+              example: value1
+    PassTemplateList:
+      properties:
+        passTemplates:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassTemplateModel'
+        count:
+          type: number
+          example: 10
+    PassTemplateModel:
+      allOf:
+        - $ref: '#/components/schemas/PassTemplateBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            identifier:
+              description: auto generated UUID to be used as GoogleWallet class Id
+              type: string
+              format: uuid
+            date:
+              $ref: '#/components/schemas/Date'
+            lastModified:
+              $ref: '#/components/schemas/Date'
+            lastUpdated:
+              $ref: '#/components/schemas/Date'
+            updating:
+              type: boolean
+              default: false
+          type: object
+    PassTemplateBase:
+      properties:
+        type:
+          type: string
+          enum:
+            - eventTicket
+            - flight
+            - transit
+            - offer
+            - giftCard
+            - loyalty
+            - generic
+        templateDesign:
+          properties:
+            appleWallet:
+              type: object
+            googlePay:
+              type: object
+        barcodeDesign:
+          properties:
+            format:
+              type: string
+              enum:
+                - none
+                - aztec
+                - qr
+                - pdf417
+                - code128
+              default: none
+            showAltText:
+              type: boolean
+            encoding:
+              type: string
+              example: 'iso-8859-1'
+              default: 'iso-8859-1'
+        templateData:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassTemplateTemplateDataField'
+        passData:
+          type: array
+          items:
+            $ref: '#/components/schemas/PassTemplatePassDataField'
+        beacons:
+          type: array
+          description: Beacons for which passes with this template are relevant (AppleWallet only). Will be overriden by individual pass beacons.
+          items:
+            properties:
+              proximityUUID:
+                type: string
+              major:
+                type: string
+              minor:
+                type: string
+              relevantText:
+                description: Text displayed on the lock screen when the pass is currently relevant.
+                type: string
+            required:
+              - proximityUUID
+        locations:
+          type: array
+          description: Locations for which passes with this template are relevant. Will be overriden by individual pass locations.
+          items:
+            properties:
+              latitude:
+                type: number
+              longitude:
+                type: number
+              altitude:
+                description: The altitude (AppleWallet only)
+                type: number
+              relevantText:
+                description: Text displayed on the lock screen when the pass is currently relevant. (AppleWallet only)
+                type: string
+            required:
+              - latitude
+              - longitude
     Permissions:
       description: The permisssions an account has, matching the access role
       properties:

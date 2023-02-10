@@ -24,7 +24,7 @@ info:
     This API requires activations before you can use it. To activate or get more
     information about this API, please [contact us](http://notifica.re/contact).
   title: Notificare CLOUD API
-  version: '1.130.0'
+  version: '1.130.2'
 servers:
   - url: 'https://cloud.notifica.re/api'
     description: The Notificare Cloud API - securely connect with TLSv1.2
@@ -858,6 +858,71 @@ paths:
       description: Delete inbox item in a specific device's inbox
       operationId: deleteNotificationInbox
       summary: Delete inbox item in a specific device's inbox
+  '/notification/userinbox/{id}/fordevice/{deviceID}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The inbox item's unique identifier.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/NotificationModel'
+          description: OK
+      tags:
+        - Notification
+      description: Get a specific notification
+      operationId: getUserInboxByIdForDevice
+      summary: Get a specific user inbox notification
+    delete:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The inbox item's unique identifier.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: The unique identifier for your device.
+          example: APA91bEpai_9PbfvVie3xvVnM2VXZEjQ1ZZIFiRzXf
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/ResponseMessage'
+                  example:
+                    message: inbox item removed
+          description: OK
+      tags:
+        - Notification
+      description: Delete a specific user inbox item
+      operationId: deleteUserInboxByIdForDevice
+      summary: Delete a specific user inbox notification
   '/notification/{id}':
     get:
       security:
@@ -1069,6 +1134,30 @@ paths:
             schema:
               $ref: '#/components/schemas/ReplyCreate'
       summary: Register a reply
+  '/scannable/tag/{tag}':
+    get:
+      security:
+        - ApplicationSecret: []
+      parameters:
+        - description: The scannable tag.
+          in: path
+          name: tag
+          required: true
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  scannable:
+                    $ref: '#/components/schemas/ScannableModel'
+          description: OK
+      tags:
+        - Scannable
+      description: Get a specific scannable
+      operationId: getScannableForTag
+      summary: Get a specific scannable
   /status:
     get:
       security:
@@ -1912,6 +2001,9 @@ components:
           default: true
         expires:
           $ref: '#/components/schemas/Date'
+        limited:
+          type: boolean
+          default: false
     LocationsCriteria:
       properties:
         locations:
@@ -2767,6 +2859,36 @@ components:
       properties:
         _id:
           $ref: '#/components/schemas/ObjectId'
+    ScannableBase:
+      type: object
+      properties:
+        active:
+          type: boolean
+          default: true
+        tag:
+          type: string
+          example: MyScannable
+        name:
+          type: string
+          example: My Scannable Tag
+        type:
+          type: string
+          default: 're.notifica.scannable.Notification'
+        data:
+          type: object
+          additionalProperties: true
+      required:
+        - name
+        - tag
+    ScannableModel:
+      allOf:
+        - $ref: '#/components/schemas/ScannableBase'
+        - type: object
+          properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
     SegmentsCriteria:
       properties:
         quantifier:
@@ -2829,6 +2951,8 @@ tags:
     name: Region
   - description: All methods to handle replies related operations.
     name: Reply
+  - description: All methods to handle scannable related operations.
+    name: Scannable
   - description: Check the status of this API.
     name: Status
   - description: All methods to handle trigger related operations.
