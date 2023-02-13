@@ -18909,7 +18909,14 @@ components:
         templateDesign:
           properties:
             appleWallet:
-              type: object
+              oneOf:
+                - $ref: '#/components/schemas/PassTemplateAppleWalletEventTicket'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletLoyalty'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletGiftCard'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletOffer'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletFlight'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletTransit'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletGeneric'
             googlePay:
               type: object
         barcodeDesign:
@@ -18971,8 +18978,147 @@ components:
             required:
               - latitude
               - longitude
+    AppleWalletDictionary:
+      properties:
+        description:
+          type: string
+        organizationName:
+          type: string
+        appLaunchURL:
+          type: string
+          format: uri
+        associatedStoreIdentifiers:
+          type: array
+          items:
+            type: string
+        userInfo:
+          type: object
+          additionalProperties: true
+        maxDistance:
+          type: number
+        groupingIdentifier:
+          type: string
+        logoText:
+          type: string
+        sharingProhibited:
+          type: boolean
+          default: false
+        backgroundColor:
+          type: string
+          example: '{{color}}'
+        foregroundColor:
+          type: string
+          example: 'rgb(0,0,0)'
+        labelColor:
+          type: string
+          example: 'rgb(0,0,0)'
+        suppressStripShine:
+          type: boolean
+          default: false
+    AppleWalletEventTicketDictionary:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionary'
+        - properties:
+            eventTicket:
+              $ref: '#/components/schemas/AppleWalletDictionaryFields'
+    AppleWalletLoyaltyDictionary:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionary'
+        - properties:
+            storeCard:
+              $ref: '#/components/schemas/AppleWalletDictionaryFields'
+    AppleWalletGiftCardDictionary:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionary'
+        - properties:
+            generic:
+              $ref: '#/components/schemas/AppleWalletDictionaryFields'
+    AppleWalletOfferDictionary:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionary'
+        - properties:
+            coupon:
+              $ref: '#/components/schemas/AppleWalletDictionaryFields'
+    AppleWalletFlightDictionary:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionary'
+        - properties:
+            boardingPass:
+              $ref: '#/components/schemas/AppleWalletDictionaryFields'
+    AppleWalletTransitDictionary:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionary'
+        - properties:
+            boardingPass:
+              $ref: '#/components/schemas/AppleWalletTransitFields'
+    AppleWalletGenericDictionary:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionary'
+        - properties:
+            generic:
+              $ref: '#/components/schemas/AppleWalletDictionaryFields'
+    AppleWalletDictionaryFields:
+      properties:
+        auxiliaryFields:
+          type: array
+          items:
+            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+        backFields:
+          type: array
+          items:
+            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+        headerFields:
+          type: array
+          items:
+            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+        primaryFields:
+          type: array
+          items:
+            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+        secondaryFields:
+          type: array
+          items:
+            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+    AppleWalletTransitFields:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionaryFields'
+        - properties:
+            transitType:
+              type: string
+              enum:
+                - PKTransitTypeAir
+    AppleWalletDictionaryField:
+      type: object
+    PassTemplateAppleWalletEventTicket:
+      properties:
+        dictionary:
+          $ref: '#/components/schemas/AppleWalletEventTicketDictionary'
+    PassTemplateAppleWalletLoyalty:
+      properties:
+        dictionary:
+          $ref: '#/components/schemas/AppleWalletStoreCardDictionary'
+    PassTemplateAppleWalletGiftCard:
+      properties:
+        dictionary:
+          $ref: '#/components/schemas/AppleWalletGiftCardDictionary'
+    PassTemplateAppleWalletFlight:
+      properties:
+        dictionary:
+          $ref: '#/components/schemas/AppleWalletFlightDictionary'
+    PassTemplateAppleWalletTransit:
+      properties:
+        dictionary:
+          $ref: '#/components/schemas/AppleWalletTransitDictionary'
+    PassTemplateAppleWalletOffer:
+      properties:
+        dictionary:
+          $ref: '#/components/schemas/AppleWalletOfferDictionary'
+    PassTemplateAppleWalletGeneric:
+      properties:
+        dictionary:
+          $ref: '#/components/schemas/AppleWalletGenericDictionary'
     Permissions:
-      description: The permisssions an account has, matching the access role
+      description: The permissions an account has, matching the access role
       properties:
         AUDIENCE_READ:
           type: boolean
