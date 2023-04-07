@@ -5858,6 +5858,459 @@ paths:
             schema:
               $ref: '#/components/schemas/LiveActivityMessageBase'
       summary: Update Live Activity
+  /loyalty/program:
+    get:
+      security:
+        - MasterSecret: [ ]
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/LoyaltyProgramModelList'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get all the loyalty programs
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyProgram
+      summary: List Loyalty Programs
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  loyaltyProgram:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Loyalty
+      description: >-
+        Create a loyalty program
+      operationId: postLoyaltyProgram
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoyaltyProgramBase'
+      summary: Create Loyalty Program
+  /loyalty/program/{program}:
+    get:
+      security:
+        - MasterSecret: [ ]
+      parameters:
+        - description: the program id
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  program:
+                    $ref: '#/components/schemas/LoyaltyProgramModel'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get the loyalty program
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyProgramById
+      summary: Get Loyalty Program
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: the program id
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example: 'program updated'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Update a loyalty program
+      operationId: putLoyaltyProgram
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoyaltyProgramBase'
+      summary: Update Loyalty Program
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: the program id
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Loyalty
+      description: >-
+        Delete a loyalty program
+      operationId: deleteLoyaltyProgram
+      summary: Delete Loyalty Program
+  /loyalty/rule:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  loyaltyRule:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Loyalty
+      description: >-
+        Create a loyalty rule
+      operationId: postLoyaltyRule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoyaltyRuleBase'
+      summary: Create Loyalty Rule
+  /loyalty/rule/forprogram/{program}:
+    get:
+      security:
+        - MasterSecret: [ ]
+      parameters:
+        - description: the program id
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/LoyaltyRuleModelList'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get all the loyalty rules
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyRule
+      summary: List Loyalty Rules
+  /loyalty/rule/{rule}:
+    get:
+      security:
+        - MasterSecret: [ ]
+      parameters:
+        - description: the rule id
+          in: path
+          name: rule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  loyaltyRule:
+                    $ref: '#/components/schemas/LoyaltyRuleModel'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get the loyalty rule
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyRuleById
+      summary: Get Loyalty Rule
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: the rule id
+          in: path
+          name: rule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example: 'loyalty rule updated'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Update a loyalty rule
+      operationId: putLoyaltyRule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoyaltyRuleBase'
+      summary: Update Loyalty Rule
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: the rule id
+          in: path
+          name: rule
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Loyalty
+      description: >-
+        Delete a loyalty rule
+      operationId: deleteLoyaltyRule
+      summary: Delete Loyalty Rule
+  /loyalty/profile/forprogram/{program}:
+    get:
+      security:
+        - MasterSecret: [ ]
+      parameters:
+        - description: the program these members belong to
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/LoyaltyProfileModelList'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get all the loyalty profiles for a program
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyProfiles
+      summary: List Loyalty Profiles
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: the program the member belong to
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  loyaltyProgram:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Loyalty
+      description: >-
+        Create a loyalty profile
+      operationId: postLoyaltyProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoyaltyProfileBase'
+      summary: Create Loyalty Profile
+  /loyalty/profile/forprogram/{program}/{memberId}:
+    get:
+      security:
+        - MasterSecret: [ ]
+      parameters:
+        - description: the program the member belong to
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: the unique member id for the program
+          in: path
+          name: memberId
+          required: true
+          example: 59258837-6279-4612-adde-dc7646ea136c
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  profile:
+                    $ref: '#/components/schemas/LoyaltyProfileModel'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get the loyalty profile for a member for a program
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyProfileByMemberId
+      summary: Get Loyalty Profile For MemberId
+  /loyalty/profile/forprogram/{program}/foruserid/{userID}:
+    get:
+      security:
+        - MasterSecret: [ ]
+      parameters:
+        - description: the program these members belong to
+          in: path
+          name: program
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - description: the userID this member is associated with
+          in: path
+          name: userID
+          required: true
+          example: 12345678
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/LoyaltyProfileModelList'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get the loyalty profile for a userID for a program
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyProfileByUserID
+      summary: Get Loyalty Profile For UserID
+  /loyalty/profile/{profile}:
+    get:
+      security:
+        - MasterSecret: [ ]
+      parameters:
+        - description: the profile id
+          in: path
+          name: profile
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  profile:
+                    $ref: '#/components/schemas/LoyaltyProfileModel'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Get the loyalty profile
+        
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getLoyaltyProfileById
+      summary: Get Loyalty Profile
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: the profile id
+          in: path
+          name: profile
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '202':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example: 'profile update being processed'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Update a loyalty profile
+      operationId: putLoyaltyProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoyaltyProfileBase'
+      summary: Update Loyalty Profile
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: the profile id
+          in: path
+          name: profile
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '202':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example: 'profile removal being processed'
+          description: OK
+      tags:
+        - Loyalty
+      description: >-
+        Delete a loyalty profile
+      operationId: deleteLoyaltyProfile
+      summary: Delete Loyalty Profile
   /notification:
     get:
       security:
@@ -9987,13 +10440,13 @@ paths:
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
-      operationId: putPassbookById
+      operationId: putPassTemplateById
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PassTemplateBase'
-      summary: Update Pass Template
+      summary: Update Pass Template (v2)
     delete:
       security:
         - MasterSecret: []
@@ -16453,6 +16906,222 @@ components:
             - none
           type: string
       type: object
+    LoyaltyProgramModelList:
+      properties:
+        loyaltyPrograms:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyProgramModel'
+      type: object
+    LoyaltyProgramModel:
+      allOf:
+        - $ref: '#/components/schemas/LoyaltyProgramBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+    LoyaltyProgramBase:
+      properties:
+        name:
+          description: The name of the loyalty program
+          example: My Loyalty Program
+          type: string
+        type:
+          description: The type of loyalty program (currently only `simple`)
+          example: simple
+          enum:
+            - simple
+          type: string
+        tierTemplates:
+          description: The pass templates to be used for each tier
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectId'
+        balanceType:
+          description: The data type of balance
+          type: string
+          enum:
+            - none
+            - string
+            - integer
+            - double
+            - money
+          default: 'none'
+        defaultCurrency:
+          description: The default currency for the loyalty program
+          type: string
+          example: 'EUR'
+        defaultBalance:
+          oneOf:
+            - type: string
+            - type: number
+          description: The default value of the balance of the loyalty program
+        defaultLanguage:
+          type: string
+          default: 'en'
+        profileFields:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              type:
+                type: string
+                enum:
+                  - string
+                  - text
+                  - number
+                  - date
+                  - money
+                  - color
+                  - image
+                  - boolean
+              default:
+                oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+              passDataKey:
+                type: string
+            required:
+              - key
+              - type
+              - passDataKey
+        memberIdFieldKey:
+          type: string
+          default: 'memberId'
+        balanceFieldKey:
+          type: string
+          default: 'balance'
+      type: object
+    LoyaltyRuleModelList:
+      properties:
+        loyaltyRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyRuleModel'
+      type: object
+    LoyaltyRuleModel:
+      allOf:
+        - $ref: '#/components/schemas/LoyaltyRuleBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            program:
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+    LoyaltyRuleBase:
+      properties:
+        name:
+          description: The name of the rule
+          example: Upgrade rule
+          type: string
+        active:
+          description: is the rule active?
+          type: boolean
+        tier:
+          description: The loyalty program tier this member is in
+          type: number
+        condition:
+          properties:
+            property:
+              type: string
+              default: 'balance'
+            operator:
+              type: string
+              enum:
+                - eq
+                - ne
+                - lt
+                - lte
+                - gt
+                - gte
+                - in
+                - nin
+                - sw
+            value:
+              oneOf:
+                - type: string
+                - type: number
+                - type: boolean
+        action:
+          properties:
+            type:
+              type: string
+              example: 're.notifica.loyalty.action.Tier'
+              default: 're.notifica.loyalty.action.None'
+            data:
+              type: object
+              additionalProperties: true
+              example:
+                tier: 1
+      type: object
+    LoyaltyProfileModelList:
+      properties:
+        loyaltyProfiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoyaltyProfileModel'
+      type: object
+    LoyaltyProfileModel:
+      allOf:
+        - $ref: '#/components/schemas/LoyaltyProfileBase'
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            program:
+              $ref: '#/components/schemas/ObjectId'
+            created:
+              $ref: '#/components/schemas/Date'
+            lastUpdated:
+              $ref: '#/components/schemas/Date'
+            loyaltyPass:
+              $ref: '#/components/schemas/ObjectId'
+          type: object
+    LoyaltyProfileBase:
+      properties:
+        userID:
+          description: The userID associated with this member, has to exist in the Notificare app
+          example: 12345678
+          type: string
+        memberId:
+          description: unique id for the member in this program
+          type: string
+          example: 59258837-6279-4612-adde-dc7646ea136c
+        tier:
+          description: The loyalty program tier this member is in
+          type: number
+        balance:
+          oneOf:
+            - type: string
+            - type: number
+          description: The value of the balance for this member
+        currency:
+          type: string
+          example: EUR
+        language:
+          type: string
+          default: en
+        fields:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+      type: object
     MessageAction:
       properties:
         type:
@@ -18911,14 +19580,20 @@ components:
             appleWallet:
               oneOf:
                 - $ref: '#/components/schemas/PassTemplateAppleWalletEventTicket'
-                - $ref: '#/components/schemas/PassTemplateAppleWalletLoyalty'
-                - $ref: '#/components/schemas/PassTemplateAppleWalletGiftCard'
-                - $ref: '#/components/schemas/PassTemplateAppleWalletOffer'
                 - $ref: '#/components/schemas/PassTemplateAppleWalletFlight'
                 - $ref: '#/components/schemas/PassTemplateAppleWalletTransit'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletCoupon'
                 - $ref: '#/components/schemas/PassTemplateAppleWalletGeneric'
+                - $ref: '#/components/schemas/PassTemplateAppleWalletStoreCard'
             googlePay:
-              type: object
+              oneOf:
+                - $ref: '#/components/schemas/PassTemplateGooglePayEventTicket'
+                - $ref: '#/components/schemas/PassTemplateGooglePayFlight'
+                - $ref: '#/components/schemas/PassTemplateGooglePayTransit'
+                - $ref: '#/components/schemas/PassTemplateGooglePayOffer'
+                - $ref: '#/components/schemas/PassTemplateGooglePayGiftCard'
+                - $ref: '#/components/schemas/PassTemplateGooglePayLoyalty'
+                - $ref: '#/components/schemas/PassTemplateGooglePayGeneric'
         barcodeDesign:
           properties:
             format:
@@ -19012,73 +19687,107 @@ components:
         labelColor:
           type: string
           example: 'rgb(0,0,0)'
-        suppressStripShine:
-          type: boolean
-          default: false
+        nfc:
+          properties:
+            message:
+              type: string
+            encryptionPublicKey:
+              type: string
+              format: binary
     AppleWalletEventTicketDictionary:
       allOf:
         - $ref: '#/components/schemas/AppleWalletDictionary'
         - properties:
             eventTicket:
               $ref: '#/components/schemas/AppleWalletDictionaryFields'
-    AppleWalletLoyaltyDictionary:
+            semantics:
+              $ref: '#/components/schemas/AppleWalletEventTicketSemantics'
+    AppleWalletStoreCardDictionary:
       allOf:
         - $ref: '#/components/schemas/AppleWalletDictionary'
         - properties:
             storeCard:
               $ref: '#/components/schemas/AppleWalletDictionaryFields'
-    AppleWalletGiftCardDictionary:
-      allOf:
-        - $ref: '#/components/schemas/AppleWalletDictionary'
-        - properties:
-            generic:
-              $ref: '#/components/schemas/AppleWalletDictionaryFields'
-    AppleWalletOfferDictionary:
+            semantics:
+              $ref: '#/components/schemas/AppleWalletStoreCardSemantics'
+    AppleWalletCouponDictionary:
       allOf:
         - $ref: '#/components/schemas/AppleWalletDictionary'
         - properties:
             coupon:
               $ref: '#/components/schemas/AppleWalletDictionaryFields'
+            semantics:
+              $ref: '#/components/schemas/AppleWalletCouponSemantics'
     AppleWalletFlightDictionary:
       allOf:
         - $ref: '#/components/schemas/AppleWalletDictionary'
         - properties:
             boardingPass:
-              $ref: '#/components/schemas/AppleWalletDictionaryFields'
+              $ref: '#/components/schemas/AppleWalletFlightFields'
+            semantics:
+              $ref: '#/components/schemas/AppleWalletFlightSemantics'
     AppleWalletTransitDictionary:
       allOf:
         - $ref: '#/components/schemas/AppleWalletDictionary'
         - properties:
             boardingPass:
               $ref: '#/components/schemas/AppleWalletTransitFields'
+            semantics:
+              $ref: '#/components/schemas/AppleWalletTransitSemantics'
     AppleWalletGenericDictionary:
       allOf:
         - $ref: '#/components/schemas/AppleWalletDictionary'
         - properties:
             generic:
               $ref: '#/components/schemas/AppleWalletDictionaryFields'
+            semantics:
+              $ref: '#/components/schemas/AppleWalletGenericSemantics'
     AppleWalletDictionaryFields:
       properties:
         auxiliaryFields:
           type: array
           items:
+            oneOf:
             - $ref: '#/components/schemas/AppleWalletDictionaryField'
+            - $ref: '#/components/schemas/AppleWalletDictionaryNumberField'
+            - $ref: '#/components/schemas/AppleWalletDictionaryDateField'
         backFields:
           type: array
           items:
-            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+            oneOf:
+              - $ref: '#/components/schemas/AppleWalletDictionaryField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryNumberField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryDateField'
         headerFields:
           type: array
           items:
-            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+            oneOf:
+              - $ref: '#/components/schemas/AppleWalletDictionaryField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryNumberField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryDateField'
         primaryFields:
           type: array
           items:
-            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+            oneOf:
+              - $ref: '#/components/schemas/AppleWalletDictionaryField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryNumberField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryDateField'
         secondaryFields:
           type: array
           items:
-            - $ref: '#/components/schemas/AppleWalletDictionaryField'
+            oneOf:
+              - $ref: '#/components/schemas/AppleWalletDictionaryField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryNumberField'
+              - $ref: '#/components/schemas/AppleWalletDictionaryDateField'
+    AppleWalletFlightFields:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionaryFields'
+        - properties:
+            transitType:
+              type: string
+              default: PKTransitTypeAir
+              enum:
+                - PKTransitTypeAir
     AppleWalletTransitFields:
       allOf:
         - $ref: '#/components/schemas/AppleWalletDictionaryFields'
@@ -19087,36 +19796,308 @@ components:
               type: string
               enum:
                 - PKTransitTypeAir
+                - PKTransitTypeBoat
+                - PKTransitTypeBus
+                - PKTransitTypeGeneric
+                - PKTransitTypeTrain
     AppleWalletDictionaryField:
       type: object
+      properties:
+        attributedValue:
+          type: string
+        changeMessage:
+          type: string
+          description: the message to show in the lockscreen when this field changes. Must include a '%@' to be replaced by the new value.
+          example: 'Gate changed to %@'
+        dataDetectorTypes:
+          type: string
+          enum:
+            - PKDataDetectorTypePhoneNumber
+            - PKDataDetectorTypeLink
+            - PKDataDetectorTypeAddress
+            - PKDataDetectorTypeCalendarEvent
+        textAlignment:
+          type: string
+          enum:
+            - PKTextAlignmentLeft
+            - PKTextAlignmentCenter
+            - PKTextAlignmentRight
+            - PKTextAlignmentNatural
+        key:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+      required:
+        - key
+        - value
+    AppleWalletDictionaryNumberField:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionaryField'
+        - properties:
+            currencyCode:
+              type: string
+            numberStyle:
+              type: string
+              enum:
+                - PKNumberStyleDecimal
+                - PKNumberStylePercent
+                - PKNumberStyleScientific
+                - PKNumberStyleSpellOut
+    AppleWalletDictionaryDateField:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletDictionaryField'
+        - properties:
+            ignoresTimeZone:
+              type: boolean
+              default: false
+            isRelative:
+              type: boolean
+              default: false
+            dateStyle:
+              type: string
+              enum:
+                - PKDateStyleNone
+                - PKDateStyleShort
+                - PKDateStyleMedium
+                - PKDateStyleLong
+                - PKDateStyleFull
+            timeStyle:
+              type: string
+              enum:
+                - PKDateStyleNone
+                - PKDateStyleShort
+                - PKDateStyleMedium
+                - PKDateStyleLong
+                - PKDateStyleFull
+    AppleWalletSemantics:
+      properties:
+        test:
+          type: string
+    AppleWalletEventTicketSemantics:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletSemantics'
+    AppleWalletStoreCardSemantics:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletSemantics'
+    AppleWalletFlightSemantics:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletSemantics'
+    AppleWalletTransitSemantics:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletSemantics'
+    AppleWalletCouponSemantics:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletSemantics'
+    AppleWalletGenericSemantics:
+      allOf:
+        - $ref: '#/components/schemas/AppleWalletSemantics'
+    GooglePayClass:
+      properties:
+        classId:
+          type: string
+        issuerName:
+          type: string
+        enableSmartTap:
+          type: string
+        hexBackgroundColor:
+          type: string
+        localizedIssuerName:
+          type: string
+        multipleDevicesAndHoldersAllowedStatus:
+          type: string
+        securityAnimation:
+          properties:
+            animationType:
+              type: string
+              enum:
+                - ANIMATION_UNSPECIFIED
+                - FOIL_SHIMMER
+        viewUnlockRequirement:
+          type: string
+          enum:
+            - VIEW_UNLOCK_REQUIREMENT_UNSPECIFIED
+            - UNLOCK_NOT_REQUIRED
+            - UNLOCK_REQUIRED_TO_VIEW
+    GooglePayObject:
+      properties:
+        classId:
+          type: string
+    GooglePayEventTicketClass:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayClass'
+    GooglePayEventTicketObject:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayObject'
+    GooglePayLoyaltyClass:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayClass'
+    GooglePayLoyaltyObject:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayObject'
+    GooglePayGiftCardClass:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayClass'
+    GooglePayGiftCardObject:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayObject'
+    GooglePayOfferClass:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayClass'
+    GooglePayOfferObject:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayObject'
+    GooglePayFlightClass:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayClass'
+    GooglePayFlightObject:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayObject'
+    GooglePayTransitClass:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayClass'
+    GooglePayTransitObject:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayObject'
+    GooglePayGenericClass:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayClass'
+    GooglePayGenericObject:
+      allOf:
+        - $ref: '#/components/schemas/GooglePayObject'
     PassTemplateAppleWalletEventTicket:
       properties:
         dictionary:
           $ref: '#/components/schemas/AppleWalletEventTicketDictionary'
-    PassTemplateAppleWalletLoyalty:
+        images:
+          properties:
+            logo:
+              type: string
+              format: uri
+            icon:
+              type: string
+              format: uri
+            footer:
+              type: string
+              format: uri
+    PassTemplateAppleWalletStoreCard:
       properties:
         dictionary:
           $ref: '#/components/schemas/AppleWalletStoreCardDictionary'
-    PassTemplateAppleWalletGiftCard:
-      properties:
-        dictionary:
-          $ref: '#/components/schemas/AppleWalletGiftCardDictionary'
+        images:
+          properties:
+            logo:
+              type: string
+              format: uri
+            icon:
+              type: string
+              format: uri
+            strip:
+              type: string
+              format: uri
     PassTemplateAppleWalletFlight:
       properties:
         dictionary:
           $ref: '#/components/schemas/AppleWalletFlightDictionary'
+        images:
+          properties:
+            logo:
+              type: string
+              format: uri
+            icon:
+              type: string
+              format: uri
+            footer:
+              type: string
+              format: uri
     PassTemplateAppleWalletTransit:
       properties:
         dictionary:
           $ref: '#/components/schemas/AppleWalletTransitDictionary'
-    PassTemplateAppleWalletOffer:
+        images:
+          properties:
+            logo:
+              type: string
+              format: uri
+            icon:
+              type: string
+              format: uri
+            footer:
+              type: string
+              format: uri
+    PassTemplateAppleWalletCoupon:
       properties:
         dictionary:
-          $ref: '#/components/schemas/AppleWalletOfferDictionary'
+          $ref: '#/components/schemas/AppleWalletCouponDictionary'
+        images:
+          properties:
+            logo:
+              type: string
+              format: uri
+            icon:
+              type: string
+              format: uri
+            strip:
+              type: string
+              format: uri
     PassTemplateAppleWalletGeneric:
       properties:
         dictionary:
           $ref: '#/components/schemas/AppleWalletGenericDictionary'
+        images:
+          properties:
+            logo:
+              type: string
+              format: uri
+            icon:
+              type: string
+              format: uri
+            thumbnail:
+              type: string
+              format: uri
+    PassTemplateGooglePayEventTicket:
+      properties:
+        walletClass:
+          $ref: '#/components/schemas/GooglePayEventTicketClass'
+        walletObject:
+          $ref: '#/components/schemas/GooglePayEventTicketObject'
+    PassTemplateGooglePayLoyalty:
+      properties:
+        walletClass:
+          $ref: '#/components/schemas/GooglePayLoyaltyClass'
+        walletObject:
+          $ref: '#/components/schemas/GooglePayLoyaltyObject'
+    PassTemplateGooglePayGiftCard:
+      properties:
+        walletClass:
+          $ref: '#/components/schemas/GooglePayGiftCardClass'
+        walletObject:
+          $ref: '#/components/schemas/GooglePayGiftCardObject'
+    PassTemplateGooglePayOffer:
+      properties:
+        walletClass:
+          $ref: '#/components/schemas/GooglePayOfferClass'
+        walletObject:
+          $ref: '#/components/schemas/GooglePayOfferObject'
+    PassTemplateGooglePayFlight:
+      properties:
+        walletClass:
+          $ref: '#/components/schemas/GooglePayFlightClass'
+        walletObject:
+          $ref: '#/components/schemas/GooglePayFlightObject'
+    PassTemplateGooglePayTransit:
+      properties:
+        walletClass:
+          $ref: '#/components/schemas/GooglePayTransitClass'
+        walletObject:
+          $ref: '#/components/schemas/GooglePayTransitObject'
+    PassTemplateGooglePayGeneric:
+      properties:
+        walletClass:
+          $ref: '#/components/schemas/GooglePayGenericClass'
+        walletObject:
+          $ref: '#/components/schemas/GooglePayGenericObject'
     Permissions:
       description: The permissions an account has, matching the access role
       properties:
@@ -20164,6 +21145,9 @@ tags:
   - description: >-
       Methods to send updates to Live Activities.
     name: Live Activities
+  - description: >-
+      Methods to manage loyalty programs in Notificare.
+    name: Loyalty
   - description: >-
       Methods to create, send and schedule messages to your audience. We support
       several channels: Push (iOS, Android & Web), Email and SMS.
