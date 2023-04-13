@@ -1,4 +1,7 @@
 # Changelog
+## [1.131.0] - 2023-04-13
+Added GooglePay classes
+Added Loyalty methods
 ## [1.130.2] - 2023-02-10
 Added pass template methods
 Added pass v2 methods

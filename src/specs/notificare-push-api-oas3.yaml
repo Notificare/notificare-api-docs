@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.130.2'
+  version: '1.131.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -19899,14 +19899,43 @@ components:
           type: string
         issuerName:
           type: string
-        enableSmartTap:
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayMessage'
+        homepageUri:
+          $ref: '#/components/schemas/GooglePayUri'
+        imageModulesData:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayImageModule'
+        textModulesData:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayTextModule'
+        linksModuleData:
+          $ref: '#/components/schemas/GooglePayLinksModule'
+        redemptionIssuers:
+          type: array
+          items:
+            type: string
+        countryCode:
           type: string
+        heroImage:
+          $ref: '#/components/schemas/GooglePayImage'
+        enableSmartTap:
+          type: boolean
         hexBackgroundColor:
           type: string
         localizedIssuerName:
-          type: string
+          $ref: '#/components/schemas/GooglePayLocalizedString'
         multipleDevicesAndHoldersAllowedStatus:
           type: string
+          enum:
+            - STATUS_UNSPECIFIED
+            - MULTIPLE_HOLDERS
+            - ONE_USER_ALL_DEVICES
+            - ONE_USER_ONE_DEVICE
         securityAnimation:
           properties:
             animationType:
@@ -19920,52 +19949,821 @@ components:
             - VIEW_UNLOCK_REQUIREMENT_UNSPECIFIED
             - UNLOCK_NOT_REQUIRED
             - UNLOCK_REQUIRED_TO_VIEW
+    GooglePayMessage:
+      properties:
+        messageType:
+          type: 'string'
+          enum:
+            - MESSAGE_TYPE_UNSPECIFIED
+            - TEXT
+            - EXPIRATION_NOTIFICATION
+        header:
+          type: string
+        body:
+          type: string
+        localizedHeader:
+         $ref: '#/components/schemas/GooglePayLocalizedString'
+        localizedBody:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        displayInterval:
+         $ref: '#/components/schemas/GooglePayTimeInterval'
+        id:
+          type: string
+    GooglePayImageModule:
+      properties:
+        mainImage:
+          $ref: '#/components/schemas/GooglePayImage'
+        id:
+          type: 'string'
+    GooglePayTextModule:
+      properties:
+        header:
+          type: string
+        body:
+          type: string
+        localizedHeader:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        localizedBody:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        id:
+          type: string
+    GooglePayLinksModule:
+      properties:
+        uris:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayUri'
+    GooglePayLocalizedValue:
+      properties:
+        language:
+          type: string
+          default: 'en-US'
+        value:
+          type: string
+    GooglePayLocalizedString:
+      properties:
+        translatedValues:
+          type: array
+        defaultValue:
+          $ref: '#/components/schemas/GooglePayLocalizedValue'
+    GooglePayTimeInterval:
+      properties:
+        start:
+          properties:
+            date:
+              type: string
+              format: 'date-time'
+        end:
+          properties:
+            date:
+              type: string
+              format: 'date-time'
+    GooglePayUri:
+      properties:
+        uri:
+          type: string
+        description:
+          type: string
+        localizedDescription:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        id:
+          type: string
+    GooglePayAppTarget:
+      properties:
+        targetUri:
+          $ref: '#/components/schemas/GooglePayUri'
+    GooglePayAppLinkInfo:
+      properties:
+        appLogoImage:
+          $ref: '#/components/schemas/GooglePayImage'
+        title:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        description:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        appTarget:
+          $ref: '#/components/schemas/GooglePayAppTarget'
+    GooglePayAppLinkData:
+      properties:
+        androidAppLinkInfo:
+          $ref: '#/components/schemas/GooglePayAppLinkInfo'
+        iosAppLinkInfo:
+          $ref: '#/components/schemas/GooglePayAppLinkInfo'
+        webAppLinkInfo:
+          $ref: '#/components/schemas/GooglePayAppLinkInfo'
+    GooglePayImage:
+      properties:
+        sourceUri:
+          properties:
+            uri:
+              type: string
+    GooglePayGroupingInfo:
+      properties:
+        sortIndex:
+          type: number
+        groupingId:
+          type: string
+    GooglePayMoney:
+      properties:
+        micros:
+          type: number
+        currencyCode:
+          type: string
+    GooglePayEventVenue:
+      properties:
+        name:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        address:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayEventDateTime:
+      properties:
+        doorsOpen:
+          type: string
+          format: 'dateTime'
+        start:
+          type: string
+          format: 'dateTime'
+        end:
+          type: string
+          format: 'dateTime'
+        doorsOpenLabel:
+          type: string
+          enum:
+            - 'DOORS_OPEN_LABEL_UNSPECIFIED'
+            - 'DOORS_OPEN'
+            - 'GATES_OPEN'
+        customDoorsOpenLabel:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePaySeatInfo:
+      properties:
+        seat:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        row:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        section:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        gate:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayEventReservationInfo:
+      properties:
+        confirmationCode:
+          type: string
+    GooglePayMerchantSignupInfo:
+      properties:
+        signupWebsite:
+          $ref: '#/components/schemas/GooglePayUri'
+        signupSharedDatas:
+          type: array
+          items:
+            type: string
+            enum:
+              - 'SHARED_DATA_TYPE_UNSPECIFIED'
+              - 'FIRST_NAME'
+              - 'LAST_NAME'
+              - 'STREET_ADDRESS'
+              - 'ADDRESS_LINE_1'
+              - 'ADDRESS_LINE_2'
+              - 'ADDRESS_LINE_3'
+              - 'CITY'
+              - 'STATE'
+              - 'ZIPCODE'
+              - 'COUNTRY'
+              - 'EMAIL'
+              - 'PHONE'
+    GooglePayMerchantSigninInfo:
+      properties:
+        signinWebsite:
+          $ref: '#/components/schemas/GooglePayUri'
+    GooglePayDiscoverableProgram:
+      properties:
+        merchantSignupInfo:
+          $ref: '#/components/schemas/GooglePayMerchantSignupInfo'
+        merchantSigninInfo:
+          $ref: '#/components/schemas/GooglePayMerchantSigninInfo'
+        state:
+          type: string
+          enum:
+            - 'STATE_UNSPECIFIED'
+            - 'TRUSTED_TESTERS'
+            - 'LIVE'
+            - 'DISABLED'
+    GooglePayLoyaltyPointsBalance:
+      properties:
+        string:
+          type: string
+        int:
+          type: number
+        double:
+          type: number
+        money:
+          $ref: '#/components/schemas/GooglePayMoney'
+    GooglePayLoyaltyPoints:
+      properties:
+        label:
+          type: string
+        balance:
+          $ref: '#/components/schemas/GooglePayLoyaltyPointsBalance'
+        localizedLabel:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayFlightCarrier:
+      properties:
+        carrierIataCode:
+          type: string
+        carrierIcaoCode:
+          type: string
+        airlineName:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        airlineLogo:
+          $ref: '#/components/schemas/GooglePayImage'
+        airlineAllianceLogo:
+          $ref: '#/components/schemas/GooglePayImage'
+    GooglePayFlightHeader:
+      properties:
+        carrier:
+          $ref: '#/components/schemas/GooglePayFlightCarrier'
+        flightNumber:
+          type: string
+        operatingCarrier:
+          $ref: '#/components/schemas/GooglePayFlightCarrier'
+        operatingFlightNumber:
+          type: string
+    GooglePayAirportInfo:
+      properties:
+        airportIataCode:
+          type: string
+        terminal:
+          type: string
+        gate:
+          type: string
+        airportNameOverride:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayBoardingPolicy:
+      properties:
+        boardingPolicy:
+          type: string
+          enum:
+            - 'BOARDING_POLICY_UNSPECIFIED'
+            - 'ZONE_BASED'
+            - 'GROUP_BASED'
+            - 'BOARDING_POLICY_OTHER'
+        seatingPolicy:
+          type: string
+          enum:
+            - 'SEAT_CLASS_POLICY_UNSPECIFIED'
+            - 'CABIN_BASED'
+            - 'CLASS_BASED'
+            - 'TIER_BASED'
+            - 'SEAT_CLASS_POLICY_OTHER'
+    GooglePayFrequentFlyerInfo:
+      properties:
+        frequentFlyerProgramName:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        frequentFlyerNumber:
+          type: string
+    GooglePayReservationInfo:
+      properties:
+        confirmationCode:
+          type: string
+        eticketNumber:
+          type: string
+        frequentFlyerInfo:
+          $ref: '#/components/schemas/GooglePayFrequentFlyerInfo'
+    GooglePayBoardingAndSeatingInfo:
+      properties:
+        boardingGroup:
+          type: string
+        seatNumber:
+          type: string
+        seatClass:
+          type: string
+        boardingPrivilegeImage:
+          $ref: '#/components/schemas/GooglePayImage'
+        boardingPosition:
+          type: string
+        sequenceNumber:
+          type: string
+        boardingDoor:
+          type: string
+          enum:
+            - 'BOARDING_DOOR_UNSPECIFIED'
+            - 'FRONT'
+            - 'BACK'
+        seatAssignment:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayTicketCost:
+      properties:
+        faceValue:
+          $ref: '#/components/schemas/GooglePayMoney'
+        purchasePrice:
+          $ref: '#/components/schemas/GooglePayMoney'
+        discountMessage:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayPurchaseDetails:
+      properties:
+        purchaseReceiptNumber:
+          type: string
+        purchaseDateTime:
+          type: string
+          format: 'date-time'
+        accountId:
+          type: string
+        confirmationCode:
+          type: string
+        ticketCost:
+          $ref: '#/components/schemas/GooglePayTicketCost'
+    GooglePayTicketRestrictions:
+      properties:
+        routeRestrictions:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        routeRestrictionsDetails:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        timeRestrictions:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        otherRestrictions:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayTicketSeat:
+      properties:
+        fareClass:
+          type: string
+          enum:
+            - 'FARE_CLASS_UNSPECIFIED'
+            - 'ECONOMY'
+            - 'FIRST'
+            - 'BUSINESS'
+        customFareClass:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        coach:
+          type: string
+        seat:
+          type: string
+        seatAssignment:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayTicketLeg:
+      properties:
+        originStationCode:
+          type: string
+        originName:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        destinationStationCode:
+          type: string
+        destinationName:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        departureDateTime:
+          type: string
+          format: 'date-time'
+        arrivalDateTime:
+          type: string
+          format: 'date-time'
+        fareName:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        carriage:
+          type: string
+        platform:
+          type: string
+        zone:
+          type: string
+        ticketSeat:
+          $ref: '#/components/schemas/GooglePayTicketSeat'
+        ticketSeats:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayTicketSeat'
+        transitOperatorName:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+        transitTerminusName:
+          $ref: '#/components/schemas/GooglePayLocalizedString'
+    GooglePayNotification:
+      properties:
+        enableNotification:
+          type: boolean
+    GooglePayNotifications:
+      properties:
+        expiryNotification:
+          $ref: '#/components/schemas/GooglePayNotification'
+        upcomingNotification:
+          $ref: '#/components/schemas/GooglePayNotification'
     GooglePayObject:
       properties:
         classId:
           type: string
+        disableExpirationNotification:
+          type: boolean
+        smartTapRedemptionValue:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayMessage'
+        imageModulesData:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayImageModule'
+        textModulesData:
+          type: array
+          items:
+            $ref: '#/components/schemas/GooglePayTextModule'
+        linksModuleData:
+          $ref: '#/components/schemas/GooglePayLinksModule'
+        appLinkData:
+          $ref: '#/components/schemas/GooglePayAppLinkData'
+        heroImage:
+          $ref: '#/components/schemas/GooglePayImage'
+        groupingInfo:
+          $ref: '#/components/schemas/GooglePayGroupingInfo'
     GooglePayEventTicketClass:
       allOf:
         - $ref: '#/components/schemas/GooglePayClass'
+        - properties:
+            eventName:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            eventId:
+              type: 'string'
+            logo:
+              $ref: '#/components/schemas/GooglePayImage'
+            venue:
+              $ref: '#/components/schemas/GooglePayEventVenue'
+            dateTime:
+              $ref: '#/components/schemas/GooglePayEventDateTime'
+            confirmationCodeLabel:
+              type: string
+              enum:
+                - 'CONFIRMATION_CODE_LABEL_UNSPECIFIED'
+                - 'CONFIRMATION_CODE'
+                - 'CONFIRMATION_NUMBER'
+                - 'ORDER_NUMBER'
+                - 'RESERVATION_NUMBER'
+            customConfirmationCodeLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            seatLabel:
+              type: string
+              enum:
+                - 'SEAT_LABEL_UNSPECIFIED'
+                - 'SEAT'
+            customSeatLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            rowLabel:
+              type: string
+              enum:
+                - 'ROW_LABEL_UNSPECIFIED'
+                - 'ROW'
+            customRowLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            sectionLabel:
+              type: string
+              enum:
+                - 'SECTION_LABEL_UNSPECIFIED'
+                - 'SECTION'
+                - 'THEATER'
+            customSectionLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            gateLabel:
+              type: string
+              enum:
+                - 'GATE_LABEL_UNSPECIFIED'
+                - 'GATE'
+                - 'DOOR'
+                - 'ENTRANCE'
+            customGateLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            finePrint:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
     GooglePayEventTicketObject:
       allOf:
         - $ref: '#/components/schemas/GooglePayObject'
+        - properties:
+            seatInfo:
+              $ref: '#/components/schemas/GooglePaySeatInfo'
+            reservationInfo:
+              $ref: '#/components/schemas/GooglePayEventReservationInfo'
+            ticketHolderName:
+              type: string
+            ticketNumber:
+              type: string
+            ticketType:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            faceValue:
+              $ref: '#/components/schemas/GooglePayMoney'
+            linkedOfferIds:
+              type: array
+              items:
+                type: string
+            hexBackgroundColor:
+              type: string
     GooglePayLoyaltyClass:
       allOf:
         - $ref: '#/components/schemas/GooglePayClass'
+        - properties:
+            programName:
+              type: string
+            programLogo:
+              $ref: '#/components/schemas/GooglePayImage'
+            accountNameLabel:
+              type: string
+            accountIdLabel:
+              type: string
+            rewardsTierLabel:
+              type: string
+            rewardsTier:
+              type: string
+            localizedProgramName:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedAccountNameLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedAccountIdLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedRewardsTierLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedRewardsTier:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            secondaryRewardsTierLabel:
+              type: string
+            localizedSecondaryRewardsTierLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            secondaryRewardsTier:
+              type: string
+            localizedSecondaryRewardsTier:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            discoverableProgram:
+              $ref: '#/components/schemas/GooglePayDiscoverableProgram'
     GooglePayLoyaltyObject:
       allOf:
         - $ref: '#/components/schemas/GooglePayObject'
+        - properties:
+            accountName:
+              type: string
+            accountId:
+              type: string
+            loyaltyPoints:
+              $ref: '#/components/schemas/GooglePayLoyaltyPoints'
+            linkedOfferIds:
+              type: array
+              items:
+                type: string
+            secondaryLoyaltyPoints:
+              $ref: '#/components/schemas/GooglePayLoyaltyPoints'
     GooglePayGiftCardClass:
       allOf:
         - $ref: '#/components/schemas/GooglePayClass'
+        - properties:
+            merchantName:
+              type: string
+            programLogo:
+              $ref: '#/components/schemas/GooglePayImage'
+            pinLabel:
+              type: string
+            eventNumberLabel:
+              type: string
+            allowBarcodeRedemption:
+              type: boolean
+            localizedMerchantName:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedPinLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedEventNumberLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            cardNumberLabel:
+              type: string
+            localizedCardNumberLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
     GooglePayGiftCardObject:
       allOf:
         - $ref: '#/components/schemas/GooglePayObject'
+        - properties:
+            cardNumber:
+              type: string
+            pin:
+              type: string
+            balance:
+              $ref: '#/components/schemas/GooglePayMoney'
+            balanceUpdateTime:
+              type: string
+              format: 'date-time'
+            eventNumber:
+              type: string
     GooglePayOfferClass:
       allOf:
         - $ref: '#/components/schemas/GooglePayClass'
+        - properties:
+            title:
+              type: string
+            redemptionChannel:
+              type: string
+              enum:
+                - 'REDEMPTION_CHANNEL_UNSPECIFIED'
+                - 'INSTORE'
+                - 'ONLINE'
+                - 'BOTH'
+                - 'TEMPORARY_PRICE_REDUCTION'
+            provider:
+              type: string
+            titleImage:
+              $ref: '#/components/schemas/GooglePayImage'
+            details:
+              type: string
+            finePrint:
+              type: string
+            helpUri:
+              $ref: '#/components/schemas/GooglePayUri'
+            localizedTitle:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedProvider:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedDetails:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            localizedFinePrint:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            shortTitle:
+              type: string
+            localizedShortTitle:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
     GooglePayOfferObject:
       allOf:
         - $ref: '#/components/schemas/GooglePayObject'
     GooglePayFlightClass:
       allOf:
         - $ref: '#/components/schemas/GooglePayClass'
+        - properties:
+            localScheduledDepartureDateTime:
+              type: string
+              format: 'date-time'
+            localEstimatedOrActualDepartureDateTime:
+              type: string
+              format: 'date-time'
+            localBoardingDateTime:
+              type: string
+              format: 'date-time'
+            localScheduledArrivalDateTime:
+              type: string
+              format: 'date-time'
+            localEstimatedOrActualArrivalDateTime:
+              type: string
+              format: 'date-time'
+            flightHeader:
+              $ref: '#/components/schemas/GooglePayFlightHeader'
+            origin:
+              $ref: '#/components/schemas/GooglePayAirportInfo'
+            destination:
+              $ref: '#/components/schemas/GooglePayAirportInfo'
+            flightStatus:
+              type: string
+              enum:
+                - 'FLIGHT_STATUS_UNSPECIFIED'
+                - 'SCHEDULED'
+                - 'ACTIVE'
+                - 'LANDED'
+                - 'CANCELLED'
+                - 'REDIRECTED'
+                - 'DIVERTED'
+            boardingAndSeatingPolicy:
+              $ref: '#/components/schemas/GooglePayBoardingPolicy'
+            localGateClosingDateTime:
+              type: string
+              format: 'date-time'
+            languageOverride:
+              type: string
     GooglePayFlightObject:
       allOf:
         - $ref: '#/components/schemas/GooglePayObject'
+        - properties:
+            passengerName:
+              type: string
+            boardingAndSeatingInfo:
+              $ref: '#/components/schemas/GooglePayBoardingAndSeatingInfo'
+            reservationInfo:
+              $ref: '#/components/schemas/GooglePayReservationInfo'
+            securityProgramLogo:
+              $ref: '#/components/schemas/GooglePayImage'
+            hexBackgroundColor:
+              type: string
     GooglePayTransitClass:
       allOf:
         - $ref: '#/components/schemas/GooglePayClass'
+        - properties:
+            transitOperatorName:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            logo:
+              $ref: '#/components/schemas/GooglePayImage,'
+            transitType:
+              type: string
+              enum:
+                - 'TRANSIT_TYPE_UNSPECIFIED'
+                - 'BUS'
+                - 'RAIL'
+                - 'TRAM'
+                - 'FERRY'
+                - 'OTHER'
+            watermark:
+              $ref: '#/components/schemas/GooglePayImage'
+            languageOverride:
+              type: string
+            customTransitTerminusNameLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customTicketNumberLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customRouteRestrictionsLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customRouteRestrictionsDetailsLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customTimeRestrictionsLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customOtherRestrictionsLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customPurchaseReceiptNumberLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customConfirmationCodeLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customPurchaseFaceValueLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customPurchasePriceLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customDiscountMessageLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customCarriageLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customSeatLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customCoachLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customPlatformLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customZoneLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customFareClassLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customConcessionCategoryLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            customFareNameLabel:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
     GooglePayTransitObject:
       allOf:
         - $ref: '#/components/schemas/GooglePayObject'
+        - properties:
+            ticketNumber:
+              type: string
+            passengerType:
+              type: string
+              enum:
+                - 'PASSENGER_TYPE_UNSPECIFIED'
+                - 'SINGLE_PASSENGER'
+                - 'MULTIPLE_PASSENGERS'
+            passengerNames:
+              type: string
+            tripId:
+              type: string
+            ticketStatus:
+              type: string
+              enum:
+                - 'TICKET_STATUS_UNSPECIFIED'
+                - 'USED'
+                - 'REFUNDED'
+                - 'EXCHANGED'
+            customTicketStatus:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            concessionCategory:
+              type: string
+              enum:
+                - 'CONCESSION_CATEGORY_UNSPECIFIED'
+                - 'ADULT'
+                - 'CHILD'
+                - 'SENIOR'
+            customConcessionCategory:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            ticketRestrictions:
+              $ref: '#/components/schemas/GooglePayTicketRestrictions'
+            purchaseDetails:
+              $ref: '#/components/schemas/GooglePayPurchaseDetails'
+            ticketLeg:
+              $ref: '#/components/schemas/GooglePayTicketLeg'
+            ticketLegs:
+              type: array
+              items:
+                $ref: '#/components/schemas/GooglePayTicketLeg'
+            hexBackgroundColor:
+              type: string
+            tripType:
+              type: string
+              enum:
+                - 'TRIP_TYPE_UNSPECIFIED'
+                - 'ROUND_TRIP'
+                - 'ONE_WAY'
     GooglePayGenericClass:
       allOf:
         - $ref: '#/components/schemas/GooglePayClass'
     GooglePayGenericObject:
       allOf:
         - $ref: '#/components/schemas/GooglePayObject'
+        - properties:
+            cardTitle:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            subHeader:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            header:
+              $ref: '#/components/schemas/GooglePayLocalizedString'
+            logo:
+              $ref: '#/components/schemas/GooglePayImage'
+            hexBackgroundColor:
+              type: string
+            notifications:
+              $ref: '#/components/schemas/GooglePayNotifications'
     PassTemplateAppleWalletEventTicket:
       properties:
         dictionary:
