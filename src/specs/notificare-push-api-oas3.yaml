@@ -17551,15 +17551,16 @@ components:
     MessageSender:
       description: >-
         An object containing the sender name and address for this
-        template. Applicable only for email templates.
+        template. Applicable only for email messages and templates.
       properties:
         address:
           type: string
           example: massimo
-          description: the local part of the email address
+          description: the local part of the email address. Allows placeholders.
         name:
           type: string
           example: Massimo Gondoliere
+          description: the human-friendly name of the sender. Allows placeholders.
       required:
         - name
         - address
@@ -18076,14 +18077,6 @@ components:
                 be true. Please note that this property will be ignored if
                 Inbox is not being used.
               type: boolean
-            openTracking:
-              description: If set to false, will disable tracking of the message being opened
-              type: boolean
-              default: true
-            linkTracking:
-              description: If set to false, will disable tracking of clicks on links in the message
-              type: boolean
-              default: true
             inbox:
               description: >-
                 This property is only available for SDKs 2.3.0 and up. When
@@ -18351,6 +18344,9 @@ components:
               type: array
             sender:
               $ref: '#/components/schemas/MessageSender'
+            replyTo:
+              type: string
+              description: a fully-qualified email address to be used as reply-to. Allows placeholders.
             rules:
               description: >-
                 Adds one or more rules to a notification. An array of rules
@@ -18359,6 +18355,18 @@ components:
               items:
                 $ref: '#/components/schemas/MessageRule'
               type: array
+            openTracking:
+              description: If set to false, will disable tracking of the message being opened
+              type: boolean
+              default: true
+            linkTracking:
+              description: If set to false, will disable tracking of clicks on links in the message
+              type: boolean
+              default: true
+            useListHeaders:
+              description: If set to true, include List-Unsubscribe headers
+              type: boolean
+              default: false
           required:
             - type
             - subject
@@ -18549,6 +18557,9 @@ components:
           type: string
         sender:
           $ref: '#/components/schemas/MessageSender'
+        replyTo:
+          type: string
+          description: Fully-qualified email address to use as reply-to. Allows placeholders.
         title:
           description: >-
             With SDK 1.9 and up, iOS 10 and up and Android 5 and up
@@ -18754,6 +18765,10 @@ components:
           description: If set to false, will disable tracking of clicks on links in the message
           type: boolean
           default: true
+        useListHeaders:
+          description: If set to true, include List-Unsubscribe headers
+          type: boolean
+          default: false
         rate:
           description: >-
             Number of messages per second that should be sent using this
@@ -19323,15 +19338,6 @@ components:
             barcode:
               type: string
               example: 18847737723
-            redeemHistory:
-              type: array
-              items:
-                properties:
-                  date:
-                    type: string
-                    format: 'date-time'
-                  comments:
-                    type: string
         - $ref: '#/components/schemas/PassV2Base'
     PassCreate:
       properties:
@@ -19369,20 +19375,6 @@ components:
           example: 18847737723
         data:
           $ref: '#/components/schemas/PassV2Data'
-        limit:
-          description: >-
-            When using `limit` as a redeem option, you should provide
-            the number of times the card can be redeemed.
-          type: number
-        redeem:
-          description: >-
-            A pass supports one of 3 modes (always, once, limit) for
-            redemption.
-          enum:
-            - always
-            - once
-            - limit
-          type: string
       required:
         - template
         - data
@@ -19433,20 +19425,6 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/PassV2Data'
-        limit:
-          description: >-
-            When using `limit` as a redeem option, you should provide
-            the number of times the card can be redeemed.
-          type: number
-        redeem:
-          description: >-
-            A pass supports one of 3 modes (always, once, limit) for
-            redemption.
-          enum:
-            - always
-            - once
-            - limit
-          type: string
     PassBase:
       properties:
         data:
