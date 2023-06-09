@@ -2220,6 +2220,9 @@ components:
               example: Hello world
             sender:
               $ref: '#/components/schemas/MessageSender'
+            replyTo:
+              type: string
+              description: a fully-qualified email address to be used as reply-to. Allows placeholders.
             openTracking:
               description: If set to false, will disable tracking of the message being opened
               type: boolean
@@ -2228,6 +2231,10 @@ components:
               description: If set to false, will disable tracking of clicks on links in the message
               type: boolean
               default: true
+            useListHeaders:
+              description: If set to true, include List-Unsubscribe headers
+              type: boolean
+              default: false
             criteria:
               $ref: '#/components/schemas/Criteria'
             eventCriteria:
@@ -2410,14 +2417,6 @@ components:
                 be true. Please note that this property will be ignored if
                 Inbox is not being used.
               type: boolean
-            openTracking:
-              description: If set to false, will disable tracking of the message being opened
-              type: boolean
-              default: true
-            linkTracking:
-              description: If set to false, will disable tracking of clicks on links in the message
-              type: boolean
-              default: true
             inbox:
               description: >-
                 This property is only available for SDKs 2.3.0 and up. When
