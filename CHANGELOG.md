@@ -1,4 +1,8 @@
 # Changelog
+## [1.132.0] - 2023-06-09
+Added useListHeaders
+Added replyTo
+Removed redeem properties
 ## [1.131.0] - 2023-04-13
 Added GooglePay classes
 Added Loyalty methods
