@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.132.0'
+  version: '1.133.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -11277,6 +11277,298 @@ paths:
         `masterSecret`.
       operationId: getRegionSearch
       summary: Search Regions
+  '/region/bytag/{tag}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: Region tag.
+          example: test_tag
+          in: path
+          name: tag
+          required: true
+          schema:
+            type: string
+        - description: Include count of triggers.
+          example: 0
+          in: query
+          name: includeTriggerCount
+          required: false
+          schema:
+            type: number
+        - description: Include count of beacon triggers.
+          example: 0
+          in: query
+          name: includeBeaconTriggerCount
+          required: false
+          schema:
+            type: number
+        - description: Include count of beacons.
+          example: 0
+          in: query
+          name: includeBeaconCount
+          required: false
+          schema:
+            type: number
+        - description: Only regions with this category.
+          example: fence
+          in: query
+          name: category
+          required: false
+          schema:
+            type: string
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
+          description: OK
+      tags:
+        - Region
+      description: >-
+        Search regions for an application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getRegionByTag
+      summary: List Regions By Tag
+  '/region/bylocation/{lat}/{long}/{distance}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: Latitude of circular area.
+          example: 51.2735
+          in: path
+          name: lat
+          required: true
+          schema:
+            type: number
+        - description: Longitude of circular area.
+          example: 4.5643
+          in: path
+          name: long
+          required: true
+          schema:
+            type: number
+        - description: Radius of circular area.
+          example: 100
+          in: path
+          name: distance
+          required: true
+          schema:
+            type: number
+        - description: Include count of triggers.
+          example: 0
+          in: query
+          name: includeTriggerCount
+          required: false
+          schema:
+            type: number
+        - description: Include count of beacon triggers.
+          example: 0
+          in: query
+          name: includeBeaconTriggerCount
+          required: false
+          schema:
+            type: number
+        - description: Include count of beacons.
+          example: 0
+          in: query
+          name: includeBeaconCount
+          required: false
+          schema:
+            type: number
+        - description: Only regions with these tags.
+          example: test_tag
+          in: query
+          name: tag
+          required: false
+          schema:
+            type: string
+        - description: Only regions with this category.
+          example: fence
+          in: query
+          name: category
+          required: false
+          schema:
+            type: string
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
+          description: OK
+      tags:
+        - Region
+      description: >-
+        List regions inside a circular area.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getRegionByLocationCircular
+      summary: List Regions By Location Circular
+  '/region/bylocation/{lat1}/{long1}/{lat2}/{long2}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: Lower latitude of box.
+          example: 51.2735
+          in: path
+          name: lat1
+          required: true
+          schema:
+            type: number
+        - description: Lower longitude of box.
+          example: 4.5643
+          in: path
+          name: long1
+          required: true
+          schema:
+            type: number
+        - description: Upper latitude of box.
+          example: 51.2735
+          in: path
+          name: lat2
+          required: true
+          schema:
+            type: number
+        - description: Upper longitude of box.
+          example: 4.5643
+          in: path
+          name: long2
+          required: true
+          schema:
+            type: number
+        - description: Include count of triggers.
+          example: 0
+          in: query
+          name: includeTriggerCount
+          required: false
+          schema:
+            type: number
+        - description: Include count of beacon triggers.
+          example: 0
+          in: query
+          name: includeBeaconTriggerCount
+          required: false
+          schema:
+            type: number
+        - description: Include count of beacons.
+          example: 0
+          in: query
+          name: includeBeaconCount
+          required: false
+          schema:
+            type: number
+        - description: Only regions with these tags.
+          example: test_tag
+          in: query
+          name: tag
+          required: false
+          schema:
+            type: string
+        - description: Only regions with this category.
+          example: fence
+          in: query
+          name: category
+          required: false
+          schema:
+            type: string
+        - description: The maximum number of results to retrieve.
+          example: '10'
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip
+          example: '0'
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              example:
+                regions:
+                  - _id: 5245bc5b3e66a3b01f0024d4
+                    geometry:
+                      coordinates:
+                        - 4.2345
+                        - 5.6789
+                      type: Point
+                    major: '123456'
+                    name: My Region
+                    timezone: Europe/Amsterdam
+                count: 1
+          description: OK
+      tags:
+        - Region
+      description: >-
+        List regions inside a box area.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getRegionByLocationBox
+      summary: List Regions By Location Box
   '/region/{region}':
     get:
       security:
@@ -21839,6 +22131,11 @@ tags:
 
       | re.notifica.event.sms.Nondeliverable | Stored whenever an SMS message 
       could not be delivered. |
+
+      | re.notifica.event.sms.Incoming | Stored whenever an SMS contact 
+      replies with a message. |
+
+      | re.notifica.event.sms.Charged | Stored whenever an SMS message was charged (inbonud, outbound or optin messages). |
 
       | re.notifica.event.region.Session | Stored whenever a user enters and
       leaves a region. |

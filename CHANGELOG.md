@@ -1,4 +1,7 @@
 # Changelog
+## [1.133.0] - 2023-08-11
+Added region by location methods
+Added SMS event types
 ## [1.132.0] - 2023-06-09
 Added useListHeaders
 Added replyTo
