@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.133.0'
+  version: '1.134.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -9354,6 +9354,49 @@ paths:
             schema:
               $ref: '#/components/schemas/NotificationTestSmsDevice'
       summary: Test SMS Message to Phone
+  '/notification/test/{id}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The identifier for a message test.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  test:
+                    $ref: '#/components/schemas/NotificationTestModel'
+          description: OK
+      tags:
+        - Message Test
+      description: Show message test by id
+      operationId: getNotificationTestById
+      summary: Show message test
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The identifier for a message test.
+          in: path
+          name: id
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '202':
+          description: Accepted
+      tags:
+        - Message Test
+      description: Delete message test, or cancel if still running
+      operationId: deleteNotificationTestById
+      summary: Delete message test
   '/notification/userinbox/foruserid/{userID}':
     get:
       security:
@@ -17899,6 +17942,14 @@ components:
         status:
           type: string
           enum: [saved, gathering, sending, error, finished]
+        costUSD:
+          description: for SMS this will have an indication of the cost of the message
+          type: number
+          example: 1.00
+        costEUR:
+          description: for SMS this will have an indication of the cost of the message
+          type: number
+          example: 0.90
         gathering:
           type: boolean
           default: false
@@ -19299,6 +19350,30 @@ components:
           example: Hello world
       required:
         - message
+    NotificationTestModel:
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        application:
+          $ref: '#/components/schemas/ObjectId'
+        date:
+          type: string
+          format: 'date-time'
+          example: '2014-02-01T00:00:00.000Z'
+        status:
+          type: string
+          enum:
+            - queued
+            - running
+            - error
+            - finished
+          default: queued
+        users:
+          type: number
+          example: 2
+        devices:
+          type: number
+          example: 2
     ObjectId:
       type: string
       example: 1d9e80ef851d212aca82cf23

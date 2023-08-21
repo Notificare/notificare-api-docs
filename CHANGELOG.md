@@ -1,4 +1,7 @@
 # Changelog
+## [1.134.0] - 2023-08-21
+Added cost info
+Added message test show/delete
 ## [1.133.0] - 2023-08-11
 Added region by location methods
 Added SMS event types
