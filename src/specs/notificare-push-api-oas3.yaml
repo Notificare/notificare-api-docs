@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.140.0'
+  version: '1.140.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2351,49 +2351,6 @@ paths:
                     type: string
                   example: [tag1, tag2]
       summary: Remove Tags For Email Contact
-  '/email/{deviceID}/userdata':
-    put:
-      security:
-        - MasterSecret: []
-      parameters:
-        - description: The deviceID is the unique identifier
-          example: 00a9b9bf-xxx9278-64d6a3f22476
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              schema:
-                $ref: '#/components/schemas/ResponseMessage'
-              example:
-                message: email contact user data updated
-          description: OK
-      tags:
-        - Email
-      description: >-
-        Set the user data fields for an email contact. The fields need to be defined as User Data Fields in
-        the Settings > Configure App > User Data Fields menu before they can be set through this endpoint.
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: putEmailUserdata
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                userData:
-                  type: object
-                  additionalProperties:
-                    type: string
-                  example:
-                    firstName: John
-                    lastName: Doe
-              type: object
-      summary: Update User Data For Email Contact
   '/event/custom/{type}/{userID}':
     post:
       security:
@@ -12148,7 +12105,7 @@ paths:
                 message: sms number updated, pending validation
           description: Accepted
       tags:
-        - Email
+        - SMS
       description: >-
         Update an sms contact for your application.
 
@@ -12262,49 +12219,6 @@ paths:
                     type: string
                   example: [tag1, tag2]
       summary: Remove Tags For SMS Number
-  '/sms/{deviceID}/userdata':
-    put:
-      security:
-        - MasterSecret: []
-      parameters:
-        - description: The deviceID is the unique identifier
-          example: 00a9b9bf-xxx9278-64d6a3f22476
-          in: path
-          name: deviceID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          content:
-            application/json; charset=utf-8:
-              schema:
-                $ref: '#/components/schemas/ResponseMessage'
-              example:
-                message: sms number user data updated
-          description: OK
-      tags:
-        - SMS
-      description: >-
-        Set the user data fields for an sms number. The fields need to be defined as User Data Fields in
-        the Settings > Configure App > User Data Fields menu before they can be set through this endpoint.
-        This request is authenticated with the `applicationKey` and
-        `masterSecret`.
-      operationId: putSmsUserdata
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                userData:
-                  type: object
-                  additionalProperties:
-                    type: string
-                  example:
-                    firstName: John
-                    lastName: Doe
-              type: object
-      summary: Update User Data For SMS Number
   '/stats/device/{dimension}/lastmonth':
     get:
       security:
@@ -16141,6 +16055,29 @@ components:
           description: The userName your wish to assign the contact to.
           type: string
           example: Test User
+        userData:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            firstName: John
+            lastName: Doe
+        dnd:
+          type: object
+          description: DND start and end, set to null to clear
+          properties:
+            start:
+              type: string
+              example: 23:00
+            end:
+              type: string
+              example: 07:00
+        latitude:
+          type: number
+          example: 52.5
+        longitude:
+          type: number
+          example: 4.5
         verify:
           description: >-
             If you wish to require verification when changing the
@@ -22057,6 +21994,29 @@ components:
           description: The userName your wish to assign the number to.
           type: string
           example: Test User
+        userData:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            firstName: John
+            lastName: Doe
+        dnd:
+          type: object
+          description: DND start and end, set to null to clear
+          properties:
+            start:
+              type: string
+              example: 23:00
+            end:
+              type: string
+              example: 07:00
+        latitude:
+          type: number
+          example: 52.5
+        longitude:
+          type: number
+          example: 4.5
         verify:
           description: >-
             If you wish to require verification when changing the
