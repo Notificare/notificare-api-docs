@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.134.0'
+  version: '1.140.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2215,6 +2215,185 @@ paths:
             schema:
               $ref: '#/components/schemas/EmailCreate'
       summary: Create Email Contact
+  /email/{deviceID}:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: email contact updated
+          description: OK
+        '202':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: email contact updated, pending validation
+          description: Accepted
+      tags:
+        - Email
+      description: >-
+        Create an email contact for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailUpdate'
+      summary: Update Email Contact
+    delete:
+      security:
+        - MasterSecret: []
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Email
+      description: >-
+        Deactivate an email contact for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteEmail
+      summary: Deactivate Email Contact
+  /email/{deviceID}/cleartags:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: tags cleared
+          description: OK
+      tags:
+        - Email
+      description: >-
+        Remove all tags for an email contact for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putEmailClearTags
+      summary: Clear Tags For Email Contact
+  /email/{deviceID}/addtags:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: tags added
+          description: OK
+      tags:
+        - Email
+      description: >-
+        Remove all tags for an email contact for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putEmailAddTags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example: [tag1, tag2]
+      summary: Add Tags For Email Contact
+  /email/{deviceID}/removetags:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: tags removed
+          description: OK
+      tags:
+        - Email
+      description: >-
+        Remove all tags for an email contact for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putEmailRemoveTags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example: [tag1, tag2]
+      summary: Remove Tags For Email Contact
+  '/email/{deviceID}/userdata':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The deviceID is the unique identifier
+          example: 00a9b9bf-xxx9278-64d6a3f22476
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: email contact user data updated
+          description: OK
+      tags:
+        - Email
+      description: >-
+        Set the user data fields for an email contact. The fields need to be defined as User Data Fields in
+        the Settings > Configure App > User Data Fields menu before they can be set through this endpoint.
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putEmailUserdata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userData:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    firstName: John
+                    lastName: Doe
+              type: object
+      summary: Update User Data For Email Contact
   '/event/custom/{type}/{userID}':
     post:
       security:
@@ -11945,37 +12124,187 @@ paths:
         content:
           application/json:
             schema:
+              $ref: '#/components/schemas/SmsCreate'
+      summary: Create SMS Number
+  /sms/{deviceID}:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: sms number updated
+          description: OK
+        '202':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: sms number updated, pending validation
+          description: Accepted
+      tags:
+        - Email
+      description: >-
+        Update an sms contact for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putSms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmsUpdate'
+      summary: Update SMS Number
+    delete:
+      security:
+        - MasterSecret: []
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - SMS
+      description: >-
+        Deactivate an sms number for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deleteSms
+      summary: Deactivate SMS Number
+  /sms/{deviceID}/cleartags:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: tags cleared
+          description: OK
+      tags:
+        - SMS
+      description: >-
+        Remove all tags for an sms number for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putSmsClearTags
+      summary: Clear Tags For SMS Number
+  /sms/{deviceID}/addtags:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: tags added
+          description: OK
+      tags:
+        - SMS
+      description: >-
+        Remove all tags for an sms number for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putSmsAddTags
+      requestBody:
+        content:
+          application/json:
+            schema:
               properties:
                 tags:
-                  description: A list of tags you wish to assign to the email address.
+                  type: array
                   items:
                     type: string
-                    example: [tag1]
+                  example: [tag1, tag2]
+      summary: Add Tags For SMS Number
+  /sms/{deviceID}/removetags:
+    put:
+      security:
+        - MasterSecret: []
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: tags removed
+          description: OK
+      tags:
+        - SMS
+      description: >-
+        Remove all tags for an sms number for your application.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putSmsRemoveTags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                tags:
                   type: array
-                language:
-                  description: The language you wish to assign the contact to.
-                  type: string
-                phone:
-                  description: The phone number you wish to subscribe to your app.
-                  type: string
-                region:
-                  description: The region you wish to assign the contact to.
-                  type: string
-                userID:
-                  description: The userID your wish to assign the contact to.
-                  type: string
-                userName:
-                  description: The userName your wish to assign the contact to.
-                  type: string
-                verify:
-                  description: >-
-                    If you wish to require verification before activating the
-                    email contact set this property to `true`.
-                  type: boolean
-              required:
-                - phone
+                  items:
+                    type: string
+                  example: [tag1, tag2]
+      summary: Remove Tags For SMS Number
+  '/sms/{deviceID}/userdata':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The deviceID is the unique identifier
+          example: 00a9b9bf-xxx9278-64d6a3f22476
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: sms number user data updated
+          description: OK
+      tags:
+        - SMS
+      description: >-
+        Set the user data fields for an sms number. The fields need to be defined as User Data Fields in
+        the Settings > Configure App > User Data Fields menu before they can be set through this endpoint.
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putSmsUserdata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userData:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    firstName: John
+                    lastName: Doe
               type: object
-      summary: Create SMS Number
+      summary: Update User Data For SMS Number
   '/stats/device/{dimension}/lastmonth':
     get:
       security:
@@ -15185,9 +15514,6 @@ components:
               type: string
               example: Test beacon
             region:
-              description: >-
-                Your beacon's region (must match a previously
-                created identifier of a region). Also determines the major of the beacon
               $ref: '#/components/schemas/ObjectId'
             minor:
               description: Your beacon's minor identifier (must be unique per major)
@@ -15370,6 +15696,8 @@ components:
             - in
             - nin
             - sw
+            - has
+            - nhas
           type: string
         property:
           type: string
@@ -15727,6 +16055,14 @@ components:
             type: string
           type: array
           example: ['tag1']
+        userData:
+          description: A key/value of user data properties
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            firstName: John
+            lastName: Doe
         email:
           description: The email address you wish to subscribe to your app.
           type: string
@@ -15739,6 +16075,20 @@ components:
           description: The region you wish to assign the contact to.
           type: string
           example: 'NL'
+        country:
+          description: The country this email contact is in
+          type: string
+          example: 'NL'
+        timeZoneOffset:
+          type: number
+          default: 0
+          example: 2
+        timeZone:
+          description: >-
+            If no timeZoneOffset is given, this will use the name of the 
+            timezone to determine the offset.
+          type: string
+          example: Europe/Amsterdam
         userID:
           description: The userID your wish to assign the contact to.
           type: string
@@ -15754,6 +16104,49 @@ components:
           type: boolean
       required:
         - email
+      type: object
+    EmailUpdate:
+      properties:
+        subscriptionId:
+          description: The email address you wish to subscribe to your app.
+          type: string
+          format: email
+        language:
+          description: The language you wish to assign the contact to.
+          type: string
+          example: 'nl'
+        region:
+          description: The region you wish to assign the contact to.
+          type: string
+          example: 'NL'
+        country:
+          description: The country this email contact is in
+          type: string
+          example: 'NL'
+        timeZoneOffset:
+          type: number
+          default: 0
+          example: 2
+        timeZone:
+          description: >-
+            If no timeZoneOffset is given, this will use the name of the 
+            timezone to determine the offset.
+          type: string
+          example: Europe/Amsterdam
+        userID:
+          description: The userID your wish to assign the contact to.
+          type: string
+          example: '173661892772'
+        userName:
+          description: The userName your wish to assign the contact to.
+          type: string
+          example: Test User
+        verify:
+          description: >-
+            If you wish to require verification when changing the
+            subscriptionId of the email contact, 
+            set this property to `true`.
+          type: boolean
       type: object
     ExportJobList:
       properties:
@@ -16869,7 +17262,8 @@ components:
             (only during app launch from an initial state), 
             `foreground` (whenever an app comes to foreground), or both (the default)
           type: array
-          items: string
+          items:
+            type: string
           example: ['launch', 'foreground']
         criteria:
           $ref: '#/components/schemas/Criteria'
@@ -17187,7 +17581,8 @@ components:
           description: The topics for this activity as registered by the device
           type: array
           example: [myOrder1, myOrder2]
-          items: string
+          items:
+            type: string
         created:
           $ref: '#/components/schemas/Date'
     LiveActivityMessageBase:
@@ -17378,7 +17773,6 @@ components:
                 - gte
                 - in
                 - nin
-                - sw
             value:
               oneOf:
                 - type: string
@@ -17971,6 +18365,9 @@ components:
         users:
           type: number
           example: 2
+        received:
+          type: number
+          example: 3
         opened:
           type: number
           example: 2
@@ -18012,6 +18409,7 @@ components:
             default:
               sent: 3
               fails: 1
+              received: 2
               opened: 2
               uniqueOpened: 1
               replied: 1
@@ -18025,6 +18423,7 @@ components:
             en:
               sent: 1
               fails: 0
+              received: 1
               opened: 0
               uniqueOpened: 0
               replied: 0
@@ -20986,7 +21385,7 @@ components:
             transitOperatorName:
               $ref: '#/components/schemas/GooglePayLocalizedString'
             logo:
-              $ref: '#/components/schemas/GooglePayImage,'
+              $ref: '#/components/schemas/GooglePayImage'
             transitType:
               type: string
               enum:
@@ -21419,6 +21818,8 @@ components:
             `in` means in, needs an array of values
             `nin` means not in, needs an array of values
             `sw` means starts with, only for string values
+            `has` means contains this string, only for string values
+            `nhas` means does not contain this string, only for string values
           enum:
             - eq
             - ne
@@ -21429,6 +21830,8 @@ components:
             - in
             - nin
             - sw
+            - has
+            - nhas
           type: string
         property:
           description: >-
@@ -21567,6 +21970,99 @@ components:
           items:
             $ref: '#/components/schemas/ObjectId'
           type: array
+      type: object
+    SmsCreate:
+      properties:
+        tags:
+          description: A list of tags you wish to assign to the sms number.
+          items:
+            type: string
+          type: array
+          example: ['tag1']
+        userData:
+          description: A key/value of user data properties
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            firstName: John
+            lastName: Doe
+        phone:
+          description: The sms number you wish to subscribe to your app.
+          type: string
+          example: '+31612345678'
+        language:
+          description: The language you wish to assign the number to.
+          type: string
+          example: 'nl'
+        region:
+          description: The region you wish to assign the number to.
+          type: string
+          example: 'NL'
+        timeZoneOffset:
+          type: number
+          default: 0
+          example: 2
+        timeZone:
+          description: >-
+            If no timeZoneOffset is given, this will use the name of the 
+            timezone to determine the offset.
+          type: string
+          example: Europe/Amsterdam
+        userID:
+          description: The userID your wish to assign the number to.
+          type: string
+          example: '173661892772'
+        userName:
+          description: The userName your wish to assign the number to.
+          type: string
+          example: Test User
+        verify:
+          description: >-
+            If you wish to require verification before activating the
+            sms number set this property to `true`.
+          type: boolean
+      required:
+        - email
+      type: object
+    SmsUpdate:
+      properties:
+        subscriptionId:
+          description: The phone number you wish to subscribe to your app.
+          type: string
+          example: '+31612345678'
+        language:
+          description: The language you wish to assign the number to.
+          type: string
+          example: 'nl'
+        region:
+          description: The region you wish to assign the number to.
+          type: string
+          example: 'NL'
+        timeZoneOffset:
+          type: number
+          default: 0
+          example: 2
+        timeZone:
+          description: >-
+            If no timeZoneOffset is given, this will use the name of the 
+            timezone to determine the offset.
+          type: string
+          example: Europe/Amsterdam
+        userID:
+          description: The userID your wish to assign the number to.
+          type: string
+          example: '173661892772'
+        userName:
+          description: The userName your wish to assign the number to.
+          type: string
+          example: Test User
+        verify:
+          description: >-
+            If you wish to require verification when changing the
+            subscriptionId of the sms number, 
+            set this property to `true`.
+          type: boolean
       type: object
     ExportStorageConfigS3:
       allOf:
@@ -21947,6 +22443,8 @@ components:
             `in` means in, needs an array of values
             `nin` means not in, needs an array of values
             `sw` means starts with, only for string values
+            `has` means contains this string, only for string values
+            `nhas` means does not contain this string, only for string values
           enum:
             - eq
             - ne
@@ -21957,6 +22455,8 @@ components:
             - in
             - nin
             - sw
+            - has
+            - nhas
           type: string
         key:
           description: >-

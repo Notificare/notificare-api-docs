@@ -1,4 +1,10 @@
 # Changelog
+## [1.140.0] - 2023-10-18
+Added timezone for email/sms create/update
+Added email update
+Added sms update
+Added has/nhas in criteria
+Added received to notification info
 ## [1.134.0] - 2023-08-21
 Added cost info
 Added message test show/delete
