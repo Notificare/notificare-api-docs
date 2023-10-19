@@ -2303,7 +2303,7 @@ paths:
       tags:
         - Email
       description: >-
-        Remove all tags for an email contact for your application.
+        Add tags for an email contact for your application.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -2335,7 +2335,7 @@ paths:
       tags:
         - Email
       description: >-
-        Remove all tags for an email contact for your application.
+        Remove tags for an email contact for your application.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -12171,7 +12171,7 @@ paths:
       tags:
         - SMS
       description: >-
-        Remove all tags for an sms number for your application.
+        Add tags for an sms number for your application.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -12203,7 +12203,7 @@ paths:
       tags:
         - SMS
       description: >-
-        Remove all tags for an sms number for your application.
+        Remove tags for an sms number for your application.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
