@@ -1,4 +1,6 @@
 # Changelog
+## [1.140.2] - 2023-10-19
+Fix typos
 ## [1.140.1] - 2023-10-18
 Change update email/sms
 ## [1.140.0] - 2023-10-18
