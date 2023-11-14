@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.140.2'
+  version: '1.141.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2181,9 +2181,12 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/ResponseMessage'
+                $ref: '#/components/schemas/ResponseDeviceMessage'
               example:
                 message: subscription updated
+                device:
+                  id: 1d9e80ef851d212aca82cf23
+                  deviceID: 00a9b9bf-xxx9278-64d6a3f22476
           description: OK
         '201':
           content:
@@ -12057,10 +12060,21 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/ResponseMessage'
+                $ref: '#/components/schemas/ResponseDeviceMessage'
               example:
                 message: subscription updated
+                device:
+                  id: 1d9e80ef851d212aca82cf23
+                  deviceID: 00a9b9bf-xxx9278-64d6a3f22476
           description: OK
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  device:
+                    $ref: '#/components/schemas/ResponseDeviceCreated'
+          description: Created
         '202':
           content:
             application/json; charset=utf-8:
@@ -21836,6 +21850,20 @@ components:
       required:
         - message
       type: object
+    ResponseDeviceMessage:
+      type: object
+      properties:
+        message:
+          type: string
+        device:
+          properties:
+            id:
+              $ref: '#/components/schemas/ObjectId'
+            deviceID:
+              type: string
+              format: 'uuid'
+      required:
+        - message
     ResponseCreated:
       type: object
       properties:
