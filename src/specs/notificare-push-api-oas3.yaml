@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.141.0'
+  version: '1.141.6'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -5483,10 +5483,9 @@ paths:
           content:
             application/json; charset=utf-8:
               schema:
-                $ref: '#/components/schemas/ResponseMessageCreated'
-              example:
-                _id: 5245bc5b3e66a3b01f0024d4
-                message: notifications are queued
+                properties:
+                  message:
+                    $ref: '#/components/schemas/ResponseCreated'
           description: Created
       tags:
         - In-App Messaging
@@ -6027,7 +6026,7 @@ paths:
               schema:
                 properties:
                   loyaltyProgram:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Loyalty
@@ -6128,7 +6127,7 @@ paths:
               schema:
                 properties:
                   loyaltyRule:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Loyalty
@@ -6289,7 +6288,7 @@ paths:
               schema:
                 properties:
                   loyaltyProgram:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Loyalty
@@ -8931,7 +8930,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Message Test
@@ -8959,7 +8958,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Message Test
@@ -9129,7 +9128,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Message Test
@@ -9157,7 +9156,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Message Test
@@ -9330,7 +9329,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Message Test
@@ -9358,7 +9357,7 @@ paths:
               schema:
                 properties:
                   test:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
           description: Created
       tags:
         - Message Test
@@ -9732,7 +9731,7 @@ paths:
               schema:
                 properties:
                   pass:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponsePassCreated'
           description: Created
       tags:
         - Pass
@@ -10550,8 +10549,8 @@ paths:
             application/json; charset=utf-8:
               schema:
                 properties:
-                  passbook:
-                    $ref: '#/components/schemas/ResponseCreated'
+                  passTemplate:
+                    $ref: '#/components/schemas/ResponsePassTemplateCreated'
           description: Created
       tags:
         - Pass Templates
@@ -21817,7 +21816,7 @@ components:
           type: object
     ResponseMessageCreated:
       allOf:
-        - $ref: '#/components/schemas/ResponseCreated'
+        - $ref: '#/components/schemas/ResponseCreatedWithUnderscore'
         - $ref: '#/components/schemas/ResponseMessage'
     ResponseError:
       properties:
@@ -21867,6 +21866,11 @@ components:
     ResponseCreated:
       type: object
       properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+    ResponseCreatedWithUnderscore:
+      type: object
+      properties:
         _id:
           $ref: '#/components/schemas/ObjectId'
     ResponseDeviceCreated:
@@ -21875,6 +21879,22 @@ components:
         id:
           $ref: '#/components/schemas/ObjectId'
         deviceID:
+          type: string
+          format: 'uuid'
+    ResponsePassCreated:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        serial:
+          type: string
+          format: 'uuid'
+    ResponsePassTemplateCreated:
+      type: object
+      properties:
+        _id:
+          $ref: '#/components/schemas/ObjectId'
+        identifier:
           type: string
           format: 'uuid'
     ScannableBase:
