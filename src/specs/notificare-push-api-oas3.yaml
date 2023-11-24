@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.141.6'
+  version: '1.142.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -9898,6 +9898,10 @@ paths:
       description: >-
         Get a pass object using the barcode string.
 
+        This method will *always* return a v1 format, even if the pass itself is v2.
+  
+        To get the v2 data, please use [getPassV2ById](#tag/Pass/operation/getPassV2ById)
+        
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: getPassForBarcode
@@ -9927,7 +9931,11 @@ paths:
       tags:
         - Pass
       description: >-
-        Get a pass object using the serial string.
+        Get a pass object using the serial string. 
+        
+        This method will *always* return a v1 format, even if the pass itself is v2.
+        
+        To get the v2 data, please use [getPassV2ById](#tag/Pass/operation/getPassV2ById)
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -10108,7 +10116,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseMessage'
               example:
-                message: pass deleted
+                message: pass removed
           description: OK
       tags:
         - Pass
@@ -17757,6 +17765,9 @@ components:
               $ref: '#/components/schemas/ObjectId'
             program:
               $ref: '#/components/schemas/ObjectId'
+            active:
+              type: boolean
+              default: true
             created:
               $ref: '#/components/schemas/Date'
             lastUpdated:
@@ -20023,11 +20034,22 @@ components:
               type: number
               enum:
                 - 1
+            active:
+              type: boolean
+              default: true
             passbook:
               $ref: '#/components/schemas/ObjectId'
+            serial:
+              type: string
+              format: uuid
             barcode:
+              description: the barcode for this pass, defaults to the (generated) serial, needs to be unique
               type: string
               example: 18847737723
+            token:
+              description: push token to be used for updating AppleWallet
+              type: string
+              example: 859f6830c89d902c16a4579c19fb66a0211bb8a34deafc9217f17f8c4e86bb05
             redeemHistory:
               type: array
               items:
@@ -20049,11 +20071,31 @@ components:
               type: number
               enum:
                 - 2
+            active:
+              type: boolean
+              default: true
             template:
               $ref: '#/components/schemas/ObjectId'
+            serial:
+              type: string
+              format: uuid
             barcode:
+              description: the barcode for this pass, defaults to the (generated) serial, needs to be unique
               type: string
               example: 18847737723
+            token:
+              description: push token to be used for updating AppleWallet
+              type: string
+              example: 859f6830c89d902c16a4579c19fb66a0211bb8a34deafc9217f17f8c4e86bb05
+            redeemHistory:
+              type: array
+              items:
+                properties:
+                  date:
+                    type: string
+                    format: 'date-time'
+                  comments:
+                    type: string
         - $ref: '#/components/schemas/PassV2Base'
     PassCreate:
       properties:
@@ -20087,8 +20129,23 @@ components:
         template:
           $ref: '#/components/schemas/ObjectId'
         barcode:
+          description: the barcode for this pass, defaults to the (generated) serial, needs to be unique
           type: string
           example: 18847737723
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
         data:
           $ref: '#/components/schemas/PassV2Data'
       required:
@@ -20141,6 +20198,20 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/PassV2Data'
+        limit:
+          description: >-
+            When using `limit` as a redeem option, you should provide
+            the number of times the card can be redeemed.
+          type: number
+        redeem:
+          description: >-
+            A pass supports one of 3 modes (always, once, limit) for
+            redemption.
+          enum:
+            - always
+            - once
+            - limit
+          type: string
     PassBase:
       properties:
         data:
@@ -20243,6 +20314,14 @@ components:
               $ref: '#/components/schemas/ObjectId'
             application:
               $ref: '#/components/schemas/ObjectId'
+            masterTemplate:
+              type: boolean
+              default: true
+            parentTemplate:
+              $ref: '#/components/schemas/ObjectId'
+            active:
+              type: boolean
+              default: true
             identifier:
               description: auto generated UUID to be used as GoogleWallet class Id
               type: string
@@ -20256,6 +20335,8 @@ components:
             updating:
               type: boolean
               default: false
+            program:
+              $ref: '#/components/schemas/ObjectId'
           type: object
     PassTemplateBase:
       properties:
