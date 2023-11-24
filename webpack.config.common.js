@@ -38,6 +38,13 @@ module.exports = {
         loader: 'raw-loader',
       },
       {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+        ]
+      },
+      {
         test: /\.(pdf|gif|png|jpe?g|svg)$/,
         use: [
           {
