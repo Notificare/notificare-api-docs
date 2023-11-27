@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.142.0'
+  version: '1.142.1'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -14188,6 +14188,43 @@ paths:
         with the `applicationKey` and  `masterSecret`.
       operationId: getUserForUserID
       summary: Get User By userID
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The app-specific userID of the user
+          example: '12345'
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: user updated
+          description: OK
+      tags:
+        - User
+      description: >-
+        Update a user object using the `userID`. This request is authenticated
+        with the `applicationKey` and  `masterSecret`.
+      operationId: putUserForUserID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userName:
+                  description: The user's name
+                  type: string
+                  example: Massimo Gondoliere
+              type: object
+      summary: Update User By userID
     delete:
       security:
         - MasterSecret: []
@@ -16311,6 +16348,28 @@ components:
         userID:
           type: string
           example: 188720716616
+        medium:
+          type: string
+          description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+        aggregation:
+          description: >- 
+            The aggregation identifier for this message, e.g. the automation
+            this notification belongs to or the import job that was used to send 
+            individual messages
+          type: string
+          example: 1d9e80ef851d212aca82cf23
+        notification:
+          $ref: '#/components/schemas/ObjectId'
+        data:
+          additionalProperties:
+            type: string
+          example:
+            test: a test value
+            test2: another test
+          type: object
       type: object
     EventCriteria:
       properties:

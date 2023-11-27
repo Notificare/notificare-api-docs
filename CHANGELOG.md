@@ -1,4 +1,7 @@
 # Changelog
+## [1.142.1] - 2023-11-27
+Add missing properties to passes
+Add update user
 ## [1.142.0] - 2023-11-24
 Add missing properties to passes
 Add active flag to loyalty profile
