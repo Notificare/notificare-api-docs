@@ -1,4 +1,6 @@
 # Changelog
+## [1.142.2] - 2023-12-08
+Add missing notification schedule recurrency properties
 ## [1.142.1] - 2023-11-27
 Add missing properties to passes
 Add update user

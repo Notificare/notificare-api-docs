@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.142.1'
+  version: '1.142.2'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -8476,17 +8476,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 1
-                schedules:
-                  - _id: 56d421uu073cc157eu3137
-                    application: 5489b42ff23e5815132b492a
-                    lastRun: '2016-08-26T23:00:10.273Z'
-                    local: true
-                    nextRun: '2016-08-26T23:15:04.958Z'
-                    notification: 56d421uu073cc157eu3137
-                    status: running
-                    time: '2016-08-26 23:01'
+              schema:
+                $ref: '#/components/schemas/NotificationScheduleList'
           description: OK
       tags:
         - Message Schedule
@@ -8496,7 +8487,7 @@ paths:
         This request must be authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: getNotificationSchedule
-      summary: Get Scheduled Tasks
+      summary: List Message Schedules
     post:
       security:
         - MasterSecret: []
@@ -8527,34 +8518,8 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                local:
-                  description: >-
-                    Defines if message should be sent on date and time of the
-                    device. If false time will be considered UTC.
-                  type: boolean
-                  default: false
-                notification:
-                  description: The notification Id of the message to be schedule.
-                  type: string
-                time:
-                  description: >-
-                    The date and time (YYYY-MM-DD hh:mm) in which the message
-                    should be sent.
-                  type: string
-                  example: 2016-08-26 23:01
-                timezone:
-                  description: >-
-                    The timezone of the time in which the message
-                    should be sent.
-                  type: string
-                  example: Europe/Amsterdam
-              required:
-                - notification
-                - time
-                - local
-              type: object
-      summary: Create Scheduled Message
+              $ref: '#/components/schemas/NotificationScheduleBase'
+      summary: Create Message Schedule
   '/notification/schedule/fornotification/{notification}':
     get:
       security:
@@ -8585,17 +8550,8 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                count: 1
-                schedules:
-                  - _id: 56d421uu073cc157eu3137
-                    application: 5489b42ff23e5815132b492a
-                    lastRun: '2016-08-26T23:00:10.273Z'
-                    local: true
-                    nextRun: '2016-08-26T23:15:04.958Z'
-                    notification: 56d421uu073cc157eu3137
-                    status: running
-                    time: '2016-08-26 23:01'
+              schema:
+                $ref: '#/components/schemas/NotificationScheduleList'
           description: OK
       tags:
         - Message Schedule
@@ -8605,7 +8561,7 @@ paths:
         This request must be authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: getNotificationScheduleForNotification
-      summary: Get Scheduled Tasks For Message
+      summary: List Schedules For Message
   '/notification/schedule/{schedule}':
     get:
       security:
@@ -8621,16 +8577,10 @@ paths:
         '200':
           content:
             application/json; charset=utf-8:
-              example:
-                schedule:
-                  _id: 56d421uu073cc157eu3137
-                  application: 5489b42ff23e5815132b492a
-                  lastRun: '2016-08-26T23:00:10.273Z'
-                  local: true
-                  nextRun: '2016-08-26T23:15:04.958Z'
-                  notification: 56d421uu073cc157eu3137
-                  status: running
-                  time: '2016-08-26 23:01'
+              schema:
+                properties:
+                  schedule:
+                    $ref: '#/components/schemas/NotificationScheduleModel'
           description: OK
       tags:
         - Message Schedule
@@ -8640,7 +8590,7 @@ paths:
         This request must be authenticated with the `applicationKey` and
         `masterSecret`.
       operationId: getNotificationScheduleById
-      summary: Get Schedule Task
+      summary: Get Message Schedule
     put:
       security:
         - MasterSecret: []
@@ -8674,27 +8624,8 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                local:
-                  description: >-
-                    Defines if message should be sent on date and time of the
-                    device. If false time will be considered UTC.
-                  type: boolean
-                  default: false
-                time:
-                  description: >-
-                    The date and time (YYYY-MM-DD hh:mm) in which the message
-                    should be sent.
-                  type: string
-                  example: 2016-08-26 23:01
-                timezone:
-                  description: >-
-                    The timezone of the time in which the message
-                    should be sent.
-                  type: string
-                  example: Europe/Amsterdam
-              type: object
-      summary: Update Schedule Task
+              $ref: '#/components/schemas/NotificationScheduleBase'
+      summary: Update Message Schedule
     delete:
       security:
         - MasterSecret: []
@@ -19281,6 +19212,111 @@ components:
           description: Total number of notifications sent during this period
           type: number
           example: 1000
+    NotificationScheduleList:
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationScheduleModel'
+        count:
+          type: number
+          example: 10
+    NotificationScheduleModel:
+      allOf:
+        - properties:
+            _id:
+              $ref: '#/components/schemas/ObjectId'
+            application:
+              $ref: '#/components/schemas/ObjectId'
+            status:
+              type: string
+              enum: [ 'scheduled', 'running', 'finished', 'canceled' ]
+            currentTime:
+              type: string
+              example: 2023-01-01 12:00
+            nextTime:
+              type: string
+              example: 2023-02-01 12:00
+            lastRun:
+              $ref: '#/components/schemas/ObjectId'
+            nextRun:
+              $ref: '#/components/schemas/ObjectId'
+        - $ref: '#/components/schemas/NotificationScheduleBase'
+    NotificationScheduleBase:
+      properties:
+        active:
+          type: boolean
+          default: true
+        local:
+          description: >-
+            Defines if message should be sent on date and time of the
+            device. If false time will be considered UTC.
+          type: boolean
+          default: false
+        notification:
+          description: The notification Id of the message to be schedule.
+          type: string
+        time:
+          description: >-
+            The date and time (YYYY-MM-DD hh:mm) in which the message
+            should be sent.
+          type: string
+          example: 2016-08-26 23:01
+        timezone:
+          description: >-
+            The timezone of the time in which the message
+            should be sent.
+          type: string
+          example: Europe/Amsterdam
+        recurrent:
+          description: Is this a recurrent schedule?
+          type: boolean
+          default: false
+        recurrency:
+          description: The recurrency settings.
+          type: object
+          properties:
+            type:
+              description: >-
+                Interval of recurrency. Hourly schedules can not be local.
+              type: string
+              enum: [ 'hourly', 'daily', 'weekly', 'monthly', 'yearly' ]
+            frequency:
+              description: Frequency of recurrency interval
+              type: number
+              default: 1
+            hours:
+              description: >-
+                The hours to run at (if hourly)
+                If not set or empty, run every (frequency) hours
+              type: array
+              items:
+                type: number
+                minimum: 0
+                maximum: 23
+            weekdays:
+              description: >-
+                The weekdays to run at (if hourly, weekly or monthly)
+                If not set or empty, calculated from the schedule time (if weekly)
+              type: array
+              items:
+                type: number
+                minimum: 0
+                maximum: 6
+            ordinal:
+              description: >-
+                The week of the month to run in (if monthly)
+                If not set, calculated from the schedule time
+              type: number
+              minimum: 0
+              maximum: 5
+          required:
+            - type
+      required:
+        - notification
+        - time
+        - local
+      type: object
     NotificationTemplateList:
       properties:
         templates:
