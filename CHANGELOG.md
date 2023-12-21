@@ -1,4 +1,7 @@
 # Changelog
+## [1.144.0] - 2023-12-21
+Add protected uploads
+Add transport query parameter in notification log
 ## [1.142.2] - 2023-12-08
 Add missing notification schedule recurrency properties
 ## [1.142.1] - 2023-11-27
