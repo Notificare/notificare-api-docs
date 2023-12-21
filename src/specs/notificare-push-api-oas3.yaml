@@ -8089,6 +8089,20 @@ paths:
           required: false
           schema:
             type: string
+        - description: Use this parameter to retrieve errors with a certain transport
+          example: APNS
+          in: query
+          name: transport
+          required: false
+          schema:
+            enum:
+              - APNS
+              - GCM
+              - HMS
+              - WebPush
+              - Email
+              - SMS
+            type: string
         - description: The sorter order for your results
           example: asc
           in: query
@@ -13826,7 +13840,9 @@ paths:
 
         The contents of the file should be in the body of the request and with
         the correct mime-type. So, e.g. an import should be of type `text/csv`,
-        an image to go with a notification `image/png`, etc.
+        an image to go with a notification `image/png`, etc. 
+        
+        Please note that the `protected` upload type can only be used for email attachments.
 
         This request is authenticated with the `applicationKey` and
         `masterSecret`.
@@ -13863,6 +13879,18 @@ paths:
 
 
         website-push
+
+
+        ***
+
+
+        website-push
+
+
+        ***
+
+
+        protected
 
 
         ***
@@ -23367,7 +23395,7 @@ tags:
       These methods let you manage files.
 
       All the files you upload to Notificare can be used as content of your
-      notifications, replies, import jobs, WebPush icons and passes.
+      notifications, email attachments, replies, import jobs, WebPush icons and passes.
     name: Upload
   - description: >-
       These methods let you create, change and remove user segments as well as
