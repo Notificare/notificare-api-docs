@@ -1,4 +1,7 @@
 # Changelog
+## [1.149.0] - 2024-04-17
+Fix email content types
+Add query parameters to notification list
 ## [1.144.0] - 2023-12-21
 Add protected uploads
 Add transport query parameter in notification log
