@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.144.0'
+  version: '1.149.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -6524,6 +6524,13 @@ paths:
           required: false
           schema:
             type: boolean
+        - description: Search messages by message / subject / title / subtitle
+          example: 'Test'
+          in: query
+          name: message
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -7827,6 +7834,45 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium of the messages (it can be one of the following: push,
+            email, sms)
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+            enum: [push, email, sms]
+        - description: Filter by messages that have been scheduled
+          example: '1'
+          in: query
+          name: scheduled
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by messages that have been archived
+          example: '1'
+          in: query
+          name: archived
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by messages that have have a status of draft
+          example: '1'
+          in: query
+          name: draft
+          required: false
+          schema:
+            type: boolean
+        - description: Search messages by message / subject / title / subtitle
+          example: 'Test'
+          in: query
+          name: message
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -7871,6 +7917,45 @@ paths:
           required: false
           schema:
             type: number
+        - description: >-
+            The medium of the messages (it can be one of the following: push,
+            email, sms)
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+            enum: [push, email, sms]
+        - description: Filter by messages that have been scheduled
+          example: '1'
+          in: query
+          name: scheduled
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by messages that have been archived
+          example: '1'
+          in: query
+          name: archived
+          required: false
+          schema:
+            type: boolean
+        - description: Filter by messages that have have a status of draft
+          example: '1'
+          in: query
+          name: draft
+          required: false
+          schema:
+            type: boolean
+        - description: Search messages by message / subject / title / subtitle
+          example: 'Test'
+          in: query
+          name: message
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           content:
@@ -17906,7 +17991,13 @@ components:
           enum:
             - 're.notifica.content.MJML'
         data:
-          description: MJML document for email content, only used for editing in the Notificare Email Component editor
+          description: >-
+            MJML document for email content, 
+            only used for editing in the Notificare Email Component editor,
+            requires also a `re.notifica.content.HTML` element to be able to 
+            send the email as HTML email. 
+            Use [MJML Transform](#tag/Messages/operation/postNotificationMjmlTransform) to generate HTML
+            from MJML.
           type: string
           example: '<mjml><mj-body><mj-text>Hello World!</mj-text></mj-body></mjml>'
       required:
@@ -19039,10 +19130,11 @@ components:
                 Defines the type of content to show. Please refer
                 to [Message Types](#section/Email/Email-Message-Types:) for all available types.
               type: string
-              default: re.notifica.notification.HTML
+              default: re.notifica.notification.email.HTML
               enum:
-                - re.notifica.notification.HTML
-                - re.notifica.notification.Notificare
+                - re.notifica.notification.email.HTML
+                - re.notifica.notification.email.MJML
+                - re.notifica.notification.email.Notificare
             subject:
               description: >-
                 Subject of your email message
@@ -19054,10 +19146,10 @@ components:
                 message. Please refer to [Content Types](#section/Email/Content-Objects:) for all available
                 types.
               items:
-                oneOf:
-                  - $ref: '#/components/schemas/MessageContentText'
+                anyOf:
                   - $ref: '#/components/schemas/MessageContentHTML'
                   - $ref: '#/components/schemas/MessageContentMJML'
+                  - $ref: '#/components/schemas/MessageContentText'
               type: array
             attachments:
               items:
@@ -23220,7 +23312,14 @@ tags:
       |:---------:|-------------|
 
       | re.notifica.notification.email.HTML | The most flexible type of email
-      messages. You can should your own HTML to design your email messages. |
+      messages. You can use your own HTML to design your email messages. 
+      Requires a `re.notifica.content.HTML` content object. |
+
+      | re.notifica.notification.email.MJML | For custom MJML email messages.
+      You can use your own MJML to design your email messages, then use 
+      [MJML Transform](#tag/Messages/operation/postNotificationMjmlTransform) to
+      generate HTML, which will then be sent. Requires both a `re.notifica.content.MJML`
+      and `re.notifica.content.HTML` content object. |
 
       | re.notifica.notification.email.Notificare | This type is reserved for
       messages designed in our dashboard. It will expect a certain structure to
