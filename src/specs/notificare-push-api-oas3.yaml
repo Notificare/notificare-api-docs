@@ -10256,7 +10256,7 @@ paths:
                 data:
                   $ref: '#/components/schemas/PassV2Data'
               required:
-                -data
+                - data
       summary: Update Pass (v2)
   /passbook:
     get:
@@ -17647,11 +17647,13 @@ components:
         created:
           $ref: '#/components/schemas/Date'
     LiveActivityMessageBase:
+      required:
+        - activity
+        - content
       properties:
         activity:
           description: The name of the activity as registered by the device
           type: string
-          required: true
         final:
           type: boolean
         dismissalDate:
@@ -17671,7 +17673,6 @@ components:
             key1: value1
             key2: value2
           type: object
-          required: true
         topic:
           description: The topic
           type: string
