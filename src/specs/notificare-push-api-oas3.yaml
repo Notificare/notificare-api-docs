@@ -23280,6 +23280,11 @@ tags:
       "openTabInMyCode") | n/a | n/a | array (eg.:
       [{"type":"re.notifica.rule.segment.Add",params:["532434df434657df4664"]}])
       |
+      
+      | re.notifica.action.InAppBrowser | string (eg.: "open notifica.re") | string (eg.:
+      "http://notifica.re") | n/a | n/a | array (eg.:
+      [{"type":"re.notifica.rule.segment.Add",params:["532434df434657df4664"]}])
+      |
 
 
       ## Rules Objects:
