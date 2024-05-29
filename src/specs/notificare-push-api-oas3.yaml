@@ -23137,8 +23137,7 @@ tags:
 
       | re.notifica.notification.InAppBrowser | Use this type to open any URL in
       an in-app browser. 
-      It requires a Content object of type `re.notifica.content.URL`. You can
-      additionally add Action objects to this type of push message. |
+      It requires a Content object of type `re.notifica.content.URL`. |
 
       | re.notifica.notification.Image | Add one or more images to your push
       messages. It requires one or more Content objects of types
@@ -23278,6 +23277,11 @@ tags:
 
       | re.notifica.action.Custom | string (eg.: "open tab") | string (eg.:
       "openTabInMyCode") | n/a | n/a | array (eg.:
+      [{"type":"re.notifica.rule.segment.Add",params:["532434df434657df4664"]}])
+      |
+      
+      | re.notifica.action.InAppBrowser | string (eg.: "open notifica.re") | string (eg.:
+      "http://notifica.re") | n/a | n/a | array (eg.:
       [{"type":"re.notifica.rule.segment.Add",params:["532434df434657df4664"]}])
       |
 
