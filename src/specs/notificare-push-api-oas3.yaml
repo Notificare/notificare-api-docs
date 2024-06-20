@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.149.0'
+  version: '1.155.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -10258,6 +10258,68 @@ paths:
               required:
                 - data
       summary: Update Pass (v2)
+  '/pass/v2/{pass}/message':
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active pass.
+          in: path
+          name: pass
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: message added
+          description: OK
+      tags:
+        - Pass
+      description: >-
+        Add a message to a pass. Messages of type TEXT_AND_NOTIFY will fail if more than 3 are added in a day.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postPassV2Message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GooglePayMessage'
+      summary: Add Pass Message (v2)
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of pass.
+          in: path
+          name: pass
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: messages cleared
+          description: OK
+      tags:
+        - Pass
+      description: >-
+        Clear pass messages that were added. Messages defined in the pass design will not be cleared.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deletePassV2Message
+      summary: Clear Pass Messages (v2)
   /passbook:
     get:
       security:
@@ -10694,6 +10756,115 @@ paths:
         `masterSecret`.
       operationId: deletePassTemplateById
       summary: Delete Pass Template (v2)
+  '/pass/template/{template}/archive':
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active template.
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: pass template archived
+          description: OK
+        '202':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: pass template archived, passes being voided
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Archive a pass template, optionally voiding passes
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: putPassTemplateArchive
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                voidPasses:
+                  type: boolean
+                  description: >-
+                    Void the passes that were created with this template
+                  default: false
+      summary: Archive Pass Template (v2)
+  '/pass/template/{template}/message':
+    post:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active template.
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: message added
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Add a message to a pass template. Messages of type TEXT_AND_NOTIFY will fail if more than 3 are added in a day.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postPassTemplateMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GooglePayMessage'
+      summary: Add Pass Template Message (v2)
+    delete:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The id of an active template.
+          in: path
+          name: template
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: messages cleared
+          description: OK
+      tags:
+        - Pass Templates
+      description: >-
+        Clear pass template messages that were added. Messages defined in the template design will not be cleared.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: deletePassTemplateMessage
+      summary: Clear Pass Template Messages (v2)
   /product:
     get:
       security:
@@ -19263,6 +19434,12 @@ components:
                 The text (140 characters) of your message.
               type: string
               example: Hello world
+            enableRiskCheck:
+              description: >-
+                Check for fraudulent behaviour (SMS Pumping Protection).
+                Useful for 2FA messages.
+              type: boolean
+              default: false
           required:
             - message
     NotificationLocalizedBase:
@@ -19686,6 +19863,12 @@ components:
           default: true
         useListHeaders:
           description: If set to true, include List-Unsubscribe headers
+          type: boolean
+          default: false
+        enableRiskCheck:
+          description: >-
+            Check for fraudulent behaviour (SMS Pumping Protection).
+            Useful for 2FA messages.
           type: boolean
           default: false
         rate:
@@ -20220,6 +20403,11 @@ components:
             required:
               - latitude
               - longitude
+        messages:
+          type: array
+          description: Messages that were added to the pass (GoogleWallet only). Will be merged with messages in the pass design.
+          items:
+            $ref: '#/components/schemas/GooglePayMessage'
         fields:
           description: The values for the fields as described by the template for this pass
           additionalProperties: true
@@ -20628,7 +20816,7 @@ components:
               - proximityUUID
         locations:
           type: array
-          description: Locations for which passes with this template are relevant. Will be overriden by individual pass locations.
+          description: Locations for which passes with this template are relevant. Will be overridden by individual pass locations.
           items:
             properties:
               latitude:
@@ -20644,6 +20832,11 @@ components:
             required:
               - latitude
               - longitude
+        messages:
+          type: array
+          description: Messages that were added to the template (GoogleWallet only). Will be merged with messages in the template design.
+          items:
+            $ref: '#/components/schemas/GooglePayMessage'
     AppleWalletDictionary:
       properties:
         description:
@@ -20947,7 +21140,7 @@ components:
           enum:
             - MESSAGE_TYPE_UNSPECIFIED
             - TEXT
-            - EXPIRATION_NOTIFICATION
+            - TEXT_AND_NOTIFY
         header:
           type: string
         body:
