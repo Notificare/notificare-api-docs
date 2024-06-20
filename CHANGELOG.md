@@ -1,4 +1,8 @@
 # Changelog
+## [1.155.0] - 2024-06-20
+Added pass / template message methods
+Added pass template archive method
+Added enableRiskCheck property
 ## [1.149.0] - 2024-04-17
 Fix email content types
 Add query parameters to notification list
