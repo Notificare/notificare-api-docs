@@ -18884,6 +18884,7 @@ components:
                 - re.notifica.notification.WebView
                 - re.notifica.notification.InAppBrowser
                 - re.notifica.notification.URL
+                - re.notifica.notification.URLResolver
                 - re.notifica.notification.Image
                 - re.notifica.notification.Map
                 - re.notifica.notification.Rate
@@ -23320,17 +23321,16 @@ tags:
       added to the window as buttons. |
 
       | re.notifica.notification.WebView | This type allows you to show any
-      piece of HTML. It requires a Content object of type
+      piece of HTML in the OS built-in web view. It requires a Content object of type
       `re.notifica.content.HTML`. You can additionally add Action objects to
       this type of push message. |
 
-      | re.notifica.notification.URL | Use this type to open any URL. It
-      requires a Content object of type `re.notifica.content.URL`. You can
-      additionally add Action objects to this type of push message. |
+      | re.notifica.notification.URL | Use this type to open any web page in the OS
+      built-in web view. It requires a Content object of type `re.notifica.content.URL`. 
+      You can additionally add Action objects to this type of push message. |
 
-      | re.notifica.notification.InAppBrowser | Use this type to open any URL in
-      an in-app browser. 
-      It requires a Content object of type `re.notifica.content.URL`. |
+      | re.notifica.notification.InAppBrowser | Use this type to open any web page in
+      the OS built-in browser controller. It requires a Content object of type `re.notifica.content.URL`. |
 
       | re.notifica.notification.Image | Add one or more images to your push
       messages. It requires one or more Content objects of types
@@ -23352,7 +23352,8 @@ tags:
       of push message. |
 
       | re.notifica.notification.Passbook | Use this type to easily send .pkpass
-      files in your push notifications. Distribute your Passbook Passes directly
+      files in your push notifications. It requires a Content object of type 
+      `re.notifica.content.PKPass`. Distribute your Passbook Passes directly
       to your app users. This type does not allow any Action objects. |
 
       | re.notifica.notification.Video | This type of push message is used to
@@ -23366,8 +23367,15 @@ tags:
       deep link messages to areas of your mobile app (iOS & Android) or web
       pages (Web). You will need to make sure your app responds to these URL
       Schemes by providing them in you app's Info.plist (iOS) or
-      AndroidManifest.xml (Android). This type is only available for SDKs 1.8.0
+      AndroidManifest.xml (Android). It requires one Content object of type 
+      `re.notifica.content.URL`. This type is only available for SDKs 1.8.0
       and up. |
+      
+      | re.notifica.notification.URLResolver | Use this type of push message to
+      automatically open any URL Scheme. Our SDK will display the content according 
+      to the value provided. It requires one Content object of type 
+      `re.notifica.content.URL`. This type is only available for SDK 3.10.0 (Mobile)
+      and SDK 3.6.0 (Web) and up. |
 
       | re.notifica.notification.Store | Use this type if you want to make use of 
       native functionality to drive users to the App Store, Google Play and Huawei's 
