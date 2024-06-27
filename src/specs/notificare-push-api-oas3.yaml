@@ -23372,7 +23372,7 @@ tags:
       and up. |
       
       | re.notifica.notification.URLResolver | Use this type of push message to
-      automatically open any URL Scheme. Our SDK will display the content according 
+      open a HTTP(S) or custom URL Scheme. Our SDK will display the content according 
       to the value provided. It requires one Content object of type 
       `re.notifica.content.URL`. This type is only available for SDK 3.10.0 (Mobile)
       and SDK 3.6.0 (Web) and up. |
