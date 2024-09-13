@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.155.0'
+  version: '1.158.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -4543,6 +4543,47 @@ paths:
             schema:
               $ref: '#/components/schemas/ImportJobUserSegment'
       summary: Import Users Into Segment
+  /import/re.notifica.import.DeviceTag:
+    post:
+      security:
+        - MasterSecret: [ ]
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  importJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Import
+      description: >-
+        Used to import a list of devices to a tag. Every row in the
+        referenced CSV should contain a `subscriptionId`.
+
+        The tag to import for should be set as the `tag`
+        property of `data`.
+
+        There is one option in this import type, which is `clear`. If set, it
+        clears the tag before importing devices, otherwise it just adds the tag to the devices.
+        It defaults to `false`.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+
+
+        Recognized columns in your .csv file are:
+
+
+        + subscriptionId
+      operationId: postImportDeviceTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportJobDeviceTag'
+      summary: Import Devices To Tag
   /import/re.notifica.import.Region:
     post:
       security:
@@ -4935,6 +4976,75 @@ paths:
 
 
         + sound
+
+
+        + push (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + inbox (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + inboxTtl
+
+
+        + requireInteraction (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + renotify (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + linkTracking (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + badge
+
+
+        + senderName
+
+
+        + senderAddress (local email address part)
+
+
+        + channel
+
+
+        + rate
+
+
+        + targetContentIdentifier
+
+
+        + presentation (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + interruptionLevel
+
+
+        + relevanceScore
+
+
+        + filterCriteria
+
+
+        + critical (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + criticalSoundVolume
+
+
+        + overrideSendingLimit (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + useListHeaders (boolean, '0' is treated as `false`, any other string as `true`)
+
+
+        + replyTo
+
+
+        + listHeader
+
+
+        + enableRiskCheck (boolean, '0' is treated as `false`, any other string as `true`)
 
 
         + extra (JSON string)
@@ -16741,6 +16851,13 @@ components:
             data:
               $ref: '#/components/schemas/ImportDataUserSegment'
           type: object
+    ImportJobDeviceTag:
+      allOf:
+        - $ref: '#/components/schemas/ImportJobBase'
+        - properties:
+            data:
+              $ref: '#/components/schemas/ImportDataDeviceTag'
+          type: object
     ImportJobModelList:
       properties:
         importJobs:
@@ -16765,6 +16882,7 @@ components:
                 - $ref: '#/components/schemas/ImportDataUser'
                 - $ref: '#/components/schemas/ImportDataUserData'
                 - $ref: '#/components/schemas/ImportDataUserSegment'
+                - $ref: '#/components/schemas/ImportDataDeviceTag'
                 - $ref: '#/components/schemas/ImportDataBeacon'
                 - $ref: '#/components/schemas/ImportDataRegion'
                 - $ref: '#/components/schemas/ImportDataPass'
@@ -17033,6 +17151,37 @@ components:
       type: object
       required:
         - userSegment
+    ImportDataDeviceTag:
+      properties:
+        tag:
+          description: The tag to import for
+          type: string
+          example: test_tag
+        clear:
+          description: Clear the tags before importing devices
+          type: boolean
+          default: false
+        verifyOnly:
+          description: Only verify the import file
+          type: boolean
+        skipErrorEmails:
+          description: >-
+            Do not send emails when import fails
+          type: boolean
+          default: false
+        skipVerifiedEmails:
+          description: >-
+            Do not send emails when import is verified
+          type: boolean
+          default: false
+        skipSuccessEmails:
+          description: >-
+            Do not send emails when export succeeds
+          type: boolean
+          default: false
+      type: object
+      required:
+        - tag
     ImportDataBeacon:
       properties:
         overwrite:
@@ -17434,6 +17583,75 @@ components:
           type: object
         notificationCriteria:
           $ref: '#/components/schemas/Criteria'
+        notificationData:
+          description: override of template property values
+          properties:
+            title:
+              type: string
+            subtitle:
+              type: string
+            subject:
+              type: string
+            message:
+              type: string
+            replyTo:
+              type: string
+            senderName:
+              type: string
+            senderAddress:
+              type: string
+            group:
+              type: string
+            badge:
+              type: string
+            channel:
+              type: string
+            targetContentIdentifier:
+              type: string
+            listHeader:
+              type: string
+            interruptionLevel:
+              type: string
+            filterCriteria:
+              type: string
+            sound:
+              type: string
+            push:
+              type: boolean
+            inbox:
+              type: boolean
+            requireInteraction:
+              type: boolean
+            renotify:
+              type: boolean
+            linkTracking:
+              type: boolean
+            overrideSendingLimit:
+              type: boolean
+            useListHeaders:
+              type: boolean
+            presentation:
+              type: boolean
+            critical:
+              type: boolean
+            enableRiskCheck:
+              type: boolean
+            ttl:
+              type: number
+            inboxTtl:
+              type: number
+            rate:
+              type: number
+            relevanceScore:
+              type: number
+            criticalSoundVolume:
+              type: number
+            attachmentUri:
+              type: string
+            attachmentMimeType:
+              type: string
+            extra:
+              additionalProperties: true
         verifyOnly:
           description: Only verify the import file
           type: boolean
@@ -17907,6 +18125,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ObjectId'
+        offerTemplate:
+          $ref: '#/components/schemas/ObjectId'
         balanceType:
           description: The data type of balance
           type: string
