@@ -15689,6 +15689,10 @@ components:
           $ref: '#/components/schemas/Criteria'
         dataFilter:
           $ref: '#/components/schemas/DataFilterCriteria'
+        loyaltyRule:
+          oneOf:
+            - $ref: '#/components/schemas/LoyaltyRuleCreateOffer'
+            - $ref: '#/components/schemas/LoyaltyRuleUpdateBalance'
         rules:
           $ref: '#/components/schemas/MessageRule'
       type: object
@@ -17892,10 +17896,11 @@ components:
           example: My Loyalty Program
           type: string
         type:
-          description: The type of loyalty program (currently only `simple`)
+          description: The type of loyalty program
           example: simple
           enum:
             - simple
+            - offer
           type: string
         tierTemplates:
           description: The pass templates to be used for each tier
@@ -18086,6 +18091,48 @@ components:
                   - type: string
                   - type: number
                   - type: boolean
+      type: object
+    LoyaltyRuleCreateOffer:
+      properties:
+        params:
+          type: object
+          properties:
+            program:
+              $ref: '#/components/schemas/ObjectId'
+            expiresIn:
+              type: number
+            maxExpirationDate:
+              $ref: '#/components/schemas/Date'
+        type:
+          enum:
+            - re.notifica.rule.loyalty.CreateOffer
+          type: string
+      required:
+        - type
+        - params
+      type: object
+    LoyaltyRuleUpdateBalance:
+      properties:
+        params:
+          properties:
+            program:
+              $ref: '#/components/schemas/ObjectId'
+            amount:
+              type: number
+            operator:
+              enum:
+                - set
+                - add
+                - subtract
+                - increase
+                - decrease
+        type:
+          enum:
+            - re.notifica.rule.loyalty.UpdateBalance
+          type: string
+      required:
+        - type
+        - params
       type: object
     MessageAction:
       properties:
