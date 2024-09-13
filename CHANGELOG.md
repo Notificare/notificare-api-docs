@@ -1,4 +1,10 @@
 # Changelog
+## [1.158.0] - 2024-09-13
+Added device tag import
+Added notificare data to grouped message import
+Added CSV columns to message import
+Added offer program
+Added loyalty rule in automation
 ## [1.155.0] - 2024-06-20
 Added pass / template message methods
 Added pass template archive method
