@@ -5811,7 +5811,7 @@ paths:
               schema:
                 properties:
                   link:
-                    $ref: '#/components/schemas/ResponseCreated'
+                    $ref: '#/components/schemas/ResponseLinkCreated'
           description: Created
       tags:
         - Links
@@ -8194,6 +8194,34 @@ paths:
         Archive a message, it will not show up in the list of messages anymore
       operationId: puttNotificationArchiveById
       summary: Archive Message
+  /notification/{notification}/abort:
+    put:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The notification ID given whenever you create or retrieve a message
+            object.
+          in: path
+          name: notification
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/ResponseMessage'
+              example:
+                message: notification aborted
+          description: OK
+      tags:
+        - Messages
+      description: >-
+        Abort a message, only applies to messages that are still sending
+      operationId: puttNotificationAbortById
+      summary: Abort Message
   /notification/{notification}/info:
     get:
       security:
@@ -22639,6 +22667,13 @@ components:
         deviceID:
           type: string
           format: 'uuid'
+    ResponseLinkCreated:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ObjectId'
+        hash:
+          type: string
     ResponsePassCreated:
       type: object
       properties:
