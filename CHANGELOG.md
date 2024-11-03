@@ -1,4 +1,7 @@
 # Changelog
+## [1.159.3] - 2024-11-03
+Added device search
+Removed badge iOS note
 ## [1.159.0] - 2024-10-04
 Added notification abort
 Added link hash

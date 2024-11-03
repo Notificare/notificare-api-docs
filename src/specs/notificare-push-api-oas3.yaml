@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.159.0'
+  version: '1.159.3'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -1830,6 +1830,50 @@ paths:
         `masterSecret`.
       operationId: getDeviceForSubscription
       summary: Get Device For Subscription
+  '/device/search/{search}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The search string
+          example: 00a9b9bf-c099-45aa-9278-64d6a3f22476
+          in: path
+          name: search
+          required: true
+          schema:
+            type: string
+        - description: >-
+            The medium for the device. Possible values are `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/DeviceList'
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Search for devices with either deviceID or subscriptionId.
+        In push devices, these are matched exactly as they are given.
+        In email and sms, the subscriptionId is partially matched, so you can search
+        for parts of an email address or phone number.
+        If a device is matched by exact deviceID, only that device is returned in the 
+        response list, otherwise subscriptionId matching is done, 
+        in which case multiple devices can be returned.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getDeviceForSearchString
+      summary: Get Device For Search String
   '/device/fortag/{tag}':
     get:
       security:
@@ -19294,9 +19338,9 @@ components:
               example: important
             badge:
               description: >-
-                This is an iOS only property. A badge will be displayed over
-                your app icon whenever a notification arrives. Use a number
-                from 1 to 9999, strings not parseable as integer are ignored.
+                A badge can be displayed whenever a notification arrives.
+                In iOS, this is displayed automatically over the app / webapp icon.
+                Use a number from 1 to 9999, strings not parseable as integer are ignored.
               type: string
               example: 1
             presentation:
@@ -20070,9 +20114,9 @@ components:
           example: important
         badge:
           description: >-
-            This is a iOS only property. A badge will be displayed over
-            your app icon whenever a notification arrives. Use a number
-            from 1 to 9999, strings not parseable as integer are ignored.
+            A badge can be displayed whenever a notification arrives.
+            In iOS, this is displayed automatically over the app / webapp icon.
+            Use a number from 1 to 9999, strings not parseable as integer are ignored.
           type: string
         presentation:
           description: >-
