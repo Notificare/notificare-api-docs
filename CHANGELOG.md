@@ -1,4 +1,8 @@
 # Changelog
+## [1.162.0] - 2025-02-17
+Fixed image message content types
+Added campaign export
+Added region state endpoint
 ## [1.159.3] - 2024-11-03
 Added device search
 Removed badge iOS note

@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.159.3'
+  version: '1.162.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -2216,6 +2216,113 @@ paths:
                     lastName: Doe
               type: object
       summary: Update User Data For Device
+  '/device/{deviceID}/regionstate':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The deviceID is the unique identifier provided by APNS, GCM, HMS or WebPush.
+          example: 00a9b9bf-xxx9278-64d6a3f22476
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  regionStates:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RegionState'
+                  count:
+                    type: number
+                    example: 10
+          description: OK
+      tags:
+        - Device
+      description: >-
+        List the region states for a specific device based on the deviceID.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getDeviceRegionStatesById
+      summary: List Device Region States
+  '/device/{deviceID}/regionstate/forregion/{region}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The deviceID is the unique identifier provided by APNS, GCM, HMS or WebPush.
+          example: 00a9b9bf-xxx9278-64d6a3f22476
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+        - description: The id of the region.
+          in: path
+          name: region
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  regionState:
+                    $ref: '#/components/schemas/RegionState'
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Get region state for a specific device based on the deviceID.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getDeviceRegionStateForRegion
+      summary: Get Device Region State For Region
+  '/device/{deviceID}/regionstate/forbeacon/{beacon}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The deviceID is the unique identifier provided by APNS, GCM, HMS or WebPush.
+          example: 00a9b9bf-xxx9278-64d6a3f22476
+          in: path
+          name: deviceID
+          required: true
+          schema:
+            type: string
+        - description: The id of the beacon.
+          in: path
+          name: beacon
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  regionState:
+                    $ref: '#/components/schemas/RegionState'
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Get region state for a specific device based on the deviceID.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getDeviceRegionStateForBeacon
+      summary: Get Device Region State For Beacon
   /email:
     post:
       security:
@@ -3576,6 +3683,66 @@ paths:
                 - data
               type: object
       summary: Export Campaign Events
+  /export/re.notifica.export.CampaignNotifications:
+    post:
+      security:
+        - MasterSecret: []
+      responses:
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  exportJob:
+                    $ref: '#/components/schemas/ResponseCreated'
+          description: Created
+      tags:
+        - Export
+      description: >-
+        Export the notifications for one or more campaigns. 
+        Maximum time interval is 180 days, it will be trimmed automatically.
+        If no interval is given, it defaults to 30 days.
+        This job might take
+        some time to finish, check the export result endpoint to obtain
+        information about the status of this export job.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: postExportCampaignNotifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                data:
+                  properties:
+                    campaigns:
+                      description: The ids of the campaigns you wish to export summary from
+                      items:
+                        $ref: '#/components/schemas/ObjectId'
+                      type: array
+                    useSegmentNames:
+                      description: >-
+                        Specify if export jobs should contain the name of the
+                        segments instead of their IDs
+                      type: boolean
+                    skipErrorEmails:
+                      description: >-
+                        Do not send emails when export fails
+                      type: boolean
+                      default: false
+                    skipSuccessEmails:
+                      description: >-
+                        Do not send emails when export succeeds
+                      type: boolean
+                      default: false
+                  required:
+                    - campaign
+                  type: object
+              required:
+                - data
+              type: object
+      summary: Export Campaign Notifications
   /export/re.notifica.export.AutomationSummary:
     post:
       security:
@@ -18529,12 +18696,40 @@ components:
         - type
         - data
       type: object
-    MessageContentImage:
+    MessageContentGIF:
       properties:
         type:
           type: string
           enum:
-            - 're.notifica.content.Image'
+            - 're.notifica.content.GIF'
+        data:
+          description: URL of image to load
+          type: string
+          example: 'https://www.example.com/image1.gif'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentJPEG:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.JPEG'
+        data:
+          description: URL of image to load
+          type: string
+          example: 'https://www.example.com/image1.jpg'
+      required:
+        - type
+        - data
+      type: object
+    MessageContentPNG:
+      properties:
+        type:
+          type: string
+          enum:
+            - 're.notifica.content.PNG'
         data:
           description: URL of image to load
           type: string
@@ -18798,7 +18993,9 @@ components:
               - $ref: '#/components/schemas/MessageContentHTML'
               - $ref: '#/components/schemas/MessageContentMJML'
               - $ref: '#/components/schemas/MessageContentURL'
-              - $ref: '#/components/schemas/MessageContentImage'
+              - $ref: '#/components/schemas/MessageContentGIF'
+              - $ref: '#/components/schemas/MessageContentJPEG'
+              - $ref: '#/components/schemas/MessageContentPNG'
               - $ref: '#/components/schemas/MessageContentMarker'
               - $ref: '#/components/schemas/MessageContentPKPass'
               - $ref: '#/components/schemas/MessageContentYouTube'
@@ -19264,7 +19461,9 @@ components:
                 oneOf:
                   - $ref: '#/components/schemas/MessageContentHTML'
                   - $ref: '#/components/schemas/MessageContentURL'
-                  - $ref: '#/components/schemas/MessageContentImage'
+                  - $ref: '#/components/schemas/MessageContentGIF'
+                  - $ref: '#/components/schemas/MessageContentJPEG'
+                  - $ref: '#/components/schemas/MessageContentPNG'
                   - $ref: '#/components/schemas/MessageContentMarker'
                   - $ref: '#/components/schemas/MessageContentPKPass'
                   - $ref: '#/components/schemas/MessageContentYouTube'
@@ -20028,7 +20227,9 @@ components:
               - $ref: '#/components/schemas/MessageContentHTML'
               - $ref: '#/components/schemas/MessageContentMJML'
               - $ref: '#/components/schemas/MessageContentURL'
-              - $ref: '#/components/schemas/MessageContentImage'
+              - $ref: '#/components/schemas/MessageContentGIF'
+              - $ref: '#/components/schemas/MessageContentJPEG'
+              - $ref: '#/components/schemas/MessageContentPNG'
               - $ref: '#/components/schemas/MessageContentMarker'
               - $ref: '#/components/schemas/MessageContentPKPass'
               - $ref: '#/components/schemas/MessageContentYouTube'
@@ -22627,6 +22828,21 @@ components:
                 type: string
           example: Android
       type: object
+    RegionState:
+      properties:
+        deviceID:
+          type: string
+          example: 1234567890
+        source:
+          $ref: '#/components/schemas/ObjectId'
+        state:
+          type: string
+          enum:
+            - in
+            - out
+        since:
+          type: string
+          format: 'date-time'
     ResponseMessageFileInfo:
       allOf:
         - $ref: '#/components/schemas/ResponseMessage'
@@ -23751,8 +23967,16 @@ tags:
 
       | re.notifica.content.URL | string (eg.: "http://notifica.re") |
 
-      | re.notifica.content.Image | string (eg.:
-      "https://s3-eu-west-1.amazonaws.com/notificare-storage/notifications/9fd.../6ccd..")
+      | re.notifica.content.GIF | string (eg.:
+      "https://push.notifica.re/asset/file/notifications/9fd.../6ccd..")
+      |
+
+      | re.notifica.content.JPEG | string (eg.:
+      "https://push.notifica.re/asset/file/notifications/9fd.../6ccd..")
+      |
+
+      | re.notifica.content.PNG | string (eg.:
+      "https://push.notifica.re/asset/file/notifications/9fd.../6ccd..")
       |
 
       | re.notifica.content.Marker | object (eg.: {"title":"Some Place",
