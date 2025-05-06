@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.162.0'
+  version: '1.167.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -1986,6 +1986,45 @@ paths:
         `masterSecret`.
       operationId: getDeviceForUser
       summary: List Devices For User
+  '/device/foruser/{userID}/fornotification/{notification}':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: >-
+            The user ID is the one the client device registered with, e.g., the
+            user's email address.
+          example: testuser@example.com
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+        - description: >-
+            The id of the notification we are looking for
+          in: path
+          name: notification
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/DeviceList'
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Get all push devices for a specific user that have a 
+        specific notification in their inbox.
+        Please note that there is a max. size of 250 devices.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getDeviceForUserForNotification
+      summary: List Devices For User For Notification
   /device/tags:
     get:
       security:
@@ -9914,6 +9953,53 @@ paths:
       description: Delete message test, or cancel if still running
       operationId: deleteNotificationTestById
       summary: Delete message test
+  '/notification/userinbox/foruserid/{userID}/all':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The unique identifier for your user.
+          example: 123456789
+          in: path
+          name: userID
+          required: true
+          schema:
+            type: string
+        - description: >-
+            A date that we will use to retrieve items. When provided we will
+            only retrieve items since that date.
+          in: query
+          name: since
+          required: false
+          schema:
+            $ref: '#/components/schemas/Date'
+        - description: The maximum number of results to retrieve.
+          example: 10
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: number
+        - description: The number of results to skip.
+          example: 0
+          in: query
+          name: skip
+          required: false
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInboxItemListAll'
+          description: OK
+      tags:
+        - Message User Inbox
+      description: Get a specific user's inbox with all items
+      operationId: getUserInboxForUserAll
+      summary: Get a specific user's inbox with all items
   '/notification/userinbox/foruserid/{userID}':
     get:
       security:
@@ -14499,6 +14585,12 @@ paths:
 
 
         ***
+
+
+        public
+
+
+        ***
       operationId: postUpload
       requestBody:
         content:
@@ -16027,6 +16119,17 @@ components:
             Previously created notification to be sent when automation is executed.
           type: string
           example: 1d9e80ef851d212aca82cf23
+        notifications:
+          description: >-
+            Set of previously created notifications to be sent when automation is executed.
+          type: object
+          properties:
+            push:
+              $ref: '#/components/schemas/ObjectId'
+            email:
+              $ref: '#/components/schemas/ObjectId'
+            sms:
+              $ref: '#/components/schemas/ObjectId'
         distinctNotifications:
           description: >-
             Send distinct notifications for each automation trigger.
@@ -16034,6 +16137,21 @@ components:
             which will be equal to the automation id
           type: boolean
           default: false
+        quietTime:
+          description: >-
+            The period during which messages will be postponed. They will be sent at
+            the preferred time if set, otherwise at the end of the quietTime
+          type: object
+          properties:
+            start:
+              type: string
+              example: '17:00'
+            end:
+              type: string
+              example: '09:00'
+            preferred:
+              type: string
+              example: '10:00'
         criteria:
           $ref: '#/components/schemas/Criteria'
         dataFilter:
@@ -23551,6 +23669,21 @@ components:
         unread:
           type: number
           example: 1
+    UserInboxItemListAll:
+      properties:
+        inboxItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserInboxItemModel'
+        count:
+          type: number
+          example: 10
+        visible:
+          type: number
+          example: 8
+        unread:
+          type: number
+          example: 1
     UserInboxItemModel:
       description: Item in a user inbox
       properties:
@@ -23762,6 +23895,12 @@ tags:
       confirms its subscription, either via one of our SMS subscription forms 
       or when you create a new contact that requires opt-in. |
 
+      | re.notifica.event.sms.AutoSubscribe | Stored whenever an SMS contact 
+      uses an opt-in with automatic subscribe enabled. |
+
+      | re.notifica.event.sms.OptIn | Stored whenever an SMS contact 
+      uses an opt-in keyword. |
+
       | re.notifica.event.sms.Unsubscribe | Stored whenever an SMS contact 
       clicks an unsubscribe link. |
 
@@ -23771,7 +23910,8 @@ tags:
       | re.notifica.event.sms.Incoming | Stored whenever an SMS contact 
       replies with a message. |
 
-      | re.notifica.event.sms.Charged | Stored whenever an SMS message was charged (inbonud, outbound or optin messages). |
+      | re.notifica.event.sms.Charged | Stored whenever an SMS message was charged 
+      (inbound, outbound or optin messages). |
 
       | re.notifica.event.region.Session | Stored whenever a user enters and
       leaves a region. |

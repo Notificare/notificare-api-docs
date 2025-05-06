@@ -1,4 +1,10 @@
 # Changelog
+## [1.168.0] - 2025-03-17
+Added public upload
+Added user inbox all
+Added devices for user for notification
+Added quietTime and multiple notifications to automation
+Added sms optin event types
 ## [1.162.0] - 2025-02-17
 Fixed image message content types
 Added campaign export
