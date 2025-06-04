@@ -1,4 +1,7 @@
 # Changelog
+## [1.171.0] - 2025-06-04
+Added criteria to user message from template
+Added BCC
 ## [1.168.0] - 2025-03-17
 Added public upload
 Added user inbox all

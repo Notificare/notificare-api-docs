@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.167.0'
+  version: '1.171.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -19754,6 +19754,8 @@ components:
               items:
                 type: string
               example: [tag1]
+            criteria:
+              $ref: '#/components/schemas/Criteria'
     NotificationFromTemplateTags:
       allOf:
         - $ref: '#/components/schemas/NotificationFromTemplateBroadcast'
@@ -20142,6 +20144,14 @@ components:
             provided, we will not send more than x messages per second.
           type: number
           example: 100
+        bcc:
+          description: >-
+            A list of deviceIDs that will receive a copy of the message.
+            Not allowed for device/user/import/campaign/system scope and not 
+            allowed for triggered messages.
+          type: array
+          items:
+            type: string
     NotificationStats:
       properties:
         date:
