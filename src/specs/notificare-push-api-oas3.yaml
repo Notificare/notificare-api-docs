@@ -47,7 +47,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.171.0'
+  version: '1.173.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -18142,6 +18142,10 @@ components:
           description: >-
             Whether this message is archived or not
           type: boolean
+        active:
+          description: >-
+            Whether this message is active or not
+          type: boolean
         languages:
           type: array
           example: ['en']
@@ -23972,7 +23976,7 @@ tags:
       It will contain a title and a message and an optional image or action. |
 
       | re.notifica.inappmessage.Card | The card will present a familiar dialogue window, where a title, 
-      a message and at least one action is displayed. It can also contain an image and an additional image. |
+      a message and at least one action is displayed. It can also contain an optional image. |
 
       | re.notifica.inappmessage.Fullscreen | This will use the full width and height of the device to display rich content. 
       It must contain at least one image, but a title, a message and an action can be also included. |

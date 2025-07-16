@@ -1,4 +1,7 @@
 # Changelog
+## [1.173.0] - 2025-07-16
+Added active property for in-app message
+
 ## [1.171.0] - 2025-06-04
 Added criteria to user message from template
 Added BCC
