@@ -19,35 +19,40 @@ info:
     API calls need to be made with TLSv1.2
 
 
-    The API calls below are all authenticated. There are 4 types of
+    The API calls below are all authenticated. There are 5 types of
     authentication credentials:
 
 
     - `email` / `password`: Used for signing in to your account and retrieving a
-    session token
+    session token (see below), please do not use unless you are the Dashboard.
+
+    
+    - `sessionToken`: Used for sessions that need full access to your account, such as account settings,
+    lists of applications, etc. Only useful for logins via the Dashboard, please use the `bearertoken` auth 
+    for use by your API client. 
 
 
-    - `token`: Used for all calls that need account-wide access, such as stats,
-    lists of applications, etc.
+    - `bearerToken`: Used for all calls that need access to applications, such as stats,
+    lists of applications, etc. Request a `bearertoken` by using an OAuth Client Credential Flow.
+    See [OAuth](https://api-docs.notifica.re/#tag/OAuth/operation/postOAuthGrantClient) endpoint.
 
 
     - `applicationKey` / `applicationSecret`: Only used for calls that originate
-    from the device, e.g., registration, tags.
+    from the device, e.g., registration, tags. Uses Basic HTTP authentication, with the application key 
+    as the username and the application secret as the password.
 
 
     - `applicationKey` / `masterSecret`: Used for calls that are related to a
     specific application and originate from your backend system, e.g., push,
-    user segments, user lists, device lists, regions.
+    user segments, user lists, device lists, regions. Uses Basic HTTP authentication, with the application key 
+    as the username and the master secret as the password.
 
-
-    All 4 types use normal Basic HTTP Authentication (username + password), in
-    case of token, the password is ignored, so can be anything, e.g. "xxx"
 
 
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.173.0'
+  version: '1.179.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -109,7 +114,7 @@ paths:
       summary: Account Login
     delete:
       security:
-        - Token: []
+        - SessionToken: []
       responses:
         '204':
           description: No Content
@@ -123,7 +128,7 @@ paths:
   /account/login/totp:
     post:
       security:
-        - Token: []
+        - SessionToken: []
       responses:
         '201':
           content:
@@ -153,7 +158,7 @@ paths:
   /account/2fa:
     get:
       security:
-        - Token: []
+        - SessionToken: []
       responses:
         '200':
           description: OK
@@ -192,7 +197,7 @@ paths:
   /account/2fa/totp:
     post:
       security:
-        - Token: []
+        - SessionToken: []
       responses:
         '200':
           content:
@@ -226,7 +231,7 @@ paths:
       summary: Register TOTP
     delete:
       security:
-        - Token: []
+        - SessionToken: []
       responses:
         '204':
           description: Unregistered TOTP
@@ -249,7 +254,7 @@ paths:
   /account/2fa/enable:
     put:
       security:
-        - Token: []
+        - SessionToken: []
       responses:
         '200':
           content:
@@ -288,7 +293,7 @@ paths:
   /account/2fa/disable:
     put:
       security:
-        - Token: []
+        - SessionToken: []
       responses:
         '200':
           content:
@@ -314,7 +319,8 @@ paths:
   /application:
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The number of results to retrieve.
           example: '10'
@@ -347,7 +353,8 @@ paths:
       summary: List Applications
     post:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       responses:
         '201':
           content:
@@ -372,7 +379,8 @@ paths:
   /application/shared:
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The maximum number of results to retrieve.
           example: '10'
@@ -406,7 +414,8 @@ paths:
   '/application/{application}':
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The account id of an active application.
           example: 5245bc5b3e66a3b01f0024d4
@@ -434,7 +443,8 @@ paths:
       summary: Get Application
     put:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The account id of an active application.
           example: 5245bc5b3e66a3b01f0024d4
@@ -466,7 +476,8 @@ paths:
       summary: Update Application
     delete:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The account id of an active application.
           example: 5245bc5b3e66a3b01f0024d4
@@ -1500,7 +1511,7 @@ paths:
           schema:
             type: number
         - description: >-
-            The medium for the device. Possible values are `push`, `email` or
+            The medium for the device. Possible values are `all`, `push`, `email` or
             `sms`
           example: push
           in: query
@@ -1763,7 +1774,7 @@ paths:
           schema:
             type: number
         - description: >-
-            The medium for the device. Possible values are `push`, `email` or
+            The medium for the device. Possible values are `all`, `push`, `email` or
             `sms`
           example: push
           in: query
@@ -1843,7 +1854,7 @@ paths:
           schema:
             type: string
         - description: >-
-            The medium for the device. Possible values are `push`, `email` or
+            The medium for the device. Possible values are `all`, `push`, `email` or
             `sms`
           example: push
           in: query
@@ -1902,7 +1913,7 @@ paths:
           schema:
             type: number
         - description: >-
-            The medium for the device. Possible values are `push`, `email` or
+            The medium for the device. Possible values are `all`, `push`, `email` or
             `sms`
           example: push
           in: query
@@ -1929,6 +1940,46 @@ paths:
         `masterSecret`.
       operationId: getDeviceForTag
       summary: List Devices For Tag
+  '/device/fortag/{tag}/count':
+    get:
+      security:
+        - MasterSecret: []
+      parameters:
+        - description: The tag the device is associated with
+          example: toys
+          in: path
+          name: tag
+          required: true
+          schema:
+            type: string
+        - description: >-
+            The medium for the device. Possible values are `all`, `push`, `email` or
+            `sms`
+          example: push
+          in: query
+          name: medium
+          required: false
+          schema:
+            default: push
+            type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties:
+                  count:
+                    type: number
+          description: OK
+      tags:
+        - Device
+      description: >-
+        Get the number of devices for a specific tag.
+
+        This request is authenticated with the `applicationKey` and
+        `masterSecret`.
+      operationId: getDeviceForTagCount
+      summary: Count Devices For Tag
   '/device/foruser/{userID}':
     get:
       security:
@@ -1959,7 +2010,7 @@ paths:
           schema:
             type: number
         - description: >-
-            The medium for the device. Possible values are `push`, `email` or
+            The medium for the device. Possible values are `all`, `push`, `email` or
             `sms`
           example: push
           in: query
@@ -10116,6 +10167,45 @@ paths:
       description: Delete item from user's inbox
       operationId: deleteUserInboxById
       summary: Delete item from user's inbox
+  /oauth/grant/client:
+    post:
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/OAuthAccessToken'
+          description: OK
+      tags:
+        - OAuth
+      description: Get an OAuth access token via client credentials
+      operationId: postOAuthGrantClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                client_id:
+                  type: string
+                  example: 'ajnbjuasdPJIVNQJINERV'
+                client_secret:
+                  type: string
+                  example: 'owoqinscnuiiIOPUbuiupb'
+      summary: Create OAuth access token via client credentials
+  /oauth/publickey:
+    get:
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/OAuthPublicKey'
+          description: OK
+      tags:
+        - OAuth
+      description: Get the public key for the JWT token encryption
+      operationId: getOAuthPublicKey
+      summary: Get OAuth public key
   /pass:
     get:
       security:
@@ -13673,7 +13763,8 @@ paths:
   /stats/notification/account/lastmonth:
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       responses:
         '200':
           content:
@@ -13693,7 +13784,8 @@ paths:
   '/stats/notification/account/{year}':
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -13721,7 +13813,8 @@ paths:
   '/stats/notification/account/{year}/{month}':
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -13756,7 +13849,8 @@ paths:
   '/stats/notification/account/{year}/{month}/{day}':
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -13923,7 +14017,8 @@ paths:
   /stats/user/account:
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       responses:
         '200':
           content:
@@ -13941,7 +14036,8 @@ paths:
   /stats/user/account/lastmonth:
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       responses:
         '200':
           content:
@@ -13961,7 +14057,8 @@ paths:
   '/stats/user/account/{year}':
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -13989,7 +14086,8 @@ paths:
   '/stats/user/account/{year}/{month}':
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -14024,7 +14122,8 @@ paths:
   '/stats/user/account/{year}/{month}/{day}':
     get:
       security:
-        - Token: []
+        - BearerToken: []
+        - SessionToken: []
       parameters:
         - description: The year you desire to get stats from.
           example: '2014'
@@ -15677,6 +15776,17 @@ components:
         Username is account email address, password is account password
       type: http
       scheme: basic
+    OAuthClient:
+      description: >-
+        Used for retrieving a token via OAuth Client Credentials Flow. OAuth Clients can be configured
+        in the Dashboard.
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'http://localhost:3006/oauth/grant/client'
+          scopes:
+            read:applications: Read data for application
+            write:applications: Add / modify data for application
     ApplicationSecret:
       description: >-
         Only used for calls that originate from the device, e.g., registration, tags.
@@ -15694,12 +15804,21 @@ components:
         your app in Notificare Dashboard under the section Settings > App Keys.
       type: http
       scheme: basic
-    Token:
+    SessionToken:
       description: >-
-        Used for all calls that need account-wide access, such as stats, lists of applications, etc.
+        Used for sessions that need full access to your account, such as account settings,
+        lists of applications, etc. Only useful for logins via the Dashboard, please use the
+        BearerToken Auth for use by your API client. 
         Username is session token, password is arbitrary string, e.g., `xxx`
       type: http
       scheme: basic
+    BearerToken:
+      description: >-
+        Used for all calls that need access to applications, such as stats, lists of applications, etc.
+        Use OAuthClient auth scheme to retrieve a token.
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     AccountSession:
       properties:
@@ -20806,6 +20925,25 @@ components:
         devices:
           type: number
           example: 2
+    OAuthAccessToken:
+      properties:
+        access_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiI...."
+        expires_in:
+          type: number
+          example: 3600
+        token_type:
+          type: string
+          default: Bearer
+        scope:
+          type: string
+          example: "read:applications write:applications"
+    OAuthPublicKey:
+      properties:
+        publicKey:
+          type: string
+          example: "-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEA2cY...."
     ObjectId:
       type: string
       example: 1d9e80ef851d212aca82cf23
@@ -24385,8 +24523,11 @@ tags:
     name: SMS
   - description: >-
       Public methods to retrieve information about the status and health of the
-      API
+      API.
     name: Status
+  - description: >-
+      Methods for OAuth, e.g., to retrieve a bearer token or view the public key.
+    name: OAuth
   - description: >-
       Methods to retrieve tags.
 
