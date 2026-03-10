@@ -1,4 +1,7 @@
 # Changelog
+## [1.182.0] - 2026-03-10
+Fixed response body of GET region by Id
+
 ## [1.173.0] - 2025-07-16
 Added active property for in-app message
 
