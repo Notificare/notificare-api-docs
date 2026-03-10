@@ -52,7 +52,7 @@ info:
     For more information about this API, please [contact
     us](http://notifica.re/contact).
   title: Notificare REST API
-  version: '1.179.0'
+  version: '1.182.0'
   termsOfService: https://notificare.com/terms
   contact:
     name: Notificare Support
@@ -12500,8 +12500,8 @@ paths:
           content:
             application/json; charset=utf-8:
               example:
-                regions:
-                  - _id: 5245bc5b3e66a3b01f0024d4
+                region:
+                    _id: 5245bc5b3e66a3b01f0024d4
                     geometry:
                       coordinates:
                         - 4.2345
@@ -12510,7 +12510,6 @@ paths:
                     major: '123456'
                     name: My Region
                     timezone: Europe/Amsterdam
-                count: 1
           description: OK
       tags:
         - Region
