@@ -1,4 +1,7 @@
 # Changelog
+## [1.182.0-bugfix.1] - 2026-10-14
+Fixed CDN URL to use Redoc 2.x
+
 ## [1.182.0] - 2026-03-10
 Fixed response body of GET region by Id
 
